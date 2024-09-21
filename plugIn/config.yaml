@@ -1,0 +1,23 @@
+tasks:
+  get_stocks:
+    run_in_parallel: true
+  effective_returns1:
+    methods:
+      - mean_historical
+      - sharpe_ratio
+    enable: true
+    run_in_parallel: true
+
+  covariance:
+    methods:
+      - sample
+      - shrinkage
+    enable: true
+    run_in_parallel: true
+
+  optimize_portfolio:
+    methods:
+      - risk_parity
+      - min_variance
+    enable: true
+    run_in_parallel: true

@@ -1,10 +1,11 @@
-from plugIn.optimization.py_portfolio_op_frontier import PyPortfolioOptFrontier
+from plugIn.optimization.py_portfolio_op_frontier import PyPortfolioOptFrontier, PyPortfolioOptFrontierWithShortPosition
 from plugIn.optimization.riskfolio_lib_frontier import RiskfolioLibFrontier
 
 
 def get_all_efficient_frontier_optimizer(expected_returns, covariance_matrix, data=None):
     optimizers = {
-        'pyportfolioopt': PyPortfolioOptFrontier,
+        'pyPortfolioOptFrontier': PyPortfolioOptFrontier,
+        'pyPortfolioOptFrontierWithShortPosition': PyPortfolioOptFrontierWithShortPosition,
         'riskfolio-lib': RiskfolioLibFrontier,
         # Add more optimizers here as needed
     }

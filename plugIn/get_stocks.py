@@ -24,17 +24,15 @@ def get_stocks():
 def download_stock_data():
     # Example list of Nifty 50 stock tickers
     tickers = ["HDFCBANK.NS", "RELIANCE.NS", "CIPLA.NS", "DIVISLAB.NS", "HDFCLIFE.NS",
-                   "BHARTIARTL.NS", "ASIANPAINT.NS", "INFY.NS", "TITAN.NS", "HCLTECH.NS"]
-    # tickers = ["HDFCBANK.NS", "RELIANCE.NS", "CIPLA.NS", "DIVISLAB.NS", "HDFCLIFE.NS",
-    #            "BHARTIARTL.NS", "ASIANPAINT.NS", "INFY.NS", "TITAN.NS", "HCLTECH.NS",
-    #            "TATASTEEL.NS", "ICICIBANK.NS", "KOTAKBANK.NS", "GRASIM.NS", "BPCL.NS",
-    #            "BAJFINANCE.NS", "JSWSTEEL.NS", "ONGC.NS", "BAJAJFINSV.NS", "NTPC.NS",
-    #            "LT.NS", "HINDUNILVR.NS", "TATAMOTORS.NS", "BAJAJ-AUTO.NS", "TATACONSUM.NS",
-    #            "M&M.NS", "ULTRACEMCO.NS", "WIPRO.NS", "NESTLEIND.NS", "INDUSINDBK.NS",
-    #            "EICHERMOT.NS", "SBILIFE.NS", "BRITANNIA.NS", "UPL.NS", "AXISBANK.NS",
-    #            "APOLLOHOSP.NS", "ADANIPORTS.NS", "DRREDDY.NS", "SUNPHARMA.NS", "SBIN.NS",
-    #            "MARUTI.NS", "POWERGRID.NS", "HINDALCO.NS", "TCS.NS", "HEROMOTOCO.NS",
-    #            "COALINDIA.NS", "ITC.NS", "TECHM.NS", "SHREECEM.NS"]
+               "BHARTIARTL.NS", "ASIANPAINT.NS", "INFY.NS", "TITAN.NS", "HCLTECH.NS",
+               "TATASTEEL.NS", "ICICIBANK.NS", "KOTAKBANK.NS", "GRASIM.NS", "BPCL.NS",
+               "BAJFINANCE.NS", "JSWSTEEL.NS", "ONGC.NS", "BAJAJFINSV.NS", "NTPC.NS",
+               "LT.NS", "HINDUNILVR.NS", "TATAMOTORS.NS", "BAJAJ-AUTO.NS", "TATACONSUM.NS",
+               "M&M.NS", "ULTRACEMCO.NS", "WIPRO.NS", "NESTLEIND.NS", "INDUSINDBK.NS",
+               "EICHERMOT.NS", "SBILIFE.NS", "BRITANNIA.NS", "UPL.NS", "AXISBANK.NS",
+               "APOLLOHOSP.NS", "ADANIPORTS.NS", "DRREDDY.NS", "SUNPHARMA.NS", "SBIN.NS",
+               "MARUTI.NS", "POWERGRID.NS", "HINDALCO.NS", "TCS.NS", "HEROMOTOCO.NS",
+               "COALINDIA.NS", "ITC.NS", "TECHM.NS", "SHREECEM.NS"]
 
     tickers.sort()
 
