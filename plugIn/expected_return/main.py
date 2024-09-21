@@ -1,27 +1,15 @@
 import pandas as pd
 
-from plugIn.expected_return.expected_returns import CAPMReturn, TWRRReturn, \
-    ArithmeticMeanHistoricalReturn, CAGRMeanHistoricalReturn, EMAHistoricalReturn
+from plugIn.expected_return.expected_returns import CAPMReturn, ArithmeticMeanHistoricalReturn, \
+    CAGRMeanHistoricalReturn, EMAHistoricalReturn
 from plugIn.expected_return.expected_returns_black_litterman import BlackLittermanReturn
 from plugIn.expected_return.expected_returns_fama_french import FamaFrenchReturn
 from plugIn.expected_return.expected_returns_gordon_growth import GordonGrowthReturn
-from plugIn.expected_return.expected_returns_holt_winters import HoltWintersReturn
 from plugIn.expected_return.expected_returns_machine_learning_arima import ARIMAReturn
 from plugIn.expected_return.expected_returns_machine_learning_linearRegression import LinearRegressionReturn
 from plugIn.expected_return.expected_returns_risk_parity import RiskParityReturn
 from plugIn.expected_return.monte_carlo_simulation import MonteCarloSimulation
 from plugIn.get_stocks import get_stocks
-
-# Set the maximum number of rows and columns to display
-pd.set_option('display.max_rows', None)  # or a specific number
-pd.set_option('display.max_columns', None)  # or a specific number
-
-# Optionally, you can set the width of the columns and the precision of floats
-pd.set_option('display.max_colwidth', None)  # None for no limit
-pd.set_option('display.float_format', lambda x: f'{x:.2f}')  # Format float numbers
-
-
-# Now, printing the DataFrame will display the full content
 
 
 def run_monte_carlo_simulation(data):
@@ -53,17 +41,17 @@ def calculate_all_returns(data):
     # Create a mapping of return types to their respective classes
     return_calculators = {
         'CAGRMeanHistorical': CAGRMeanHistoricalReturn(data),
-        'ArithmeticMeanHistorical': ArithmeticMeanHistoricalReturn(data),
-        'EMAHistorical': EMAHistoricalReturn(data),
-        'CAPM': CAPMReturn(data),
-        'TWRR': TWRRReturn(data),
-        'GordonGrowth': GordonGrowthReturn(data),
-        'FamaFrench': FamaFrenchReturn(data),
-        'LinearRegression': LinearRegressionReturn(data),
-        'RiskParity': RiskParityReturn(data),
-        'BlackLitterman': BlackLittermanReturn(data),
-        # 'HoltWinters': HoltWintersReturn(data),
-        'ARIMA': ARIMAReturn(data)
+        # 'ArithmeticMeanHistorical': ArithmeticMeanHistoricalReturn(data),
+        # 'EMAHistorical': EMAHistoricalReturn(data),
+        # 'CAPM': CAPMReturn(data),
+        # # 'TWRR': TWRRReturn(data),
+        # 'GordonGrowth': GordonGrowthReturn(data),
+        # 'FamaFrench': FamaFrenchReturn(data),
+        # 'LinearRegression': LinearRegressionReturn(data),
+        # 'RiskParity': RiskParityReturn(data),
+        # 'BlackLitterman': BlackLittermanReturn(data),
+        # # 'HoltWinters': HoltWintersReturn(data),
+        # 'ARIMA': ARIMAReturn(data)
     }
 
     # Initialize an empty DataFrame to store returns
@@ -98,13 +86,6 @@ def get_expected_return(data):
 
     # Calculate all other returns (Mean Historical, EMA Historical, CAPM)
     return calculate_all_returns(data)
-
-    # Print final DataFrame with all returns
-    # pprint(df_returns)
-
-    # # Calculate realized returns
-    # backtest = Backtest(data)
-    # backtest.backtest(df_returns)
 
 
 if __name__ == "__main__":
