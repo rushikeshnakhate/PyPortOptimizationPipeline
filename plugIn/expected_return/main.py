@@ -22,17 +22,17 @@ def calculate_all_returns(data):
     # Create a mapping of return types to their respective classes
     return_calculators = {
         'CAGRMeanHistorical': CAGRMeanHistoricalReturn(data),
-        'ArithmeticMeanHistorical': ArithmeticMeanHistoricalReturn(data),
-        'EMAHistorical': EMAHistoricalReturn(data),
-        'CAPM': CAPMReturn(data),
-        # 'TWRR': TWRRReturn(data),
-        'GordonGrowth': GordonGrowthReturn(data),
-        'FamaFrench': FamaFrenchReturn(data),
-        'LinearRegression': LinearRegressionReturn(data),
-        'RiskParity': RiskParityReturn(data),
-        'BlackLitterman': BlackLittermanReturn(data),
-        # 'HoltWinters': HoltWintersReturn(data),
-        'ARIMA': ARIMAReturn(data)
+        # 'ArithmeticMeanHistorical': ArithmeticMeanHistoricalReturn(data),
+        # 'EMAHistorical': EMAHistoricalReturn(data),
+        # 'CAPM': CAPMReturn(data),
+        # # 'TWRR': TWRRReturn(data),
+        # 'GordonGrowth': GordonGrowthReturn(data),
+        # 'FamaFrench': FamaFrenchReturn(data),
+        # 'LinearRegression': LinearRegressionReturn(data),
+        # 'RiskParity': RiskParityReturn(data),
+        # 'BlackLitterman': BlackLittermanReturn(data),
+        # # 'HoltWinters': HoltWintersReturn(data),
+        # 'ARIMA': ARIMAReturn(data)
     }
 
     # Initialize an empty DataFrame to store returns

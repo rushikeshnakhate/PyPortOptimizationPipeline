@@ -96,10 +96,13 @@ class MonteCarloSimulation:
         self.run_simulation()
         return self.get_max_sharpe_ratio(), self.get_min_volatility()
 
-#
-# if __name__ == "__main__":
-#     data = get_stocks()
-#     monteCarloSimulation = MonteCarloSimulation(data)
-#     max_sharpe_ratio, min_volatility = monteCarloSimulation.run_monte_carlo_simulation()
-#     print(tabulate(max_sharpe_ratio, headers='keys', tablefmt='grid'))
-#     print(tabulate(min_volatility, headers='keys', tablefmt='grid'))
+
+def run_monte_carlo_simulation(data, results_df):
+    """
+    Run the Monte Carlo simulation and append the results to the results DataFrame.
+    """
+    monte_carlo_simulation = MonteCarloSimulation(data)
+    max_sharpe_ratio, min_volatility = monte_carlo_simulation.run_monte_carlo_simulation()
+    results_df = pd.concat([results_df, max_sharpe_ratio], ignore_index=True)
+    results_df = pd.concat([results_df, min_volatility], ignore_index=True)
+    return results_df
