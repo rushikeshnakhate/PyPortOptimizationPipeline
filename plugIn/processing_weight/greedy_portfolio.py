@@ -6,6 +6,7 @@ from plugIn.processing_weight.allocationBase import AllocationBase
 class GreedyPortfolio(AllocationBase):
     def __init__(self, weights, latest_prices, total_portfolio_value=100000, short_ratio=None):
         super().__init__(weights, latest_prices, total_portfolio_value, short_ratio)
+        self.discreteAllocation = None
 
     def get_allocation(self):
         self.discreteAllocation = DiscreteAllocation(
