@@ -1,5 +1,4 @@
 import pandas as pd
-from tabulate import tabulate
 
 from plugIn.expected_return.expected_returns import CAGRMeanHistoricalReturn, ArithmeticMeanHistoricalReturn, \
     EMAHistoricalReturn, CAPMReturn
@@ -9,7 +8,6 @@ from plugIn.expected_return.expected_returns_gordon_growth import GordonGrowthRe
 from plugIn.expected_return.expected_returns_machine_learning_arima import ARIMAReturn
 from plugIn.expected_return.expected_returns_machine_learning_linearRegression import LinearRegressionReturn
 from plugIn.expected_return.expected_returns_risk_parity import RiskParityReturn
-from plugIn.get_stocks import get_stocks
 
 
 def update_returns_dataframe(df_returns, return_type, return_values):

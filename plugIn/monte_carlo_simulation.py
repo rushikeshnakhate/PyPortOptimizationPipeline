@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 # Monte Carlo Simulation Class
 class MonteCarloSimulation:
-    def __init__(self, data, num_of_portfolios=5):
+    def __init__(self, data, num_of_portfolios=10000):
         self.tickers = data.columns
         self.data = data
         self.num_of_portfolios = num_of_portfolios
