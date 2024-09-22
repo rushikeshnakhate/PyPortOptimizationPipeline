@@ -1,12 +1,11 @@
 import logging
 from tabulate import tabulate
-from lp_portfolio import LpPortfolio
 
 from plugIn.processing_weight.greedy_portfolio import (
     GreedyPortfolio,
-    ProportionalGreedyPortfolio,
-    LpPortfolio,
-    MinRiskLpPortfolio
+    ProportionalGreedyPortfolio
+    # LpPortfolio,
+    # MinRiskLpPortfolio
 )
 
 logger = logging.getLogger(__name__)
