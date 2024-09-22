@@ -9,7 +9,7 @@ from plugIn.get_stocks import get_stocks
 from plugIn.monte_carlo_simulation import run_monte_carlo_simulation
 from plugIn.optimization.main import calculate_optimizations
 from plugIn.risk_returns.main import calculate_all_risk_matrix
-from plugIn.processing_weight.allocationBase import GreedyPortfolio
+from plugIn.processing_weight.greedy_portfolio import GreedyPortfolio
 
 pd.set_option('display.max_colwidth', None)  # Display full content in cells
 
@@ -22,6 +22,6 @@ if __name__ == "__main__":
     risk_return_dict = calculate_all_risk_matrix(data)
     results_df = calculate_optimizations(data, expected_return_df, risk_return_dict)
     results_df = run_monte_carlo_simulation(data, results_df)
-    discretePortAllocation = DiscretePortAllocation(results_df['Weights'], data.iloc[-1])
-    df = discretePortAllocation.get_allocation()
+    greedyPortfolio = GreedyPortfolio(results_df['Weights'], data.iloc[-1])
+    df = greedyPortfolio.get_allocation()
     logger.info(tabulate(df, headers='keys', tablefmt='grid'))
