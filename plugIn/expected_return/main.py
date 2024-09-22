@@ -23,14 +23,14 @@ def calculate_all_returns(data):
         'ArithmeticMeanHistorical': ArithmeticMeanHistoricalReturn(data),
         'EMAHistorical': EMAHistoricalReturn(data),
         'CAPM': CAPMReturn(data),
-        # 'TWRR': TWRRReturn(data),
         'GordonGrowth': GordonGrowthReturn(data),
         'FamaFrench': FamaFrenchReturn(data),
         'LinearRegression': LinearRegressionReturn(data),
         'RiskParity': RiskParityReturn(data),
         'BlackLitterman': BlackLittermanReturn(data),
+        # 'ARIMA': ARIMAReturn(data)
+        # 'TWRR': TWRRReturn(data),
         # 'HoltWinters': HoltWintersReturn(data),
-        'ARIMA': ARIMAReturn(data)
     }
 
     # Initialize an empty DataFrame to store returns

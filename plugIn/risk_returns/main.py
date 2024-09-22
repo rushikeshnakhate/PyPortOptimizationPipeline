@@ -30,9 +30,7 @@ def calculate_all_risk_matrix(data):
         'LedoitWolfSingleFactor': LedoitWolfSingleFactor(data),
         'LedoitWolfConstantCorrelation': LedoitWolfConstantCorrelation(data),
         'OracleApproximatingShrinkage': OracleApproximatingShrinkage(data),
-        # 'PCARiskModel': PCARiskModel(data),
         'GraphicalLasso': GraphicalLassoRiskModel(data),
-        # Machine learning-based risk models
         'AutoencoderRiskModel': AutoencoderRiskModel(data),
         'RandomForestVolatility': RandomForestVolatility(data),
         'GaussianProcessRiskModel': GaussianProcessRiskModel(data),
@@ -43,6 +41,9 @@ def calculate_all_risk_matrix(data):
         # 'BayesianNetworkRiskModel': BayesianNetworkRiskModel(data),
         # 'NeuralNetworkVolatility': NeuralNetworkVolatility(data),
         # 'GARCHRiskModel': GARCHRiskModel(data),
+        # 'PCARiskModel': PCARiskModel(data),
+        # Machine learning-based risk models
+
     }
 
     # Dictionary to store covariance matrices for each risk model

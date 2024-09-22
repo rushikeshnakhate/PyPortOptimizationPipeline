@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 # Monte Carlo Simulation Class
 class MonteCarloSimulation:
-    def __init__(self, data, num_of_portfolios=10000):
+    def __init__(self, data, num_of_portfolios=10):
         self.tickers = data.columns
         self.data = data
         self.num_of_portfolios = num_of_portfolios
@@ -21,7 +21,7 @@ class MonteCarloSimulation:
         Runs the Monte Carlo simulation to generate portfolio weights,
         returns, volatilities, and Sharpe ratios.
         """
-        output_dir = Path(r"D:\PortfoliOpt\data")
+        output_dir = Path(r"D:\PortfoliOpt\data1")
         pkl_filepath = os.path.join(output_dir, "simulation.pkl")
 
         # Check if rerun is required or simulation pickle file exists

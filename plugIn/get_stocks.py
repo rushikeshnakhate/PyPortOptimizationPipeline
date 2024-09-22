@@ -2,7 +2,6 @@ import os
 
 import pandas as pd
 import yfinance as yf
-from pathlib import Path
 
 
 # write a function to check if the pickle file exists
@@ -10,19 +9,18 @@ from pathlib import Path
 # if it doesn't, download the data from yfinance
 # and save the data to a pickle file
 # return the data
-def get_stocks():
-    output_dir = Path(r"D:\PortfoliOpt\data")
+def get_stocks(start_date, end_date, output_dir):
     pkl_filepath = os.path.join(output_dir, "data.pkl")
     if not os.path.exists(pkl_filepath):
-        df = download_stock_data()
+        df = download_stock_data(start_date, end_date)
         df.to_pickle(pkl_filepath)
     else:
         df = pd.read_pickle(pkl_filepath)
     return df
 
 
-def download_stock_data():
-    # # Example list of Nifty 50 stock tickers
+def download_stock_data(start_date, end_date):
+    # # # Example list of Nifty 50 stock tickers
     tickers = ["HDFCBANK.NS", "RELIANCE.NS", "CIPLA.NS", "DIVISLAB.NS", "HDFCLIFE.NS",
                "BHARTIARTL.NS", "ASIANPAINT.NS", "INFY.NS", "TITAN.NS", "HCLTECH.NS",
                "TATASTEEL.NS", "ICICIBANK.NS", "KOTAKBANK.NS", "GRASIM.NS", "BPCL.NS",
@@ -35,9 +33,5 @@ def download_stock_data():
                "COALINDIA.NS", "ITC.NS", "TECHM.NS", "SHREECEM.NS"]
 
     tickers.sort()
-
-    # Download historical data for the past 6 months
-    start_date = "2024-01-01"
-    end_date = "2024-07-30"
     data = yf.download(tickers, start=start_date, end=end_date)["Adj Close"]
     return data

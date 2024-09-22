@@ -1,5 +1,6 @@
-import pandas as pd
 import logging
+
+import pandas as pd
 
 from plugIn.optimization.py_portfolio_op_frontier import PyPortfolioOptFrontier, PyPortfolioOptFrontierWithShortPosition
 from plugIn.optimization.riskfolio_lib_frontier import RiskfolioLibFrontier
@@ -10,7 +11,7 @@ logger = logging.getLogger(__name__)
 def get_all_efficient_frontier_optimizer(expected_returns, covariance_matrix, data=None):
     optimizers = {
         'pyPortfolioOptFrontier': PyPortfolioOptFrontier,
-        'pyPortfolioOptFrontierWithShortPosition': PyPortfolioOptFrontierWithShortPosition,
+        # 'pyPortfolioOptFrontierWithShortPosition': PyPortfolioOptFrontierWithShortPosition,
         'riskfolio-lib': RiskfolioLibFrontier,
         # Add more optimizers here as needed
     }
