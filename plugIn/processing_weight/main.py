@@ -1,12 +1,9 @@
 import logging
 from tabulate import tabulate
-
-from plugIn.processing_weight.greedy_portfolio import (
-    GreedyPortfolio,
-    ProportionalGreedyPortfolio
-    # LpPortfolio,
-    # MinRiskLpPortfolio
-)
+from plugIn.processing_weight.greedy_portfolio import GreedyPortfolio
+from plugIn.processing_weight.lp_portfolio import LpPortfolio
+from plugIn.processing_weight.lp_portfolio import MinRiskLpPortfolio
+from plugIn.processing_weight.proportional_greedy_portfolio import ProportionalGreedyPortfolio
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +14,7 @@ def run_all_post_processing_weight(results_df, data):
         'GreedyPortfolio': GreedyPortfolio,
         'ProportionalGreedyPortfolio': ProportionalGreedyPortfolio,
         'LpPortfolio': LpPortfolio,
-        'MinRiskLpPortfolio': MinRiskLpPortfolio,
+        'MinRiskLpPortfolio': MinRiskLpPortfolio
     }
 
     allocations = {alloc_type: [] for alloc_type in allocation_classes.keys()}  # Create a dict for each allocation type

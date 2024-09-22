@@ -11,7 +11,7 @@ from pathlib import Path
 # and save the data to a pickle file
 # return the data
 def get_stocks():
-    output_dir = Path(r"D:\PortOpt\data")
+    output_dir = Path(r"D:\PortfoliOpt\data")
     pkl_filepath = os.path.join(output_dir, "data.pkl")
     if not os.path.exists(pkl_filepath):
         df = download_stock_data()

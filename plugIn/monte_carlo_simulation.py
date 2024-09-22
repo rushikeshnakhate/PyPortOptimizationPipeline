@@ -21,7 +21,7 @@ class MonteCarloSimulation:
         Runs the Monte Carlo simulation to generate portfolio weights,
         returns, volatilities, and Sharpe ratios.
         """
-        output_dir = Path(r"D:\PortOpt\data")
+        output_dir = Path(r"D:\PortfoliOpt\data")
         pkl_filepath = os.path.join(output_dir, "simulation.pkl")
 
         # Check if rerun is required or simulation pickle file exists
