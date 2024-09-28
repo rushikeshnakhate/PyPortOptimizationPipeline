@@ -3,7 +3,10 @@ import logging
 import pandas as pd
 
 from plugIn.optimization.py_portfolio_op_frontier import PyPortfolioOptFrontier, PyPortfolioOptFrontierWithShortPosition
-from plugIn.optimization.riskfolio_lib_frontier import RiskfolioLibFrontier
+from plugIn.optimization.riskfolio_lib_frontier import MVRiskFolioOptimizer, MADRiskFolioOptimizer, \
+    MSVRiskFolioOptimizer, FLPMRiskFolioOptimizer, SLPMRiskFolioOptimizer, CVaRRiskFolioOptimizer, \
+    EVaRRiskFolioOptimizer, WRRiskFolioOptimizer, MDDRiskFolioOptimizer, ADDRiskFolioOptimizer, CDaRRiskFolioOptimizer, \
+    UCIRiskFolioOptimizer, EDaRRiskFolioOptimizer
 
 logger = logging.getLogger(__name__)
 
@@ -11,9 +14,20 @@ logger = logging.getLogger(__name__)
 def get_all_efficient_frontier_optimizer(expected_returns, covariance_matrix, data=None):
     optimizers = {
         'pyPortfolioOptFrontier': PyPortfolioOptFrontier,
-        # 'pyPortfolioOptFrontierWithShortPosition': PyPortfolioOptFrontierWithShortPosition,
-        'riskfolio-lib': RiskfolioLibFrontier,
-        # Add more optimizers here as needed
+        'pyPortfolioOptFrontierWithShortPosition': PyPortfolioOptFrontierWithShortPosition,
+        'MVRiskFolioOptimizer': MVRiskFolioOptimizer,
+        'MADRiskFolioOptimizer': MADRiskFolioOptimizer,
+        'MSVRiskFolioOptimizer': MSVRiskFolioOptimizer,
+        'FLPMRiskFolioOptimizer': FLPMRiskFolioOptimizer,
+        'SLPMRiskFolioOptimizer': SLPMRiskFolioOptimizer,
+        'CVaRRiskFolioOptimizer': CVaRRiskFolioOptimizer,
+        'EVaRRiskFolioOptimizer': EVaRRiskFolioOptimizer,
+        'WRRiskFolioOptimizer': WRRiskFolioOptimizer,
+        'MDDRiskFolioOptimizer': MDDRiskFolioOptimizer,
+        'ADDRiskFolioOptimizer': ADDRiskFolioOptimizer,
+        'CDaRRiskFolioOptimizer': CDaRRiskFolioOptimizer,
+        'UCIRiskFolioOptimizer': UCIRiskFolioOptimizer,
+        'EDaRRiskFolioOptimizer': EDaRRiskFolioOptimizer
     }
 
     # Dictionary to store covariance matrices for each risk model
@@ -67,3 +81,13 @@ def process_optimizer_results(return_type, risk_model_name, mu, cov_matrix, data
     except Exception as e:
         logger.error(f"Error processing {return_type} with {risk_model_name}: {e}")
     return results
+
+# if __name__ == "__main__":
+#     output_dir = Path(r"D:\PortfoliOpt\data")
+#     start_date = '2024-01-01'
+#     end_date = '2024-01-10'
+#     data = get_stocks(start_date, end_date, output_dir)
+#     expected_return_df = calculate_all_returns(data)
+#     risk_return_dict = calculate_all_risk_matrix(data)
+#     results_df = calculate_optimizations(data, expected_return_df, risk_return_dict)
+#     print(tabulate(results_df, headers='keys', tablefmt='grid'))

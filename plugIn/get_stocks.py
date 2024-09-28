@@ -10,17 +10,24 @@ import yfinance as yf
 # and save the data to a pickle file
 # return the data
 def get_stocks(start_date, end_date, output_dir):
-    pkl_filepath = os.path.join(output_dir, "data.pkl")
-    if not os.path.exists(pkl_filepath):
-        df = download_stock_data(start_date, end_date)
-        df.to_pickle(pkl_filepath)
-    else:
-        df = pd.read_pickle(pkl_filepath)
-    return df
+    try:
+        pkl_filepath = os.path.join(output_dir, "data.pkl")
+        if not os.path.exists(pkl_filepath):
+            df = download_stock_data(start_date, end_date)
+            df.to_pickle(pkl_filepath)
+        else:
+            df = pd.read_pickle(pkl_filepath)
+        return df
+    except  Exception as ex:
+        raise ValueError(f"error in getting stocks..{ex}")
 
 
 def download_stock_data(start_date, end_date):
-    # # # Example list of Nifty 50 stock tickers
+    # tickers = ["HDFCBANK.NS", "RELIANCE.NS", "CIPLA.NS", "DIVISLAB.NS", "HDFCLIFE.NS",
+    #            "BHARTIARTL.NS", "ASIANPAINT.NS", "INFY.NS", "TITAN.NS", "HCLTECH.NS",
+    #            "TATASTEEL.NS", "ICICIBANK.NS", "KOTAKBANK.NS", "GRASIM.NS", "BPCL.NS",
+    #            "BAJFINANCE.NS", "JSWSTEEL.NS", "ONGC.NS", "BAJAJFINSV.NS", "NTPC.NS"]
+    # #  # # # Example list of Nifty 50 stock tickers
     tickers = ["HDFCBANK.NS", "RELIANCE.NS", "CIPLA.NS", "DIVISLAB.NS", "HDFCLIFE.NS",
                "BHARTIARTL.NS", "ASIANPAINT.NS", "INFY.NS", "TITAN.NS", "HCLTECH.NS",
                "TATASTEEL.NS", "ICICIBANK.NS", "KOTAKBANK.NS", "GRASIM.NS", "BPCL.NS",

@@ -1,9 +1,12 @@
+from datetime import datetime
+
 import numpy as np
 import pandas as pd
+import warnings
 
 
 class Performance:
-    def __init__(self, allocation, price_data, risk_free_rate=0.05):
+    def __init__(self, allocation, price_data, risk_free_rate=0.02):
         """
         Initialize Performance class with allocation and price data.
 
@@ -15,16 +18,20 @@ class Performance:
         self.price_data = price_data
         self.risk_free_rate = risk_free_rate
 
-    def check_dates(self, start_date, end_date):
+    def check_dates(self, data, start_date, end_date):
         """Check if start and end dates are in the price data index."""
         missing_dates = [date for date in [start_date, end_date] if date not in self.price_data.index]
         if missing_dates:
-            raise ValueError(f"Missing dates in price data: {', '.join(missing_dates)}")
+            start_date = data.index[0].date().strftime('%Y-%m-%d') if start_date in missing_dates else start_date
+            end_date = data.index[-1].date().strftime('%Y-%m-%d') if end_date in missing_dates else end_date
+
+            warnings.warn(
+                f"Missing dates in price data: {', '.join(missing_dates)},"
+                f"using defaults start_date={start_date},end_data={end_date}")
+        return start_date, end_date
 
     def calculate_return(self, start_date, end_date):
         """Calculate portfolio return over a given time period."""
-        self.check_dates(start_date, end_date)
-
         initial_prices = self.price_data.loc[start_date]
         final_prices = self.price_data.loc[end_date]
 
@@ -42,7 +49,6 @@ class Performance:
 
     def calculate_sharpe_ratio(self, start_date, end_date):
         """Calculate the Sharpe Ratio of the portfolio over a given time period."""
-        self.check_dates(start_date, end_date)
 
         portfolio_return = self.calculate_return(start_date, end_date)
         portfolio_volatility = self.calculate_volatility()
@@ -60,7 +66,7 @@ def calculate_performance(allocation_df, data, start_date, end_date):
             if col.startswith('Allocation_'):
                 allocation = row[col][0]  # Get the allocation dictionary
                 performance = Performance(allocation, data)
-
+                start_date, end_date = performance.check_dates(data, start_date, end_date)
                 # Calculate performance metrics
                 portfolio_return = performance.calculate_return(start_date, end_date)
                 portfolio_volatility = performance.calculate_volatility()

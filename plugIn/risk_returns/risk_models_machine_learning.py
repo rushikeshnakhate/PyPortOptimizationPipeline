@@ -135,7 +135,7 @@ class KMeansClustering(BaseRiskModel):
         returns = self.data.pct_change().dropna()
 
         # Apply KMeans clustering to the returns data
-        kmeans = KMeans(n_clusters=3, random_state=42)
+        kmeans = KMeans(n_clusters=2, random_state=42)
         kmeans.fit(returns)
 
         # Get the labels for each cluster (though we don't need them for covariance calculation here)

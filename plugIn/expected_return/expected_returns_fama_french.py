@@ -4,7 +4,7 @@ from plugIn.expected_return.expected_returns import ExpectedReturnBase
 class FamaFrenchReturn(ExpectedReturnBase):
     def __init__(self, data):
         super().__init__(data)
-        self.risk_free_rate = 0.04  # Example risk-free rate (4%) for demonstration purposes
+        self.risk_free_rate = 0.02  # Example risk-free rate (4%) for demonstration purposes
         self.SMB = 0.02  # Example SMB factor (2%)
         self.HML = 0.01  # Example HML factor (1%)
         self.data = data
