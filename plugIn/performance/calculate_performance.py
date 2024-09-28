@@ -63,8 +63,8 @@ def calculate_performance(allocation_df, data, start_date, end_date):
     """Calculate and append performance metrics for portfolios based on allocation columns."""
     for index, row in allocation_df.iterrows():
         for col in allocation_df.columns:
-            if col.startswith('Allocation_'):
-                allocation = row[col][0]  # Get the allocation dictionary
+            if col.startswith('Allocation_') and '_remaining_amount' not in col:
+                allocation = row[col]  # Get the allocation dictionary
                 performance = Performance(allocation, data)
                 start_date, end_date = performance.check_dates(data, start_date, end_date)
                 # Calculate performance metrics
