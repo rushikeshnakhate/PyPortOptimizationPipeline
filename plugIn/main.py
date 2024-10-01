@@ -30,17 +30,17 @@ if __name__ == "__main__":
     year = 2023
     rerun = True
     # Generate date ranges for each month in 2023
-    month_ranges = generate_month_date_ranges(year)
+    # month_ranges = generate_month_date_ranges(year)
+    month_ranges = generate_month_date_ranges(2023, months=[1, 12])
     for start_date, end_date in month_ranges:
         logger.info(f"Processing start_date={start_date}, end_date={end_date}")
         current_month_dir = create_current_month_directory(start_date, output_dir)
         data = get_stocks(start_date, end_date, current_month_dir)
 
         expected_return_df = calculate_or_get_all_return(data, current_month_dir)
+        risk_return_dict = calculate_all_risk_matrix(data, current_month_dir)
 
-    #
-    #     risk_return_dict = calculate_all_risk_matrix(data)
-    #     optimized_df = calculate_optimizations(data, expected_return_df, risk_return_dict)
+        # optimized_df = calculate_optimizations(data, expected_return_df, risk_return_dict)
     #     clean_up(optimized_df)
     #     optimized_df = run_monte_carlo_simulation(data, optimized_df)
     #     optimized_df.to_pickle(optimization_pkl_filepath)

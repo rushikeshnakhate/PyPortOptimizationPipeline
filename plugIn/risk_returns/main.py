@@ -1,25 +1,80 @@
+import logging
 import os
-
 import pandas as pd
 
 from plugIn.risk_returns.risk_models import SampleCovariance, SemiCovariance, ExponentialCovariance, \
     LedoitWolfShrinkage, LedoitWolfConstantVariance, LedoitWolfSingleFactor, OracleApproximatingShrinkage, \
-    LedoitWolfConstantCorrelation, PCARiskModel, GraphicalLassoRiskModel
-
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-# Set environment variables to control OpenMP behavior
-os.environ['OMP_NUM_THREADS'] = '1'
-os.environ['MKL_NUM_THREADS'] = '1'
-os.environ['OPENBLAS_NUM_THREADS'] = '1'
+    LedoitWolfConstantCorrelation, GraphicalLassoRiskModel
 
 from plugIn.risk_returns.risk_models_machine_learning import RegimeSwitchingRiskModel, AutoencoderRiskModel, \
     RandomForestVolatility, GaussianProcessRiskModel, SVMVolatility, KMeansClustering, CopulaRiskModel
 
+logger = logging.getLogger(__name__)
 
-def calculate_all_risk_matrix(data):
+
+# Function to check if covariance matrix pickle file exists
+def check_existing_cov_matrix(risk_type, output_dir):
     """
-    Calls different risk models and stores their covariance matrices.
+    Check if the covariance matrix for the given risk model already exists as a .pkl file.
     """
+    pkl_filepath = os.path.join(output_dir, f"{risk_type}_covariance.pkl")
+    if os.path.exists(pkl_filepath):
+        logger.info(f"Loading covariance matrix for {risk_type} from {pkl_filepath}...")
+        return pd.read_pickle(pkl_filepath)  # Load the matrix from pickle file
+    return None  # File doesn't exist
+
+
+# Function to save covariance matrix to a pickle file
+def save_cov_matrix_to_pkl(cov_matrix, risk_type, output_dir):
+    """
+    Save the covariance matrix as a .pkl file for future use.
+    """
+    pkl_filepath = os.path.join(output_dir, f"{risk_type}_covariance.pkl")
+    logger.info(f"Saving covariance matrix for {risk_type} to {pkl_filepath}...")
+    pd.DataFrame(cov_matrix).to_pickle(pkl_filepath)
+
+
+# Function to calculate the covariance matrix for each risk model
+def calculate_cov_matrix(calculator):
+    """
+    Calculate the covariance matrix using the provided risk model calculator.
+    """
+    logger.info(f"Calculating covariance matrix...")
+    return calculator.calculate_risk_matrix()
+
+
+# Function to loop through the risk models
+def process_risk_models(risk_model_calculators, output_dir):
+    """
+    Loop through each risk model, calculate or load the covariance matrix, and store it.
+    """
+    # Dictionary to store covariance matrices for each risk model
+    covariance_dict = {}
+
+    for risk_type, calculator in risk_model_calculators.items():
+        # Check if the covariance matrix exists
+        cov_matrix = check_existing_cov_matrix(risk_type, output_dir)
+
+        # If the file doesn't exist, calculate the covariance matrix and save it
+        if cov_matrix is None:
+            cov_matrix = calculate_cov_matrix(calculator)
+            save_cov_matrix_to_pkl(cov_matrix, risk_type, output_dir)
+
+        # Store the covariance matrix in the dictionary
+        covariance_dict[risk_type] = pd.DataFrame(cov_matrix)
+
+    return covariance_dict
+
+
+# Main function that orchestrates everything
+def calculate_all_risk_matrix(data, output_dir):
+    """
+    Calls different risk models, calculates the covariance matrices if not already saved,
+    and saves them as .pkl files for future use.
+    """
+    # Ensure the output directory exists
+    os.makedirs(output_dir, exist_ok=True)
+
     # Create a dictionary of risk model types and their corresponding classes
     risk_model_calculators = {
         'SampleCovariance': SampleCovariance(data),
@@ -38,20 +93,14 @@ def calculate_all_risk_matrix(data):
         'KMeansClustering': KMeansClustering(data),
         'CopulaRiskModel': CopulaRiskModel(data),
         'RegimeSwitchingRiskModel': RegimeSwitchingRiskModel(data),
-        # 'BayesianNetworkRiskModel': BayesianNetworkRiskModel(data),
-        # 'NeuralNetworkVolatility': NeuralNetworkVolatility(data),
-        # 'GARCHRiskModel': GARCHRiskModel(data),
-        # 'PCARiskModel': PCARiskModel(data),
-        # Machine learning-based risk models
-
     }
 
-    # Dictionary to store covariance matrices for each risk model
-    covariance_dict = {}
+    # Call the process function to loop through the risk models and calculate/save covariance matrices
+    return process_risk_models(risk_model_calculators, output_dir)
 
-    # Loop through each risk model, calculate the covariance matrix, and store it
-    for risk_type, calculator in risk_model_calculators.items():
-        print(f"Calculating {risk_type}...")
-        cov_matrix = calculator.calculate_risk_matrix()
-        covariance_dict[risk_type] = pd.DataFrame(cov_matrix)
-    return covariance_dict
+
+# Example usage
+# if __name__ == "__main__":
+#     data = pd.DataFrame()  # Replace with your actual data
+#     output_dir = "./covariance_matrices"  # Directory to save/load covariance matrices
+#     covariance_matrices = calculate_all_risk_matrix(data, output_dir)
