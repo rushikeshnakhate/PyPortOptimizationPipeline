@@ -32,31 +32,42 @@ class Performance:
 
     def calculate_return(self, start_date, end_date):
         """Calculate portfolio return over a given time period."""
-        initial_prices = self.price_data.loc[start_date]
-        final_prices = self.price_data.loc[end_date]
+        try:
+            initial_prices = self.price_data.loc[start_date]
+            final_prices = self.price_data.loc[end_date]
 
-        initial_value = sum(self.allocation[ticker] * initial_prices[ticker] for ticker in self.allocation)
-        final_value = sum(self.allocation[ticker] * final_prices[ticker] for ticker in self.allocation)
+            initial_value = sum(self.allocation[ticker] * initial_prices[ticker] for ticker in self.allocation)
+            final_value = sum(self.allocation[ticker] * final_prices[ticker] for ticker in self.allocation)
 
-        return (final_value - initial_value) / initial_value
+            return (final_value - initial_value) / initial_value
+        except Exception as e:
+            print("error={} for start_date={},end_date{}, ".format(e, start_date, end_date))
+            return "error={} for start_date={},end_date{}, ".format(e, start_date, end_date)
 
     def calculate_volatility(self):
         """Calculate portfolio volatility using daily price data."""
-        daily_returns = self.price_data.pct_change().dropna()
-        portfolio_returns = daily_returns[list(self.allocation.keys())].dot(pd.Series(self.allocation))
+        try:
+            daily_returns = self.price_data.pct_change().dropna()
+            portfolio_returns = daily_returns[list(self.allocation.keys())].dot(pd.Series(self.allocation))
 
-        return portfolio_returns.std() * np.sqrt(252)  # Annualized volatility
+            return portfolio_returns.std() * np.sqrt(252)  # Annualized volatility
+        except Exception as e:
+            print("error={} ".format(e))
+            return "error={} ".format(e)
 
     def calculate_sharpe_ratio(self, start_date, end_date):
         """Calculate the Sharpe Ratio of the portfolio over a given time period."""
+        try:
+            portfolio_return = self.calculate_return(start_date, end_date)
+            portfolio_volatility = self.calculate_volatility()
 
-        portfolio_return = self.calculate_return(start_date, end_date)
-        portfolio_volatility = self.calculate_volatility()
+            # Annualized return
+            annualized_return = portfolio_return * (252 / len(self.price_data.loc[start_date:end_date]))
 
-        # Annualized return
-        annualized_return = portfolio_return * (252 / len(self.price_data.loc[start_date:end_date]))
-
-        return (annualized_return - self.risk_free_rate) / portfolio_volatility
+            return (annualized_return - self.risk_free_rate) / portfolio_volatility
+        except Exception as e:
+            print("error={} ".format(e))
+            return "error={} ".format(e)
 
 
 def calculate_performance(allocation_df, data, start_date, end_date):

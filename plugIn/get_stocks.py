@@ -1,7 +1,10 @@
+import logging
 import os
 
 import pandas as pd
 import yfinance as yf
+
+logger = logging.getLogger(__name__)
 
 
 # write a function to check if the pickle file exists
@@ -10,6 +13,7 @@ import yfinance as yf
 # and save the data to a pickle file
 # return the data
 def get_stocks(start_date, end_date, output_dir):
+    logger.info(f"getting stocks start_date={start_date}, end_date={end_date}")
     try:
         pkl_filepath = os.path.join(output_dir, "data.pkl")
         if not os.path.exists(pkl_filepath):
@@ -23,21 +27,21 @@ def get_stocks(start_date, end_date, output_dir):
 
 
 def download_stock_data(start_date, end_date):
-    # tickers = ["HDFCBANK.NS", "RELIANCE.NS", "CIPLA.NS", "DIVISLAB.NS", "HDFCLIFE.NS",
-    #            "BHARTIARTL.NS", "ASIANPAINT.NS", "INFY.NS", "TITAN.NS", "HCLTECH.NS",
-    #            "TATASTEEL.NS", "ICICIBANK.NS", "KOTAKBANK.NS", "GRASIM.NS", "BPCL.NS",
-    #            "BAJFINANCE.NS", "JSWSTEEL.NS", "ONGC.NS", "BAJAJFINSV.NS", "NTPC.NS"]
-    # #  # # # Example list of Nifty 50 stock tickers
     tickers = ["HDFCBANK.NS", "RELIANCE.NS", "CIPLA.NS", "DIVISLAB.NS", "HDFCLIFE.NS",
                "BHARTIARTL.NS", "ASIANPAINT.NS", "INFY.NS", "TITAN.NS", "HCLTECH.NS",
                "TATASTEEL.NS", "ICICIBANK.NS", "KOTAKBANK.NS", "GRASIM.NS", "BPCL.NS",
-               "BAJFINANCE.NS", "JSWSTEEL.NS", "ONGC.NS", "BAJAJFINSV.NS", "NTPC.NS",
-               "LT.NS", "HINDUNILVR.NS", "TATAMOTORS.NS", "BAJAJ-AUTO.NS", "TATACONSUM.NS",
-               "M&M.NS", "ULTRACEMCO.NS", "WIPRO.NS", "NESTLEIND.NS", "INDUSINDBK.NS",
-               "EICHERMOT.NS", "SBILIFE.NS", "BRITANNIA.NS", "UPL.NS", "AXISBANK.NS",
-               "APOLLOHOSP.NS", "ADANIPORTS.NS", "DRREDDY.NS", "SUNPHARMA.NS", "SBIN.NS",
-               "MARUTI.NS", "POWERGRID.NS", "HINDALCO.NS", "TCS.NS", "HEROMOTOCO.NS",
-               "COALINDIA.NS", "ITC.NS", "TECHM.NS", "SHREECEM.NS"]
+               "BAJFINANCE.NS", "JSWSTEEL.NS", "ONGC.NS", "BAJAJFINSV.NS", "NTPC.NS"]
+    #  # # # Example list of Nifty 50 stock tickers
+    # tickers = ["HDFCBANK.NS", "RELIANCE.NS", "CIPLA.NS", "DIVISLAB.NS", "HDFCLIFE.NS",
+    #            "BHARTIARTL.NS", "ASIANPAINT.NS", "INFY.NS", "TITAN.NS", "HCLTECH.NS",
+    #            "TATASTEEL.NS", "ICICIBANK.NS", "KOTAKBANK.NS", "GRASIM.NS", "BPCL.NS",
+    #            "BAJFINANCE.NS", "JSWSTEEL.NS", "ONGC.NS", "BAJAJFINSV.NS", "NTPC.NS",
+    #            "LT.NS", "HINDUNILVR.NS", "TATAMOTORS.NS", "BAJAJ-AUTO.NS", "TATACONSUM.NS",
+    #            "M&M.NS", "ULTRACEMCO.NS", "WIPRO.NS", "NESTLEIND.NS", "INDUSINDBK.NS",
+    #            "EICHERMOT.NS", "SBILIFE.NS", "BRITANNIA.NS", "UPL.NS", "AXISBANK.NS",
+    #            "APOLLOHOSP.NS", "ADANIPORTS.NS", "DRREDDY.NS", "SUNPHARMA.NS", "SBIN.NS",
+    #            "MARUTI.NS", "POWERGRID.NS", "HINDALCO.NS", "TCS.NS", "HEROMOTOCO.NS",
+    #            "COALINDIA.NS", "ITC.NS", "TECHM.NS", "SHREECEM.NS"]
 
     tickers.sort()
     data = yf.download(tickers, start=start_date, end=end_date)["Adj Close"]

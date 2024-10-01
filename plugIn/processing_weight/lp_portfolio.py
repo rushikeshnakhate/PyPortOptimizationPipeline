@@ -9,6 +9,7 @@ class LpPortfolio(AllocationBase):
         self.discreteAllocation = None
 
     def get_allocation(self):
+
         self.discreteAllocation = DiscreteAllocation(
             self.weights,
             self.latest_prices,

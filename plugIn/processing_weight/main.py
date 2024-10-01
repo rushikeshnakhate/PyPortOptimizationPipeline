@@ -24,25 +24,32 @@ def run_all_post_processing_weight(results_df, data, budget=1000000):
     }
 
     allocations = {alloc_type: [] for alloc_type in allocation_classes.keys()}  # Create a dict for each allocation type
-
-    for index, row in results_df.iterrows():
+    total_rows = len(results_df)  # Get the total number of rows
+    for sr_no, (index, row) in enumerate(results_df.iterrows(), start=1):
         weights = row['Weights']  # Get the weights dictionary
         latest_prices = data.iloc[-1]  # Get the latest prices
 
         for allocation_type, portfolio_class in allocation_classes.items():
-            logger.info(f"Running {allocation_type} for budget={budget}...")
-            portfolio = portfolio_class(weights, latest_prices, budget)
-            allocation = portfolio.get_allocation()  # Get the allocation
-            allocations[allocation_type].append(allocation)  # Append allocation to the corresponding list
+            logger.info(f"Running {allocation_type} for Sr No={sr_no}/{total_rows} with budget={budget}...")
+            try:
+                portfolio = portfolio_class(weights, latest_prices, budget)
+                allocation = portfolio.get_allocation()  # Get the allocation
+                allocations[allocation_type].append(allocation)  # Append allocation to the corresponding list
+            except Exception as e:
+                allocations[allocation_type].append(f"error at Sr No={sr_no}: {e}")
 
     # Add allocations to the DataFrame for each allocation type
-    logger.info("Results after post-processing:")
+    logger.info("Results after post-processing, extracting weights and remaining amounts in separate columns")
     for allocation_type in allocations:
-        allocation_data = allocations[allocation_type]
-        results_df[f'Allocation_{allocation_type}_weight'] = allocation_data
-        results_df[
-            [f'Allocation_{allocation_type}_weight', f'Allocation_{allocation_type}_remaining_amount']] = pd.DataFrame(
-            results_df[f'Allocation_{allocation_type}_weight'].tolist(), index=results_df.index)
+        # allocation_data = allocations[allocation_type]
+        try:
+            results_df[f'Allocation_{allocation_type}_weight'] = allocations[allocation_type]
+            results_df[[f'Allocation_{allocation_type}_weight',
+                        f'Allocation_{allocation_type}_remaining_amount']] = pd.DataFrame(
+                results_df[f'Allocation_{allocation_type}_weight'].tolist(), index=results_df.index)
+        except Exception as e:
+            results_df[[f'Allocation_{allocation_type}_weight',
+                        f'Allocation_{allocation_type}_remaining_amount']] = f"error in getting: {e}"
     return results_df
 
 # Example usage
