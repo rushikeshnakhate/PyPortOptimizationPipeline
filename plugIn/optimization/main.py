@@ -1,5 +1,6 @@
 import logging
 
+import numpy as np
 import pandas as pd
 
 from plugIn.conventions import HeaderConventions, PklFileConventions
@@ -93,6 +94,25 @@ def calculate_optimizations_for_risk_model(expected_return_df, risk_return_dict,
     return pd.DataFrame(all_results)
 
 
+# Assuming df is your DataFrame
+def clean_metadata(value):
+    if isinstance(value, pd.Series):
+        return value.values  # Extract just the values
+    elif isinstance(value, list):
+        return [str(v) for v in value]  # Convert each element to string for clarity
+    return value
+
+
+def extract_value(value):
+    # Check if the value is a list and has only one element, then extract it
+    # print(type(value))
+    if isinstance(value, (np.ndarray, list)) and len(value) == 1:
+        return value[0]
+    # elif isinstance(value, tuple) and len(value) >= 2:
+    #   return value[1]
+    return value  # Return the value as-is if not a list
+
+
 def calculate_optimizations(data, expected_return_df, risk_return_dict, current_month_dir):
     """
     Iterate over each return type and risk model to calculate optimizations.
@@ -109,8 +129,12 @@ def calculate_optimizations(data, expected_return_df, risk_return_dict, current_
     optimization_data = calculate_optimizations_for_risk_model(expected_return_df, risk_return_dict, data,
                                                                current_month_dir)
 
+    # Clean the metadata and extract the values from the DataFrame
+    df1 = optimization_data.applymap(clean_metadata)
+    optimization_data_cleaned = df1.applymap(extract_value)
+
     # Save the newly calculated data to a pickle file
-    save_data_to_pickle(optimization_pkl_filepath, optimization_data)
+    save_data_to_pickle(optimization_pkl_filepath, optimization_data_cleaned)
 
     logger.info("Optimization data saved to {}".format(optimization_pkl_filepath))
     return optimization_data
