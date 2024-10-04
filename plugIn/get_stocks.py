@@ -4,6 +4,8 @@ import os
 import pandas as pd
 import yfinance as yf
 
+from plugIn.conventions import PklFileConventions
+
 logger = logging.getLogger(__name__)
 
 
@@ -12,10 +14,10 @@ logger = logging.getLogger(__name__)
 # if it doesn't, download the data from yfinance
 # and save the data to a pickle file
 # return the data
-def get_stocks(start_date, end_date, output_dir):
+def get_stocks(start_date, end_date, current_dir):
     logger.info(f"getting stocks start_date={start_date}, end_date={end_date}")
     try:
-        pkl_filepath = os.path.join(output_dir, "data.pkl")
+        pkl_filepath = os.path.join(current_dir, PklFileConventions.data_pkl_filename)
         if not os.path.exists(pkl_filepath):
             df = download_stock_data(start_date, end_date)
             df.to_pickle(pkl_filepath)

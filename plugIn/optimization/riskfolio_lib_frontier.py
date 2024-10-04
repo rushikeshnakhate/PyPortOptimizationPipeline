@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import riskfolio as rp
+
+from plugIn.conventions import HeaderConventions
 from plugIn.optimization.efficient_frontier_base import EfficientFrontierBase
 
 
@@ -87,10 +89,10 @@ class RiskFolioOptimizer(EfficientFrontierBase):
 
         # Create a temporary DataFrame with calculated values
         result_df = pd.DataFrame({
-            "Cleaned_Weights": [weights_dict],
-            "Expected Annual Return": [self.expected_return],
-            "Annual Volatility": [self.volatility],
-            "Sharpe Ratio": [self.sharpe_ratio]
+            HeaderConventions.cleaned_weights_column: [weights_dict],
+            HeaderConventions.expected_return_column: [self.expected_return],
+            HeaderConventions.annual_volatility_column: [self.volatility],
+            HeaderConventions.sharpe_ratio_column: [self.sharpe_ratio]
         })
 
         return result_df

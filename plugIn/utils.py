@@ -1,5 +1,10 @@
 # Function to extract the dictionary from the string
 import ast
+import logging
+import os
+import pickle
+
+logger = logging.getLogger(__name__)
 from datetime import datetime, timedelta
 
 
@@ -16,9 +21,6 @@ def clean_up(results_df):
     results_df['Weights'] = results_df['Weights'].astype(str)
     results_df['Weights'] = results_df['Weights'].apply(extract_dict_from_string)
     results_df['Weights'] = results_df['Weights'].apply(ast.literal_eval)
-
-
-from datetime import datetime, timedelta
 
 
 def generate_month_date_ranges(year, months=None):
@@ -56,3 +58,30 @@ def create_current_month_directory(start_date, output_dir):
     current_month_dir = output_dir / current_month
     current_month_dir.mkdir(parents=True, exist_ok=True)
     return current_month_dir
+
+
+def load_data_from_pickle(filepath):
+    """
+    Load optimization data from a pickle file.
+    """
+    if os.path.exists(filepath):
+        logger.info(f"Loading optimization data from {filepath}")
+        try:
+            with open(filepath, 'rb') as f:
+                return pickle.load(f)
+        except Exception as e:
+            logger.error(f"Error loading pickle file: {e}")
+            return None
+    return None
+
+
+def save_data_to_pickle(filepath, data):
+    """
+    Save optimization data to a pickle file.
+    """
+    try:
+        with open(filepath, 'wb') as f:
+            pickle.dump(data, f)
+        logger.info(f" data saved to {filepath}")
+    except Exception as e:
+        logger.error(f"Error saving {filepath} data to pickle file: {e}")

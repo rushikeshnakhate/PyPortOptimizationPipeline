@@ -2,11 +2,16 @@ import logging
 
 import pandas as pd
 
+from plugIn.conventions import HeaderConventions, PklFileConventions
 from plugIn.optimization.py_portfolio_op_frontier import PyPortfolioOptFrontier, PyPortfolioOptFrontierWithShortPosition
-from plugIn.optimization.riskfolio_lib_frontier import MVRiskFolioOptimizer, MADRiskFolioOptimizer, \
-    MSVRiskFolioOptimizer, FLPMRiskFolioOptimizer, SLPMRiskFolioOptimizer, CVaRRiskFolioOptimizer, \
-    EVaRRiskFolioOptimizer, WRRiskFolioOptimizer, MDDRiskFolioOptimizer, ADDRiskFolioOptimizer, CDaRRiskFolioOptimizer, \
-    UCIRiskFolioOptimizer, EDaRRiskFolioOptimizer
+from plugIn.optimization.riskfolio_lib_frontier import (MVRiskFolioOptimizer, MADRiskFolioOptimizer, \
+                                                        MSVRiskFolioOptimizer, FLPMRiskFolioOptimizer,
+                                                        SLPMRiskFolioOptimizer, CVaRRiskFolioOptimizer, \
+                                                        EVaRRiskFolioOptimizer, WRRiskFolioOptimizer,
+                                                        MDDRiskFolioOptimizer, ADDRiskFolioOptimizer,
+                                                        CDaRRiskFolioOptimizer, \
+                                                        UCIRiskFolioOptimizer, EDaRRiskFolioOptimizer)
+from plugIn.utils import load_data_from_pickle, save_data_to_pickle
 
 logger = logging.getLogger(__name__)
 
@@ -42,39 +47,27 @@ def get_all_efficient_frontier_optimizer(expected_returns, covariance_matrix, da
     return optimizers_dict
 
 
-def calculate_optimizations(data, expected_return_df, risk_return_dict):
-    """
-    Iterate over each return type and risk model to calculate optimizations.
-    """
-    all_results = []
-    for return_type in expected_return_df.columns:
-        mu = expected_return_df[return_type]
-
-        for risk_model_name, cov_matrix in risk_return_dict.items():
-            if cov_matrix.shape[0] == mu.shape[0]:
-                results = process_optimizer_results(return_type, risk_model_name, mu, cov_matrix, data)
-                all_results.extend(results)
-    return pd.DataFrame(all_results)
-
-
-def process_optimizer_results(return_type, risk_model_name, mu, cov_matrix, data):
+def process_optimizer_results(return_type, risk_model_name, mu, cov_matrix, data, current_month_dir):
     """
     Process the optimizer results for a given return type and risk model.
     """
     results = []
     try:
-        logger.info(f"Calculating efficient frontier for Risk Model: {risk_model_name}, Return Type: {return_type}")
+        logger.info(
+            f"Calculating efficient frontier for current_date:{current_month_dir} for Risk Model: {risk_model_name}, "
+            f"Return Type: {return_type}")
         optimizer_results = get_all_efficient_frontier_optimizer(mu, cov_matrix, data)
 
         for optimizer_name, result in optimizer_results.items():
             result_dict = {
-                'Expected Return Type': return_type,
-                'Risk Model': risk_model_name,
-                'Optimizer': optimizer_name,
-                'Weights': result['Cleaned_Weights'],
-                'Expected Annual Return': result['Expected Annual Return'],
-                'Annual Volatility': result['Annual Volatility'],
-                'Sharpe Ratio': result['Sharpe Ratio']
+                HeaderConventions.expected_return_column: return_type,
+                HeaderConventions.risk_model_column: risk_model_name,
+                HeaderConventions.optimizer_column: optimizer_name,
+                HeaderConventions.weights_column: result[HeaderConventions.cleaned_weights_column],
+                HeaderConventions.expected_annual_return_column: result[
+                    HeaderConventions.expected_annual_return_column],
+                HeaderConventions.annual_volatility_column: result[HeaderConventions.annual_volatility_column],
+                HeaderConventions.sharpe_ratio_column: result[HeaderConventions.sharpe_ratio_column]
             }
             results.append(result_dict)
 
@@ -82,12 +75,42 @@ def process_optimizer_results(return_type, risk_model_name, mu, cov_matrix, data
         logger.error(f"Error processing {return_type} with {risk_model_name}: {e}")
     return results
 
-# if __name__ == "__main__":
-#     output_dir = Path(r"D:\PortfoliOpt\data")
-#     start_date = '2024-01-01'
-#     end_date = '2024-01-10'
-#     data = get_stocks(start_date, end_date, output_dir)
-#     expected_return_df = calculate_all_returns(data)
-#     risk_return_dict = calculate_all_risk_matrix(data)
-#     results_df = calculate_optimizations(data, expected_return_df, risk_return_dict)
-#     print(tabulate(results_df, headers='keys', tablefmt='grid'))
+
+def calculate_optimizations_for_risk_model(expected_return_df, risk_return_dict, data, current_month_dir):
+    """
+    Calculate optimizations for all risk models and expected return types.
+    """
+    all_results = []
+    for return_type in expected_return_df.columns:
+        mu = expected_return_df[return_type]
+
+        for risk_model_name, cov_matrix in risk_return_dict.items():
+            if cov_matrix.shape[0] == mu.shape[0]:
+                results = process_optimizer_results(return_type, risk_model_name, mu, cov_matrix, data,
+                                                    current_month_dir)
+                all_results.extend(results)
+
+    return pd.DataFrame(all_results)
+
+
+def calculate_optimizations(data, expected_return_df, risk_return_dict, current_month_dir):
+    """
+    Iterate over each return type and risk model to calculate optimizations.
+    """
+    logger.info("calculating optimizations for the month {}".format(current_month_dir))
+    optimization_pkl_filepath = current_month_dir / PklFileConventions.optimization_pkl_filename
+
+    optimization_data = load_data_from_pickle(optimization_pkl_filepath)
+
+    if optimization_data is not None:
+        return optimization_data
+
+    # If pickle not found or loading failed, calculate the optimizations
+    optimization_data = calculate_optimizations_for_risk_model(expected_return_df, risk_return_dict, data,
+                                                               current_month_dir)
+
+    # Save the newly calculated data to a pickle file
+    save_data_to_pickle(optimization_pkl_filepath, optimization_data)
+
+    logger.info("Optimization data saved to {}".format(optimization_pkl_filepath))
+    return optimization_data

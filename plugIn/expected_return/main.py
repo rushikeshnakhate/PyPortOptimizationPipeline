@@ -2,12 +2,12 @@ import logging
 
 import pandas as pd
 
+from plugIn.conventions import PklFileConventions
 from plugIn.expected_return.expected_returns import CAGRMeanHistoricalReturn, ArithmeticMeanHistoricalReturn, \
     EMAHistoricalReturn, CAPMReturn
 from plugIn.expected_return.expected_returns_black_litterman import BlackLittermanReturn
 from plugIn.expected_return.expected_returns_fama_french import FamaFrenchReturn
 from plugIn.expected_return.expected_returns_gordon_growth import GordonGrowthReturn
-from plugIn.expected_return.expected_returns_machine_learning_arima import ARIMAReturn
 from plugIn.expected_return.expected_returns_machine_learning_linearRegression import LinearRegressionReturn
 from plugIn.expected_return.expected_returns_risk_parity import RiskParityReturn
 
@@ -50,7 +50,7 @@ def calculate_all_returns(data, output_dir):
 
 def calculate_or_get_all_return(data, current_month_dir):
     logger.info("Calculating or getting all returns...for the month {}".format(current_month_dir))
-    expected_return_pkl_filepath = current_month_dir / "expected_return.pkl"
+    expected_return_pkl_filepath = current_month_dir / PklFileConventions.expected_return_pkl_filename
     if expected_return_pkl_filepath.exists():
         return pd.read_pickle(expected_return_pkl_filepath)
     return calculate_all_returns(data, current_month_dir)

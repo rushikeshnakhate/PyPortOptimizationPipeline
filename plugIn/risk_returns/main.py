@@ -2,6 +2,7 @@ import logging
 import os
 import pandas as pd
 
+from plugIn.conventions import PklFileConventions
 from plugIn.risk_returns.risk_models import SampleCovariance, SemiCovariance, ExponentialCovariance, \
     LedoitWolfShrinkage, LedoitWolfConstantVariance, LedoitWolfSingleFactor, OracleApproximatingShrinkage, \
     LedoitWolfConstantCorrelation, GraphicalLassoRiskModel
@@ -17,7 +18,9 @@ def check_existing_cov_matrix(risk_type, output_dir):
     """
     Check if the covariance matrix for the given risk model already exists as a .pkl file.
     """
-    pkl_filepath = os.path.join(output_dir, f"{risk_type}_covariance.pkl")
+    pkl_filepath = os.path.join(output_dir,
+                                f"{risk_type}_{PklFileConventions.ending_pattern_for_risk_return_pkl_files}")
+
     if os.path.exists(pkl_filepath):
         logger.info(f"Loading covariance matrix for {risk_type} from {pkl_filepath}...")
         return pd.read_pickle(pkl_filepath)  # Load the matrix from pickle file
@@ -29,7 +32,9 @@ def save_cov_matrix_to_pkl(cov_matrix, risk_type, output_dir):
     """
     Save the covariance matrix as a .pkl file for future use.
     """
-    pkl_filepath = os.path.join(output_dir, f"{risk_type}_covariance.pkl")
+    pkl_filepath = os.path.join(output_dir,
+                                f"{risk_type}_{PklFileConventions.ending_pattern_for_risk_return_pkl_files}")
+
     logger.info(f"Saving covariance matrix for {risk_type} to {pkl_filepath}...")
     pd.DataFrame(cov_matrix).to_pickle(pkl_filepath)
 
@@ -97,7 +102,6 @@ def calculate_all_risk_matrix(data, output_dir):
 
     # Call the process function to loop through the risk models and calculate/save covariance matrices
     return process_risk_models(risk_model_calculators, output_dir)
-
 
 # Example usage
 # if __name__ == "__main__":

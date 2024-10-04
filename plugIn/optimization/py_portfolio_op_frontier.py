@@ -1,6 +1,7 @@
 import pandas as pd
 from pypfopt import EfficientFrontier
 
+from plugIn.conventions import HeaderConventions
 from plugIn.optimization.efficient_frontier_base import EfficientFrontierBase
 
 
@@ -21,10 +22,10 @@ class PyPortfolioOptFrontierBase(EfficientFrontierBase):
     def get_results(self):
         # Create a DataFrame for performance metrics
         result_df = pd.DataFrame({
-            "Cleaned_Weights": [self.cleaned_weights],
-            "Expected Annual Return": [self.performance[0]],
-            "Annual Volatility": [self.performance[1]],
-            "Sharpe Ratio": [self.performance[2]]
+            HeaderConventions.cleaned_weights_column: [self.cleaned_weights],
+            HeaderConventions.expected_return_column: [self.performance[0]],
+            HeaderConventions.annual_volatility_column: [self.performance[1]],
+            HeaderConventions.sharpe_ratio_column: [self.performance[2]]
         })
         return result_df
 
