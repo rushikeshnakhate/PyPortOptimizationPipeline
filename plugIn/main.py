@@ -9,6 +9,8 @@ from plugIn.expected_return.main import calculate_or_get_all_return
 from plugIn.experimental.monte_carlo_simulation import run_monte_carlo_simulation
 from plugIn.get_stocks import get_stocks
 from plugIn.optimization.main import calculate_optimizations
+from plugIn.performance.calculate_performance import calculate_performance
+from plugIn.processing_weight.main import run_all_post_processing_weight
 from plugIn.risk_returns.main import calculate_all_risk_matrix
 from plugIn.utils import clean_up, generate_month_date_ranges, create_current_month_directory
 
@@ -36,22 +38,8 @@ if __name__ == "__main__":
 
         optimized_df = calculate_optimizations(data, expected_return_df, risk_return_dict, current_month_dir)
         monte_carlo_df = run_monte_carlo_simulation(output_dir, data)
-        # all_optimized_df = pd.concat([monte_carlo_df, optimized_df], ignore_index=True)
-
-    #
-    #     post_processing_wright_df = run_all_post_processing_weight(optimized_df, data)
-    #     post_processing_wright_df.to_pickle(post_processing_wright_pkl_filepath)
-    # else:
-    #     data = pd.read_pickle(data_pkl_filepath)
-    #     expected_return_df = pd.read_pickle(expected_return_pkl_filepath)
-    #     risk_return_dict = calculate_all_risk_matrix(data)
-    #     optimized_df = pd.read_pickle(optimization_pkl_filepath)
-    #     post_processing_wright_df = pd.read_pickle(post_processing_wright_pkl_filepath)
-    #     performance_df = pd.read_pickle(performance_pkl_filepath)
-    #
-    # performance_df = calculate_performance(post_processing_wright_df, data, start_date=start_date,
-    #                                        end_date=previous_end_date)
-    # performance_df.to_pickle(performance_pkl_filepath)
-    optimized_df = pd.read_pickle(output_dir / '202301' / 'optimization.pkl')
-    print(tabulate(optimized_df, headers='keys', tablefmt='grid'))
-    print(tabulate(monte_carlo_df, headers='keys', tablefmt='grid'))
+        all_optimized_df = pd.concat([monte_carlo_df, optimized_df], ignore_index=True)
+        post_processing_wright_df = run_all_post_processing_weight(optimized_df, data, current_month_dir)
+        # performance_df = calculate_performance(post_processing_wright_df, data, start_date=start_date,
+        #                                     end_date=previous_end_date)
+        # post_processing_wright_df.to_csv("1.csv")

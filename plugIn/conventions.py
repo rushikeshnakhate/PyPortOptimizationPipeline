@@ -6,7 +6,7 @@ from pydantic.dataclasses import dataclass
 @dataclass
 class PklFileConventions:
     optimization_pkl_filename: str = "optimization.pkl"
-    post_processing_weight_pkl_filename: str = "post_processing_wright.pkl"
+    post_processing_weight_pkl_filename: str = "post_processing_weight.pkl"
     performance_pkl_filename: str = "performance.pkl"
     expected_return_pkl_filename: str = "expected_return.pkl"
     ending_pattern_for_risk_return_pkl_files: str = "covariance.pkl"

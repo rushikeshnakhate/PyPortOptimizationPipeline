@@ -1,66 +1,107 @@
 import logging
-import os
-from pathlib import Path
 
 import pandas as pd
-from tabulate import tabulate
+
+from plugIn.conventions import HeaderConventions, PklFileConventions
 from plugIn.processing_weight.greedy_portfolio import GreedyPortfolio
 from plugIn.processing_weight.lp_portfolio import LpPortfolio
-from plugIn.processing_weight.lp_portfolio import MinRiskLpPortfolio
-
-# from plugIn.processing_weight.pulp_portfolio import PulpPortfolio
+from plugIn.utils import save_data_to_pickle, load_data_from_pickle
 
 logger = logging.getLogger(__name__)
 
 
-def run_all_post_processing_weight(results_df, data, budget=1000000):
-    # Mapping allocation types to their corresponding classes
-    allocation_classes = {
+# Function to create allocation classes mapping
+def get_allocation_classes():
+    """
+    Returns a dictionary of allocation types mapped to their respective portfolio classes.
+    """
+    return {
         'GreedyPortfolio': GreedyPortfolio,
-        # 'ProportionalGreedyPortfolio': ProportionalGreedyPortfolio,
         'LpPortfolio': LpPortfolio,
-        # 'PulpPortfolio': PulpPortfolio
-        # 'MinRiskLpPortfolio': MinRiskLpPortfolio
     }
 
-    allocations = {alloc_type: [] for alloc_type in allocation_classes.keys()}  # Create a dict for each allocation type
-    total_rows = len(results_df)  # Get the total number of rows
-    for sr_no, (index, row) in enumerate(results_df.iterrows(), start=1):
-        weights = row['Weights']  # Get the weights dictionary
-        latest_prices = data.iloc[-1]  # Get the latest prices
 
-        for allocation_type, portfolio_class in allocation_classes.items():
-            logger.info(f"Running {allocation_type} for Sr No={sr_no}/{total_rows} with budget={budget}...")
-            try:
-                portfolio = portfolio_class(weights, latest_prices, budget)
-                allocation = portfolio.get_allocation()  # Get the allocation
-                allocations[allocation_type].append(allocation)  # Append allocation to the corresponding list
-            except Exception as e:
-                allocations[allocation_type].append(f"error at Sr No={sr_no}: {e}")
+# Function to process allocations for a single row
+def process_post_processing_for_row(sr_no, row, data, allocation_classes, budget, total_rows):
+    """
+    Processes allocations for a single row and returns a dictionary of allocations.
+    """
+    weights = row[HeaderConventions.weights_column]  # Get weights dictionary
+    latest_prices = data.iloc[-1]  # Get latest prices
+    allocations = {}
 
-    # Add allocations to the DataFrame for each allocation type
-    logger.info("Results after post-processing, extracting weights and remaining amounts in separate columns")
-    for allocation_type in allocations:
-        # allocation_data = allocations[allocation_type]
+    for allocation_type, portfolio_class in allocation_classes.items():
         try:
-            results_df[f'Allocation_{allocation_type}_weight'] = allocations[allocation_type]
-            results_df[[f'Allocation_{allocation_type}_weight',
-                        f'Allocation_{allocation_type}_remaining_amount']] = pd.DataFrame(
-                results_df[f'Allocation_{allocation_type}_weight'].tolist(), index=results_df.index)
+            logger.info(
+                f"Running {allocation_type} for Sr No={sr_no},total portfolio={total_rows} with budget={budget}...")
+            portfolio = portfolio_class(weights, latest_prices, budget)
+            allocation = portfolio.get_allocation()  # Get allocation
+            allocations[allocation_type] = allocation
         except Exception as e:
-            results_df[[f'Allocation_{allocation_type}_weight',
-                        f'Allocation_{allocation_type}_remaining_amount']] = f"error in getting: {e}"
+            logger.error(f"Error in {allocation_type} for Sr No={sr_no}: {e}")
+            allocations[allocation_type] = f"error at Sr No={sr_no}: {e}"
+    return allocations
+
+
+# Function to add allocation results to DataFrame
+def add_post_processing_to_dataframe(results_df, post_processing):
+    """
+    Adds post_processing for each allocation type to the DataFrame.
+    """
+    for allocation_type, allocation_data in post_processing.items():
+        # Log the lengths of allocation_data and results_df
+        logger.info(f"allocation_data ==> {len(allocation_data)}, {len(results_df)}")
+
+        # Add allocation data to the DataFrame using .loc to avoid SettingWithCopyWarning
+        results_df.loc[:, f'Allocation_{allocation_type}_weight'] = allocation_data
+
+        try:
+            # Convert the allocation_data to a DataFrame (it should contain lists of [weights, remaining amount])
+            allocation_df = pd.DataFrame(allocation_data, index=results_df.index)
+
+            # Check if allocation_df has exactly 2 columns (for weights and remaining amount)
+            if allocation_df.shape[1] != 2:
+                logger.error(f"Allocation data for {allocation_type} does not have the expected 2 columns.")
+                continue
+
+            # Assign the two columns (weights and remaining amount) to the DataFrame
+            results_df.loc[:, f'Allocation_{allocation_type}_weight'] = allocation_df.iloc[:,
+                                                                        0]  # First column: weights
+            results_df.loc[:, f'Allocation_{allocation_type}_remaining_amount'] = allocation_df.iloc[:,
+                                                                                  1]  # Second column: remaining amount
+
+        except Exception as e:
+            logger.error(f"Error in getting allocation data for {allocation_type}: {e}")
+            results_df.loc[:, f'Allocation_{allocation_type}_remaining_amount'] = f"error: {e}"
+
+
+# Main function to process all rows
+def run_all_post_processing_weight(results_df, data, current_month_dir, budget=1000000):
+    """
+    Processes all rows in the results DataFrame and adds post_processing to it.
+    """
+    total_rows = len(results_df)
+
+    logger.info(f"Calculating processing_weight for the month {current_month_dir}")
+    post_processing_weight_pkl_filepath = current_month_dir / PklFileConventions.post_processing_weight_pkl_filename
+
+    post_processing = load_data_from_pickle(post_processing_weight_pkl_filepath)
+    if post_processing is not None:
+        return post_processing
+
+    post_processing_classes = get_allocation_classes()
+    post_processing = {alloc_type: [] for alloc_type in
+                       post_processing_classes.keys()}  # Create a dict for each allocation type
+
+    for sr_no, (index, row) in enumerate(results_df.iterrows(), start=1):
+        row_post_processing = process_post_processing_for_row(sr_no, row, data, post_processing_classes, budget,
+                                                              total_rows)
+        for post_processing_type, allocation in row_post_processing.items():
+            # Append to the correct list for the post_processing_type
+            post_processing[post_processing_type].append(allocation)
+
+    # Add allocation results to the DataFrame
+    add_post_processing_to_dataframe(results_df, post_processing)
+    save_data_to_pickle(post_processing_weight_pkl_filepath, results_df)
+    logger.info("Processing weight completed successfully for the month {}".format(current_month_dir))
     return results_df
-
-# Example usage
-
-# if __name__ == "__main__":
-#     # Example usage
-#     output_dir = Path(r"D:\PortfoliOpt\data")
-#     data_pkl_filepath = os.path.join(output_dir, "data.pkl")
-#     pkl_filepath = os.path.join(output_dir, "results.pkl")
-#
-#     results_df = pd.read_pickle(pkl_filepath)
-#     data = pd.read_pickle(data_pkl_filepath)
-#     results_df = run_all_post_processing_weight(results_df.head(4), data.head(4))
-#     print(tabulate(results_df, headers='keys', tablefmt='grid'))

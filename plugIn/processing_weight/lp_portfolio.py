@@ -1,15 +1,18 @@
+import collections
+
+import numpy as np
 from pypfopt import DiscreteAllocation
+from sympy.printing.tests.test_cupy import cp
 
 from plugIn.processing_weight.allocationBase import AllocationBase
 
 
 class LpPortfolio(AllocationBase):
-    def __init__(self, weights, latest_prices, total_portfolio_value=10000, short_ratio=None):
+    def __init__(self, weights, latest_prices, total_portfolio_value=100000, short_ratio=None):
         super().__init__(weights, latest_prices, total_portfolio_value, short_ratio)
         self.discreteAllocation = None
 
     def get_allocation(self):
-
         self.discreteAllocation = DiscreteAllocation(
             self.weights,
             self.latest_prices,
@@ -40,34 +43,33 @@ class MinRiskLpPortfolio(AllocationBase):
                  along with the amount of funds leftover.
         :rtype: (dict, float)
         """
-        pass
-        # p = self.latest_prices.values
-        # n = len(p)
-        # w = np.fromiter([i[1] for i in self.weights], dtype=float)
-        #
-        # # Assume covariance matrix is identity for now (can be modified later)
-        # cov_matrix = np.eye(n)
-        #
-        # # Integer allocation
-        # x = cp.Variable(n, integer=True)
-        # # Remaining dollars
-        # r = self.total_portfolio_value - p.T @ x
-        #
-        # # Minimize variance (risk) of the portfolio
-        # risk = cp.quad_form(x, cov_matrix)
-        # constraints = [x >= 0, r >= 0]  # long only constraints
-        #
-        # opt = cp.Problem(cp.Minimize(risk), constraints)
-        # opt.solve(solver=solver)
-        #
-        # if opt.status not in {"optimal", "optimal_inaccurate"}:
-        #     raise ValueError("Linear program failed to find a solution.")
-        #
-        # self.allocation = self._remove_zero_positions(
-        #     collections.OrderedDict(zip([i[0] for i in self.weights], x.value.astype(int)))
-        # )
-        #
-        # if verbose:
-        #     print("Funds remaining: {:.2f}".format(r.value))
-        #     self._allocation_rmse_error(verbose)
-        # return self.allocation, r.value
+        p = self.latest_prices.values
+        n = len(p)
+        w = np.fromiter([i[1] for i in self.weights], dtype=float)
+
+        # Assume covariance matrix is identity for now (can be modified later)
+        cov_matrix = np.eye(n)
+
+        # Integer allocation
+        x = cp.Variable(n, integer=True)
+        # Remaining dollars
+        r = self.total_portfolio_value - p.T @ x
+
+        # Minimize variance (risk) of the portfolio
+        risk = cp.quad_form(x, cov_matrix)
+        constraints = [x >= 0, r >= 0]  # long only constraints
+
+        opt = cp.Problem(cp.Minimize(risk), constraints)
+        opt.solve(solver=solver)
+
+        if opt.status not in {"optimal", "optimal_inaccurate"}:
+            raise ValueError("Linear program failed to find a solution.")
+
+        self.allocation = self._remove_zero_positions(
+            collections.OrderedDict(zip([i[0] for i in self.weights], x.value.astype(int)))
+        )
+
+        if verbose:
+            print("Funds remaining: {:.2f}".format(r.value))
+            self._allocation_rmse_error(verbose)
+        return self.allocation, r.value
