@@ -1,3 +1,4 @@
+import logging
 import os
 from pathlib import Path
 
@@ -6,6 +7,8 @@ import pandas as pd
 from tqdm import tqdm
 
 from plugIn.conventions import PklFileConventions, HeaderConventions
+
+logger = logging.getLogger(__name__)
 
 
 # Monte Carlo Simulation Class
@@ -28,8 +31,14 @@ class MonteCarloSimulation:
 
         # Check if rerun is required or simulation pickle file exists
         if not rerun and os.path.exists(self.pkl_filepath):
+            logger.info(
+                "Using previous Monte Carlo Simulation for Portfolio Optimization number of portfolios={}".format(
+                    self.num_of_portfolios))
             self.simulations_df = pd.read_pickle(self.pkl_filepath)
         else:
+            logger.info(
+                "Running Monte Carlo Simulation for Portfolio Optimization number of portfolios={}".format(
+                    self.num_of_portfolios))
             self._run_simulation_now()
             self.simulations_df.to_pickle(self.pkl_filepath)
 
@@ -104,7 +113,7 @@ def run_monte_carlo_simulation(output_dir, data):
     Run the Monte Carlo simulation and append the results to the results DataFrame.
     """
     monte_carlo_df = pd.DataFrame()
-    monte_carlo_simulation = MonteCarloSimulation(output_dir, data)
+    monte_carlo_simulation = MonteCarloSimulation(data, output_dir)
     max_sharpe_ratio, min_volatility = monte_carlo_simulation.run_monte_carlo_simulation()
     monte_carlo_df = pd.concat([monte_carlo_df, max_sharpe_ratio], ignore_index=True)
     monte_carlo_df = pd.concat([monte_carlo_df, min_volatility], ignore_index=True)

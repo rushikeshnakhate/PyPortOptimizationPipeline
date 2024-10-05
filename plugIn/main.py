@@ -35,7 +35,6 @@ if __name__ == "__main__":
         risk_return_dict = calculate_all_risk_matrix(data, current_month_dir)
 
         optimized_df = calculate_optimizations(data, expected_return_df, risk_return_dict, current_month_dir)
-        clean_up(optimized_df)
 
         monte_carlo_df = run_monte_carlo_simulation(output_dir, data)
         # results_df = pd.concat([results_df, max_sharpe_ratio], ignore_index=True)
