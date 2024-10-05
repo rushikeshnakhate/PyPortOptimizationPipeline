@@ -6,6 +6,7 @@ from tabulate import tabulate
 
 from logging_config import setup_logging
 from plugIn.expected_return.main import calculate_or_get_all_return
+from plugIn.experimental.monte_carlo_simulation import run_monte_carlo_simulation
 from plugIn.get_stocks import get_stocks
 from plugIn.optimization.main import calculate_optimizations
 from plugIn.risk_returns.main import calculate_all_risk_matrix
@@ -35,7 +36,10 @@ if __name__ == "__main__":
 
         optimized_df = calculate_optimizations(data, expected_return_df, risk_return_dict, current_month_dir)
         clean_up(optimized_df)
-    #     optimized_df = run_monte_carlo_simulation(data, optimized_df)
+
+        monte_carlo_df = run_monte_carlo_simulation(output_dir, data)
+        # results_df = pd.concat([results_df, max_sharpe_ratio], ignore_index=True)
+        # results_df = pd.concat([results_df, min_volatility], ignore_index=True)
     #     optimized_df.to_pickle(optimization_pkl_filepath)
     #
     #     post_processing_wright_df = run_all_post_processing_weight(optimized_df, data)
@@ -53,3 +57,4 @@ if __name__ == "__main__":
     # performance_df.to_pickle(performance_pkl_filepath)
     optimized_df = pd.read_pickle(output_dir / '202301' / 'optimization.pkl')
     print(tabulate(optimized_df, headers='keys', tablefmt='grid'))
+    print(tabulate(monte_carlo_df, headers='keys', tablefmt='grid'))

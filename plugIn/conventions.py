@@ -11,6 +11,7 @@ class PklFileConventions:
     expected_return_pkl_filename: str = "expected_return.pkl"
     ending_pattern_for_risk_return_pkl_files: str = "covariance.pkl"
     data_pkl_filename: str = "data.pkl"
+    monte_carlo_pkl_filename: str = "monte_carlo_pkl_filename.pkl"
 
 
 @dataclass
