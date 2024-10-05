@@ -23,7 +23,7 @@ class PyPortfolioOptFrontierBase(EfficientFrontierBase):
         # Create a DataFrame for performance metrics
         result_df = pd.DataFrame({
             HeaderConventions.cleaned_weights_column: [self.cleaned_weights],
-            HeaderConventions.expected_return_column: [self.performance[0]],
+            HeaderConventions.expected_annual_return_column: [self.performance[0]],
             HeaderConventions.annual_volatility_column: [self.performance[1]],
             HeaderConventions.sharpe_ratio_column: [self.performance[2]]
         })

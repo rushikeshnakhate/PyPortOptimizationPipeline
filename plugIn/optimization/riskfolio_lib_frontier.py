@@ -74,11 +74,15 @@ class RiskFolioOptimizer(EfficientFrontierBase):
         mu_array = self.port.mu.values.flatten()
         cov_matrix = self.port.cov.values
 
-        # Calculate expected return as dot product of mu and weights
-        self.expected_return = np.dot(mu_array, weights_array)
+        # Define annualization factor for daily returns
+        annualization_factor = 252  # Use 252 for daily returns or 12 for monthly returns
 
-        # Calculate volatility: sqrt(weights.T @ cov @ weights)
-        self.volatility = np.sqrt(np.dot(weights_array.T, np.dot(cov_matrix, weights_array)))
+        # Calculate expected return as dot product of mu and weights, then annualize it
+        self.expected_return = np.dot(mu_array, weights_array) * annualization_factor  # Annualize expected return
+
+        # Calculate volatility: sqrt(weights.T @ cov @ weights), then annualize it
+        self.volatility = np.sqrt(np.dot(weights_array.T, np.dot(cov_matrix, weights_array))) * np.sqrt(
+            annualization_factor)  # Annualize volatility
 
         # Calculate Sharpe Ratio
         self.sharpe_ratio = (self.expected_return - self.rf) / self.volatility
@@ -90,11 +94,10 @@ class RiskFolioOptimizer(EfficientFrontierBase):
         # Create a temporary DataFrame with calculated values
         result_df = pd.DataFrame({
             HeaderConventions.cleaned_weights_column: [weights_dict],
-            HeaderConventions.expected_return_column: [self.expected_return],
+            HeaderConventions.expected_annual_return_column: [self.expected_return],
             HeaderConventions.annual_volatility_column: [self.volatility],
             HeaderConventions.sharpe_ratio_column: [self.sharpe_ratio]
         })
-
         return result_df
 
 
