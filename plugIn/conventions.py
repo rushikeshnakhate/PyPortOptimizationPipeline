@@ -12,6 +12,8 @@ class PklFileConventions:
     ending_pattern_for_risk_return_pkl_files: str = "covariance.pkl"
     data_pkl_filename: str = "data.pkl"
     monte_carlo_pkl_filename: str = "monte_carlo_pkl_filename.pkl"
+    short_listed_monte_carlo_pkl_filename: str = "short_listed_monte_pkl_filename.pkl"
+    all_optimized_df_pkl_filename: str = "all_optimized_df.pkl"
 
 
 @dataclass

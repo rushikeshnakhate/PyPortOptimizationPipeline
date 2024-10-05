@@ -117,4 +117,6 @@ def run_monte_carlo_simulation(output_dir, data):
     max_sharpe_ratio, min_volatility = monte_carlo_simulation.run_monte_carlo_simulation()
     monte_carlo_df = pd.concat([monte_carlo_df, max_sharpe_ratio], ignore_index=True)
     monte_carlo_df = pd.concat([monte_carlo_df, min_volatility], ignore_index=True)
+    pkl_output_path = os.path.join(output_dir, PklFileConventions.monte_carlo_pkl_filename)
+    monte_carlo_df.to_pickle(pkl_output_path)
     return monte_carlo_df
