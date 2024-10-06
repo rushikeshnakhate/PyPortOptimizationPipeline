@@ -26,8 +26,8 @@ if __name__ == "__main__":
 
     # Generate date ranges for each month in 2023
     # month_ranges = generate_month_date_ranges(year)
-    # month_ranges = generate_month_date_ranges(2023, months=[1])
-    month_ranges = generate_month_date_ranges(2023)
+    month_ranges = generate_month_date_ranges(2023, months=[1, 12])
+    # month_ranges = generate_month_date_ranges(2023)
     for start_date, end_date in month_ranges:
         logger.info(f"Processing start_date={start_date}, end_date={end_date}")
         current_month_dir = create_current_month_directory(start_date, output_dir)
@@ -40,6 +40,4 @@ if __name__ == "__main__":
         monte_carlo_df = run_monte_carlo_simulation(output_dir, data)
         all_optimized_df = pd.concat([monte_carlo_df, optimized_df], ignore_index=True)
         post_processing_wright_df = run_all_post_processing_weight(optimized_df, data, current_month_dir)
-        # performance_df = calculate_performance(post_processing_wright_df, data, start_date=start_date,
-        #                                     end_date=previous_end_date)
-        # post_processing_wright_df.to_csv("1.csv")
+        # performance_df = calculate_performance(all_optimized_df, data, current_month_dir)
