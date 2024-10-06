@@ -55,7 +55,7 @@ def run_all_post_processing_weight(results_df, data, current_month_dir, budget=1
     post_processing_classes = get_allocation_classes()
 
     for sr_no, (index, row) in enumerate(results_df.iterrows(), start=1):
-        logger.info(f"Processing row {sr_no}/{total_rows}")
+        logger.info(f"Processing row {sr_no}/{total_rows} for the month {current_month_dir}")
 
         for allocation_type, portfolio_class in post_processing_classes.items():
             allocation = process_post_processing_for_row_method(sr_no, row, data, portfolio_class, budget, total_rows)
