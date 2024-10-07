@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 def calculate_performance(post_processing_df, data, start_date, end_date, current_month_dir):
     """Calculate and append performance metrics for portfolios based on allocation columns."""
 
-    logger.info(f"Calculating calculate_performance for the month {current_month_dir}")
+    logger.info(f"started calculating calculate_performance for the month {current_month_dir}")
     performance_pkl_filepath = current_month_dir / PklFileConventions.performance_pkl_filename
     performance_df = load_data_from_pickle(performance_pkl_filepath)
     if performance_df is not None:
@@ -42,4 +42,5 @@ def calculate_performance(post_processing_df, data, start_date, end_date, curren
                 post_processing_df.loc[index, f'{method_name}_Sharpe'] = portfolio_sharpe
 
     save_data_to_pickle(performance_pkl_filepath, post_processing_df)
+    logger.info(f"completed calculating calculate_performance for the month {current_month_dir}")
     return post_processing_df
