@@ -2,7 +2,6 @@ import logging
 from pathlib import Path
 
 import pandas as pd
-from tabulate import tabulate
 
 from logging_config import setup_logging
 from plugIn.expected_return.main import calculate_or_get_all_return
@@ -42,4 +41,4 @@ if __name__ == "__main__":
         post_processing_wright_df = run_all_post_processing_weight(optimized_df, data, current_month_dir)
         performance_df = calculate_performance(post_processing_wright_df, data, start_date, end_date,
                                                current_month_dir)
-        print(tabulate(performance_df.head(20), headers='keys', tablefmt='pretty'))
+        # print(tabulate(performance_df.head(20), headers='keys', tablefmt='pretty'))
