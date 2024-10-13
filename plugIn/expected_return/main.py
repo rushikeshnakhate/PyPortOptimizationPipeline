@@ -4,7 +4,7 @@ import os
 import pandas as pd
 
 from plugIn.common.conventions import PklFileConventions
-from plugIn.common.hydra_config_loader import HydraConfigLoader
+from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
 from plugIn.common.utils import load_config
 from plugIn.expected_return.arithmetic_mean_historical_return import ArithmeticMeanHistoricalReturn
 from plugIn.expected_return.black_litterman import BlackLittermanReturn
@@ -27,6 +27,7 @@ def update_returns_dataframe(df_returns, return_type, return_values):
     return df_returns.join(return_series, how='outer')
 
 
+@ExecutionTimeRecorder(module_name='expected_return_calculate_all_returns')  #
 def calculate_all_returns(data, output_dir):
     """Calculate all the different returns (mean, ema, capm, etc.) using a loop."""
     # Create a mapping of return types to their respective classes
@@ -66,6 +67,7 @@ def calculate_all_returns(data, output_dir):
     return df_returns
 
 
+@ExecutionTimeRecorder(module_name='expected_return')  # Decorate the function
 def calculate_or_get_all_return(data, current_month_dir):
     logger.info("Calculating or getting all returns...for the month {}".format(current_month_dir))
     expected_return_pkl_filepath = current_month_dir / PklFileConventions.expected_return_pkl_filename

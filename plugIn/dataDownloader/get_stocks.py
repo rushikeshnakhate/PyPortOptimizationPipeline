@@ -5,11 +5,13 @@ import pandas as pd
 import yfinance as yf
 
 from plugIn.common.conventions import PklFileConventions
+from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
 from plugIn.common.utils import load_config
 
 logger = logging.getLogger(__name__)
 
 
+@ExecutionTimeRecorder(module_name='get_stocks')  # Decor
 def get_stocks(start_date, end_date, current_dir):
     logger.info(f"getting stocks start_date={start_date}, end_date={end_date}")
     try:
@@ -27,6 +29,7 @@ def get_stocks(start_date, end_date, current_dir):
         raise ValueError(f"error in getting stocks..{ex}")
 
 
+@ExecutionTimeRecorder(module_name='download_stocks')  # Decorate the function
 def download_stock_data(start_date, end_date):
     module_name = os.path.basename(os.path.dirname(__file__))
     stocks = load_config(module_name)
