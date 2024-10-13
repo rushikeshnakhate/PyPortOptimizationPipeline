@@ -1,11 +1,14 @@
 expected_returns:
   enabled_methods:
-    - CAGRMeanHistorical
-    - ArithmeticMeanHistorical
-    - EMAHistorical
-    - CAPM
-    - GordonGrowth
-    - FamaFrench
-    - LinearRegression
-    - RiskParity
-    - BlackLitterman
+    - ARIMA
+#    - ArithmeticMeanHistorical
+#    - BlackLitterman
+#    - CAPM
+#    - CAGRMeanHistorical
+#    - EMAHistorical
+#    - FamaFrench
+#    - GordonGrowth
+#    - HoltWinters
+#    - LinearRegression
+#    - RiskParity
+#    - TWRR

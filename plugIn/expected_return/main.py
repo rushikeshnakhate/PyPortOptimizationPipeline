@@ -34,6 +34,7 @@ def calculate_all_returns(data, output_dir):
     module_name = os.path.basename(os.path.dirname(__file__))
     returns_cfg = load_config(module_name)
     enabled_methods = returns_cfg.expected_returns.enabled_methods
+    logging.info("loading config for enabled_methods: %s", enabled_methods)
 
     return_calculators = {
         'CAGRMeanHistorical': CAGRMeanHistoricalReturn(data),
@@ -54,15 +55,15 @@ def calculate_all_returns(data, output_dir):
     df_returns = pd.DataFrame()
 
     # Loop through each return type and add to the DataFrame
-    for return_type in enabled_methods:
-        if return_type in return_calculators:
-            logger.debug("Calculating expected return for: %s", return_type)
-            calculator = return_calculators[return_type]
+    for enabled_method in enabled_methods:
+        if enabled_method in return_calculators:
+            logger.debug("Calculating expected return for: %s", enabled_method)
+            calculator = return_calculators[enabled_method]
             return_values = calculator.calculate_expected_return()
             # logger.debug("Return values for %s: %s", return_type, return_values)
-            df_returns = update_returns_dataframe(df_returns, return_type, return_values)
+            df_returns = update_returns_dataframe(df_returns, enabled_method, return_values)
         else:
-            logger.warning("Return type %s not found in return calculators", return_type)
+            logger.warning("Return type %s not found in return calculators", enabled_method)
     df_returns.to_pickle(output_dir / PklFileConventions.expected_return_pkl_filename)
     return df_returns
 

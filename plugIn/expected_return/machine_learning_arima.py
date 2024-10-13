@@ -19,6 +19,11 @@ class ARIMAReturn(ExpectedReturnBase):
         Calculate the expected return based on ARIMA model for each ticker.
         :return: Dictionary of annualized expected returns for each ticker
         """
+        # Check if cached values exist
+        # cached_returns = self._load_cache()
+        # if cached_returns is not None:
+        #     return cached_returns
+
         expected_returns = {}
         tickers = self.data.columns
 

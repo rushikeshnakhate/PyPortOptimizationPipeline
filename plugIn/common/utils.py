@@ -96,5 +96,5 @@ def load_config(module_name):
     """Load the configuration for the returns module from its own config.yaml."""
     config_loader = HydraConfigLoader()
     returns_cfg = config_loader.get_config(module_name)
-    logging.info("Loading configuration for the returns module from config.yaml")
+    logging.info(f"Loading configuration for the returns module_name={module_name} from config.yaml")
     return returns_cfg
