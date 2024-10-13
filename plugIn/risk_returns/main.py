@@ -97,7 +97,7 @@ def calculate_all_risk_matrix(data, output_dir):
         'LedoitWolfConstantCorrelation': LedoitWolfConstantCorrelation(data),
         'OracleApproximatingShrinkage': OracleApproximatingShrinkage(data),
         'GraphicalLasso': GraphicalLassoRiskModel(data),
-        'AutoencoderRiskModel': AutoencoderRiskModel(data),
+        # 'AutoencoderRiskModel': AutoencoderRiskModel(data),
         'RandomForestVolatility': RandomForestVolatility(data),
         'GaussianProcessRiskModel': GaussianProcessRiskModel(data),
         'SVMVolatility': SVMVolatility(data),

@@ -7,6 +7,8 @@ import warnings
 
 import pandas as pd
 
+from plugIn.common.hydra_config_loader import HydraConfigLoader
+
 logger = logging.getLogger(__name__)
 from datetime import datetime, timedelta
 
@@ -88,3 +90,11 @@ def save_data_to_pickle(filepath, data):
         logger.info(f" data saved to {filepath}")
     except Exception as e:
         logger.error(f"Error saving {filepath} data to pickle file: {e}")
+
+
+def load_config(module_name):
+    """Load the configuration for the returns module from its own config.yaml."""
+    config_loader = HydraConfigLoader()
+    returns_cfg = config_loader.get_config(module_name)
+    logging.info("Loading configuration for the returns module from config.yaml")
+    return returns_cfg

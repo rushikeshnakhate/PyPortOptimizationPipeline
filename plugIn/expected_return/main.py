@@ -1,14 +1,11 @@
 import logging
 import os
-from pathlib import Path
 
 import pandas as pd
-from tabulate import tabulate
 
 from plugIn.common.conventions import PklFileConventions
-from plugIn.common.get_stocks import get_stocks
 from plugIn.common.hydra_config_loader import HydraConfigLoader
-from plugIn.common.utils import generate_month_date_ranges, create_current_month_directory
+from plugIn.common.utils import load_config
 from plugIn.expected_return.arithmetic_mean_historical_return import ArithmeticMeanHistoricalReturn
 from plugIn.expected_return.black_litterman import BlackLittermanReturn
 from plugIn.expected_return.cagr_mean_historical_return import CAGRMeanHistoricalReturn
@@ -25,15 +22,6 @@ from plugIn.expected_return.twrr_return import TWRRReturn
 logger = logging.getLogger(__name__)
 
 
-def load_config():
-    """Load the configuration for the returns module from its own config.yaml."""
-    config_loader = HydraConfigLoader()
-    module_name = os.path.basename(os.path.dirname(__file__))
-    returns_cfg = config_loader.get_config(module_name)
-    logging.info("Loading configuration for the returns module from config.yaml")
-    return returns_cfg
-
-
 def update_returns_dataframe(df_returns, return_type, return_values):
     return_series = pd.Series(return_values, name=return_type)
     return df_returns.join(return_series, how='outer')
@@ -42,7 +30,8 @@ def update_returns_dataframe(df_returns, return_type, return_values):
 def calculate_all_returns(data, output_dir):
     """Calculate all the different returns (mean, ema, capm, etc.) using a loop."""
     # Create a mapping of return types to their respective classes
-    returns_cfg = load_config()
+    module_name = os.path.basename(os.path.dirname(__file__))
+    returns_cfg = load_config(module_name)
     enabled_methods = returns_cfg.expected_returns.enabled_methods
 
     return_calculators = {
@@ -84,13 +73,13 @@ def calculate_or_get_all_return(data, current_month_dir):
         return pd.read_pickle(expected_return_pkl_filepath)
     return calculate_all_returns(data, current_month_dir)
 
-
-if __name__ == "__main__":
-    output_dir = Path(r"D:\PortfoliOpt\data")
-    year = 2023
-    month_ranges = generate_month_date_ranges(year, months=[1])
-    for start_date, end_date in month_ranges:
-        current_month_dir = create_current_month_directory(start_date, output_dir)
-        data = get_stocks(start_date, end_date, current_month_dir)
-        expected_return_df = calculate_all_returns(data, current_month_dir)
-        print(tabulate(expected_return_df, headers='keys', tablefmt='grid'))
+#
+# if __name__ == "__main__":
+#     output_dir = Path(r"D:\PortfoliOpt\data")
+#     year = 2023
+#     month_ranges = generate_month_date_ranges(year, months=[1])
+#     for start_date, end_date in month_ranges:
+#         current_month_dir = create_current_month_directory(start_date, output_dir)
+#         data = get_stocks(start_date, end_date, current_month_dir)
+#         expected_return_df = calculate_all_returns(data, current_month_dir)
+#         print(tabulate(expected_return_df, headers='keys', tablefmt='grid'))
