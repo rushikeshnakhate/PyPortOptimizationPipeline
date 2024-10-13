@@ -11,7 +11,7 @@ from plugIn.risk_returns.ledoit_wolf_shrinkage import LedoitWolfShrinkage
 from plugIn.risk_returns.ledoit_wolf_single_factor import LedoitWolfSingleFactor
 from plugIn.risk_returns.oracle_approximating_shrinkage import OracleApproximatingShrinkage
 
-from plugIn.risk_returns.risk_models_machine_learning import RegimeSwitchingRiskModel, AutoencoderRiskModel, \
+from plugIn.risk_returns.risk_models_machine_learning import RegimeSwitchingRiskModel, \
     RandomForestVolatility, GaussianProcessRiskModel, SVMVolatility, KMeansClustering, CopulaRiskModel
 from plugIn.risk_returns.sample_covariance import SampleCovariance
 from plugIn.risk_returns.semi_covariance import SemiCovariance

@@ -1,4 +1,6 @@
 import logging
+import os
+from pathlib import Path
 
 import pandas as pd
 from tabulate import tabulate
@@ -6,6 +8,7 @@ from tabulate import tabulate
 from plugIn.common.conventions import PklFileConventions
 from plugIn.common.get_stocks import get_stocks
 from plugIn.common.hydra_config_loader import HydraConfigLoader
+from plugIn.common.utils import generate_month_date_ranges, create_current_month_directory
 from plugIn.expected_return.arithmetic_mean_historical_return import ArithmeticMeanHistoricalReturn
 from plugIn.expected_return.black_litterman import BlackLittermanReturn
 from plugIn.expected_return.cagr_mean_historical_return import CAGRMeanHistoricalReturn
@@ -13,16 +16,22 @@ from plugIn.expected_return.capm_return import CAPMReturn
 from plugIn.expected_return.ema_historical_return import EMAHistoricalReturn
 from plugIn.expected_return.fama_french import FamaFrenchReturn
 from plugIn.expected_return.gordon_growth import GordonGrowthReturn
+from plugIn.expected_return.holt_winters import HoltWintersReturn
+from plugIn.expected_return.machine_learning_arima import ARIMAReturn
 from plugIn.expected_return.machine_learning_linearRegression import LinearRegressionReturn
 from plugIn.expected_return.risk_parity import RiskParityReturn
+from plugIn.expected_return.twrr_return import TWRRReturn
 
 logger = logging.getLogger(__name__)
 
 
 def load_config():
     """Load the configuration for the returns module from its own config.yaml."""
-    return HydraConfigLoader().load_config()
+    config_loader = HydraConfigLoader()
+    module_name = os.path.basename(os.path.dirname(__file__))
+    returns_cfg = config_loader.get_config(module_name)
     logging.info("Loading configuration for the returns module from config.yaml")
+    return returns_cfg
 
 
 def update_returns_dataframe(df_returns, return_type, return_values):
@@ -46,9 +55,9 @@ def calculate_all_returns(data, output_dir):
         'LinearRegression': LinearRegressionReturn(data),
         'RiskParity': RiskParityReturn(data),
         'BlackLitterman': BlackLittermanReturn(data),
-        # 'ARIMA': ARIMAReturn(data)
-        # 'TWRR': TWRRReturn(data),
-        # 'HoltWinters': HoltWintersReturn(data),
+        'ARIMA': ARIMAReturn(data),
+        'TWRR': TWRRReturn(data),
+        'HoltWinters': HoltWintersReturn(data),
     }
 
     # Initialize an empty DataFrame to store returns
@@ -77,6 +86,11 @@ def calculate_or_get_all_return(data, current_month_dir):
 
 
 if __name__ == "__main__":
-    data = get_stocks()
-    expected_return_df = calculate_all_returns(data)
-    print(tabulate(expected_return_df, headers='keys', tablefmt='grid'))
+    output_dir = Path(r"D:\PortfoliOpt\data")
+    year = 2023
+    month_ranges = generate_month_date_ranges(year, months=[1])
+    for start_date, end_date in month_ranges:
+        current_month_dir = create_current_month_directory(start_date, output_dir)
+        data = get_stocks(start_date, end_date, current_month_dir)
+        expected_return_df = calculate_all_returns(data, current_month_dir)
+        print(tabulate(expected_return_df, headers='keys', tablefmt='grid'))

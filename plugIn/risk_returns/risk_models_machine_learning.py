@@ -4,30 +4,29 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
-from tensorflow.keras import layers, models
 
-from plugIn.risk_returns.risk_models import BaseRiskModel
+from plugIn.risk_returns.base_risk_model import BaseRiskModel
 
 
 # Autoencoders for Covariance Estimation
-class AutoencoderRiskModel(BaseRiskModel):
-    def calculate_risk_matrix(self):
-        returns = self.data.pct_change().dropna()
-        model = self.build_autoencoder(input_dim=returns.shape[1])
-        model.fit(returns.values, returns.values, epochs=100, batch_size=32, verbose=0)
-        compressed_data = model.predict(returns.values)
-        cov_matrix = np.cov(compressed_data.T)
-        return pd.DataFrame(cov_matrix, index=self.data.columns, columns=self.data.columns)
-
-    def build_autoencoder(self, input_dim):
-        model = models.Sequential()
-        model.add(layers.InputLayer(input_shape=(input_dim,)))
-        model.add(layers.Dense(32, activation='relu'))
-        model.add(layers.Dense(16, activation='relu'))
-        model.add(layers.Dense(32, activation='relu'))
-        model.add(layers.Dense(input_dim, activation='linear'))
-        model.compile(optimizer='adam', loss='mse')
-        return model
+# class AutoencoderRiskModel(BaseRiskModel):
+#     def calculate_risk_matrix(self):
+#         returns = self.data.pct_change().dropna()
+#         model = self.build_autoencoder(input_dim=returns.shape[1])
+#         model.fit(returns.values, returns.values, epochs=100, batch_size=32, verbose=0)
+#         compressed_data = model.predict(returns.values)
+#         cov_matrix = np.cov(compressed_data.T)
+#         return pd.DataFrame(cov_matrix, index=self.data.columns, columns=self.data.columns)
+#
+#     def build_autoencoder(self, input_dim):
+#         model = models.Sequential()
+#         model.add(layers.InputLayer(input_shape=(input_dim,)))
+#         model.add(layers.Dense(32, activation='relu'))
+#         model.add(layers.Dense(16, activation='relu'))
+#         model.add(layers.Dense(32, activation='relu'))
+#         model.add(layers.Dense(input_dim, activation='linear'))
+#         model.compile(optimizer='adam', loss='mse')
+#         return model
 
 
 # Random Forest Volatility Prediction
