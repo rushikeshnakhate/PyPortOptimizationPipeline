@@ -3,12 +3,18 @@ import os
 import pandas as pd
 
 from plugIn.common.conventions import PklFileConventions
-from plugIn.risk_returns.risk_models import SampleCovariance, SemiCovariance, ExponentialCovariance, \
-    LedoitWolfShrinkage, LedoitWolfConstantVariance, LedoitWolfSingleFactor, OracleApproximatingShrinkage, \
-    LedoitWolfConstantCorrelation, GraphicalLassoRiskModel
+from plugIn.risk_returns.exponential_covariance import ExponentialCovariance
+from plugIn.risk_returns.graphical_lasso import GraphicalLassoRiskModel
+from plugIn.risk_returns.ledoit_wolf_constant_correlation import LedoitWolfConstantCorrelation
+from plugIn.risk_returns.ledoit_wolf_constant_variance import LedoitWolfConstantVariance
+from plugIn.risk_returns.ledoit_wolf_shrinkage import LedoitWolfShrinkage
+from plugIn.risk_returns.ledoit_wolf_single_factor import LedoitWolfSingleFactor
+from plugIn.risk_returns.oracle_approximating_shrinkage import OracleApproximatingShrinkage
 
 from plugIn.risk_returns.risk_models_machine_learning import RegimeSwitchingRiskModel, AutoencoderRiskModel, \
     RandomForestVolatility, GaussianProcessRiskModel, SVMVolatility, KMeansClustering, CopulaRiskModel
+from plugIn.risk_returns.sample_covariance import SampleCovariance
+from plugIn.risk_returns.semi_covariance import SemiCovariance
 
 logger = logging.getLogger(__name__)
 
