@@ -10,11 +10,6 @@ from plugIn.common.utils import load_config
 logger = logging.getLogger(__name__)
 
 
-# write a function to check if the pickle file exists
-# if it does, load the data from the pickle file
-# if it doesn't, download the data from yfinance
-# and save the data to a pickle file
-# return the data
 def get_stocks(start_date, end_date, current_dir):
     logger.info(f"getting stocks start_date={start_date}, end_date={end_date}")
     try:
@@ -34,8 +29,8 @@ def get_stocks(start_date, end_date, current_dir):
 
 def download_stock_data(start_date, end_date):
     module_name = os.path.basename(os.path.dirname(__file__))
-    returns_cfg = load_config(module_name)
-    tickers = returns_cfg.expected_returns.enabled_methods
-    tickers.sort()
-    data = yf.download(tickers, start=start_date, end=end_date)["Adj Close"]
+    stocks = load_config(module_name)
+    tickers = stocks.tickers
+    sorted_tickers = sorted(list(tickers))
+    data = yf.download(sorted_tickers, start=start_date, end=end_date)["Adj Close"]
     return data

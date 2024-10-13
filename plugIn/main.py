@@ -1,8 +1,8 @@
 import logging
 from pathlib import Path
-
+import cProfile
 import pandas as pd
-
+import pstats
 from plugIn.common.logging_config import setup_logging
 from plugIn.expected_return.main import calculate_or_get_all_return
 from plugIn.experimental.monte_carlo_simulation import run_monte_carlo_simulation
@@ -22,11 +22,7 @@ logging.basicConfig(level=logging.INFO)
 
 if __name__ == "__main__":
     year = 2023
-    rerun = True
-
-    # Generate date ranges for each month in 2023
-    # month_ranges = generate_month_date_ranges(year)
-    month_ranges = generate_month_date_ranges(2023, months=[1])
+    month_ranges = generate_month_date_ranges(year, months=[1])
     # month_ranges = generate_month_date_ranges(2023)
     for start_date, end_date in month_ranges:
         current_month_dir = create_current_month_directory(start_date, output_dir)
@@ -44,3 +40,12 @@ if __name__ == "__main__":
         performance_df = calculate_performance(post_processing_wright_df, data, start_date, end_date,
                                                current_month_dir)
         # print(tabulate(performance_df.head(20), headers='keys', tablefmt='pretty'))
+
+
+# if __name__ == "__main__":
+#     rerun = True
+#     if __name__ == "__main__":
+#         cProfile.run('main()', 'profiling_stats')
+#         stats = pstats.Stats('profiling_stats')
+#         # Sort by cumulative time and print the top 10
+#         stats.sort_stats('cumulative').print_stats(10)
