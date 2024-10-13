@@ -1,17 +1,29 @@
 import logging
+from pathlib import Path
 
+import OmegaConf
 import pandas as pd
+from tabulate import tabulate
 
 from plugIn.conventions import PklFileConventions
-from plugIn.expected_return.expected_returns import CAGRMeanHistoricalReturn, ArithmeticMeanHistoricalReturn, \
-    EMAHistoricalReturn, CAPMReturn
-from plugIn.expected_return.expected_returns_black_litterman import BlackLittermanReturn
-from plugIn.expected_return.expected_returns_fama_french import FamaFrenchReturn
-from plugIn.expected_return.expected_returns_gordon_growth import GordonGrowthReturn
-from plugIn.expected_return.expected_returns_machine_learning_linearRegression import LinearRegressionReturn
-from plugIn.expected_return.expected_returns_risk_parity import RiskParityReturn
+from plugIn.expected_return.arithmetic_mean_historical_return import ArithmeticMeanHistoricalReturn
+from plugIn.expected_return.black_litterman import BlackLittermanReturn
+from plugIn.expected_return.cagr_mean_historical_return import CAGRMeanHistoricalReturn
+from plugIn.expected_return.capm_return import CAPMReturn
+from plugIn.expected_return.ema_historical_return import EMAHistoricalReturn
+from plugIn.expected_return.fama_french import FamaFrenchReturn
+from plugIn.expected_return.gordon_growth import GordonGrowthReturn
+from plugIn.expected_return.machine_learning_linearRegression import LinearRegressionReturn
+from plugIn.expected_return.risk_parity import RiskParityReturn
+from plugIn.get_stocks import get_stocks
 
 logger = logging.getLogger(__name__)
+
+
+def load_config():
+    """Load the configuration for the returns module from its own config.yaml."""
+    logging.info("Loading configuration for the returns module from config.yaml")
+    return OmegaConf.load(Path(__file__).parent / 'config.yaml')
 
 
 def update_returns_dataframe(df_returns, return_type, return_values):
@@ -22,6 +34,9 @@ def update_returns_dataframe(df_returns, return_type, return_values):
 def calculate_all_returns(data, output_dir):
     """Calculate all the different returns (mean, ema, capm, etc.) using a loop."""
     # Create a mapping of return types to their respective classes
+    returns_cfg = load_config()
+    enabled_methods = returns_cfg.expected_returns.enabled_methods
+
     return_calculators = {
         'CAGRMeanHistorical': CAGRMeanHistoricalReturn(data),
         'ArithmeticMeanHistorical': ArithmeticMeanHistoricalReturn(data),
@@ -41,10 +56,16 @@ def calculate_all_returns(data, output_dir):
     df_returns = pd.DataFrame()
 
     # Loop through each return type and add to the DataFrame
-    for return_type, calculator in return_calculators.items():
-        return_values = calculator.calculate_expected_return()
-        df_returns = update_returns_dataframe(df_returns, return_type, return_values)
-    df_returns.to_pickle(output_dir / 'expected_return.pkl')
+    for return_type in enabled_methods:
+        if return_type in return_calculators:
+            logger.debug("Calculating expected return for: %s", return_type)
+            calculator = return_calculators[return_type]
+            return_values = calculator.calculate_expected_return()
+            logger.debug("Return values for %s: %s", return_type, return_values)
+            df_returns = update_returns_dataframe(df_returns, return_type, return_values)
+        else:
+            logger.warning("Return type %s not found in return calculators", return_type)
+    df_returns.to_pickle(output_dir / PklFileConventions.expected_return_pkl_filename)
     return df_returns
 
 
@@ -55,7 +76,8 @@ def calculate_or_get_all_return(data, current_month_dir):
         return pd.read_pickle(expected_return_pkl_filepath)
     return calculate_all_returns(data, current_month_dir)
 
-    # if __name__ == "__main__":
-    #     data = get_stocks()
-    #     expected_return_df = calculate_all_returns(data)
-    #     print(tabulate(expected_return_df, headers='keys', tablefmt='grid'))
+
+if __name__ == "__main__":
+    data = get_stocks()
+    expected_return_df = calculate_all_returns(data)
+    print(tabulate(expected_return_df, headers='keys', tablefmt='grid'))
