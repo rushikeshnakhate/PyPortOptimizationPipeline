@@ -1,12 +1,11 @@
 import logging
 import os
-from pathlib import Path
 
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-from plugIn.conventions import PklFileConventions, HeaderConventions
+from plugIn.common.conventions import PklFileConventions, HeaderConventions
 
 logger = logging.getLogger(__name__)
 

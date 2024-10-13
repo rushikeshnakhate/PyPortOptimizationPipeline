@@ -2,6 +2,8 @@ import logging
 import hydra
 from omegaconf import DictConfig
 
+from plugIn.common.config_loader import ConfigLoader
+
 logger = logging.getLogger(__name__)
 
 

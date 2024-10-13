@@ -1,9 +1,9 @@
 import logging
 
-from plugIn.conventions import HeaderConventions, PklFileConventions
+from plugIn.common.conventions import HeaderConventions, PklFileConventions
 from plugIn.processing_weight.greedy_portfolio import GreedyPortfolio
 from plugIn.processing_weight.lp_portfolio import LpPortfolio
-from plugIn.utils import save_data_to_pickle, load_data_from_pickle
+from plugIn.common.utils import save_data_to_pickle, load_data_from_pickle
 
 logger = logging.getLogger(__name__)
 

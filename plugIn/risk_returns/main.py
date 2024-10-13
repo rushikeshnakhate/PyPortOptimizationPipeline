@@ -2,7 +2,7 @@ import logging
 import os
 import pandas as pd
 
-from plugIn.conventions import PklFileConventions
+from plugIn.common.conventions import PklFileConventions
 from plugIn.risk_returns.risk_models import SampleCovariance, SemiCovariance, ExponentialCovariance, \
     LedoitWolfShrinkage, LedoitWolfConstantVariance, LedoitWolfSingleFactor, OracleApproximatingShrinkage, \
     LedoitWolfConstantCorrelation, GraphicalLassoRiskModel

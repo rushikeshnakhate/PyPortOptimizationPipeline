@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import riskfolio as rp
 
-from plugIn.conventions import HeaderConventions
+from plugIn.common.conventions import HeaderConventions
 from plugIn.optimization.efficient_frontier_base import EfficientFrontierBase
 
 

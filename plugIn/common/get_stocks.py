@@ -4,7 +4,7 @@ import os
 import pandas as pd
 import yfinance as yf
 
-from plugIn.conventions import PklFileConventions
+from plugIn.common.conventions import PklFileConventions
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ def get_stocks(start_date, end_date, current_dir):
         else:
             df = pd.read_pickle(pkl_filepath)
         return df
-    except  Exception as ex:
+    except Exception as ex:
         raise ValueError(f"error in getting stocks..{ex}")
 
 

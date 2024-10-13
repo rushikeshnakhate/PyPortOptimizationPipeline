@@ -1,11 +1,11 @@
 import logging
-from pathlib import Path
 
-import OmegaConf
 import pandas as pd
 from tabulate import tabulate
 
-from plugIn.conventions import PklFileConventions
+from plugIn.common.conventions import PklFileConventions
+from plugIn.common.get_stocks import get_stocks
+from plugIn.common.hydra_config_loader import HydraConfigLoader
 from plugIn.expected_return.arithmetic_mean_historical_return import ArithmeticMeanHistoricalReturn
 from plugIn.expected_return.black_litterman import BlackLittermanReturn
 from plugIn.expected_return.cagr_mean_historical_return import CAGRMeanHistoricalReturn
@@ -15,15 +15,14 @@ from plugIn.expected_return.fama_french import FamaFrenchReturn
 from plugIn.expected_return.gordon_growth import GordonGrowthReturn
 from plugIn.expected_return.machine_learning_linearRegression import LinearRegressionReturn
 from plugIn.expected_return.risk_parity import RiskParityReturn
-from plugIn.get_stocks import get_stocks
 
 logger = logging.getLogger(__name__)
 
 
 def load_config():
     """Load the configuration for the returns module from its own config.yaml."""
+    return HydraConfigLoader().load_config()
     logging.info("Loading configuration for the returns module from config.yaml")
-    return OmegaConf.load(Path(__file__).parent / 'config.yaml')
 
 
 def update_returns_dataframe(df_returns, return_type, return_values):

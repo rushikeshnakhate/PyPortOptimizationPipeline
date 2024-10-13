@@ -1,7 +1,7 @@
 import pandas as pd
 from pypfopt import EfficientFrontier
 
-from plugIn.conventions import HeaderConventions
+from plugIn.common.conventions import HeaderConventions
 from plugIn.optimization.efficient_frontier_base import EfficientFrontierBase
 
 

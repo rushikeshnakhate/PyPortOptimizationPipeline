@@ -1,8 +1,8 @@
 import logging
 
-from plugIn.conventions import PklFileConventions
+from plugIn.common.conventions import PklFileConventions
 from plugIn.performance.calculate_performance import DefaultPerformance
-from plugIn.utils import load_data_from_pickle, save_data_to_pickle
+from plugIn.common.utils import load_data_from_pickle, save_data_to_pickle
 
 logger = logging.getLogger(__name__)
 

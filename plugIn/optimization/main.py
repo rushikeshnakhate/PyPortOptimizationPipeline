@@ -3,7 +3,7 @@ import logging
 import numpy as np
 import pandas as pd
 
-from plugIn.conventions import HeaderConventions, PklFileConventions
+from plugIn.common.conventions import HeaderConventions, PklFileConventions
 from plugIn.optimization.py_portfolio_op_frontier import PyPortfolioOptFrontier, PyPortfolioOptFrontierWithShortPosition
 from plugIn.optimization.riskfolio_lib_frontier import (MVRiskFolioOptimizer, MADRiskFolioOptimizer, \
                                                         MSVRiskFolioOptimizer, FLPMRiskFolioOptimizer,
@@ -12,7 +12,7 @@ from plugIn.optimization.riskfolio_lib_frontier import (MVRiskFolioOptimizer, MA
                                                         MDDRiskFolioOptimizer, ADDRiskFolioOptimizer,
                                                         CDaRRiskFolioOptimizer, \
                                                         UCIRiskFolioOptimizer, EDaRRiskFolioOptimizer)
-from plugIn.utils import load_data_from_pickle, save_data_to_pickle
+from plugIn.common.utils import load_data_from_pickle, save_data_to_pickle
 
 logger = logging.getLogger(__name__)
 
