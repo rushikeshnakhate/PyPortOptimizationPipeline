@@ -1,6 +1,7 @@
 import numpy as np
 import yfinance as yf
 
+from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
 from plugIn.expected_return.expected_returns_base import ExpectedReturnBase
 from pypfopt import risk_models, BlackLittermanModel, black_litterman
 
@@ -29,6 +30,7 @@ class BlackLittermanReturn(ExpectedReturnBase):
         self.covariance_matrix = risk_models.sample_cov(self.data)
         self.market_prior = black_litterman.market_implied_prior_returns(self.mcaps, self.delta, self.covariance_matrix)
 
+    @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ t
     def calculate_expected_return(self):
         bl = BlackLittermanModel(self.covariance_matrix, self.market_prior, absolute_views=self.investor_views)
         return bl.bl_returns()

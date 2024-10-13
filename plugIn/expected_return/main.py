@@ -59,7 +59,7 @@ def calculate_all_returns(data, output_dir):
             logger.debug("Calculating expected return for: %s", return_type)
             calculator = return_calculators[return_type]
             return_values = calculator.calculate_expected_return()
-            logger.debug("Return values for %s: %s", return_type, return_values)
+            # logger.debug("Return values for %s: %s", return_type, return_values)
             df_returns = update_returns_dataframe(df_returns, return_type, return_values)
         else:
             logger.warning("Return type %s not found in return calculators", return_type)

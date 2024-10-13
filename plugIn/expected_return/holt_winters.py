@@ -1,5 +1,6 @@
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 
+from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
 from plugIn.expected_return.expected_returns_base import ExpectedReturnBase
 
 
@@ -8,6 +9,7 @@ class HoltWintersReturn(ExpectedReturnBase):
         super().__init__(data)
         self.data = data
 
+    @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ to get the module name
     def calculate_expected_return(self):
         """
         Calculate the expected return using Holt-Winters Exponential Smoothing.

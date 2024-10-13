@@ -37,7 +37,6 @@ class ExecutionTimeRecorder:
 
             # Concatenate to the results DataFrame
             results_df = pd.concat([results_df, new_row_df], ignore_index=True)
-
             return result
 
         return wrapper

@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn.linear_model import LinearRegression
 
+from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
 from plugIn.expected_return.expected_returns_base import ExpectedReturnBase
 
 
@@ -10,6 +11,7 @@ class LinearRegressionReturn(ExpectedReturnBase):
         self.data = data
         self.expected_returns = self.calculate_expected_return()
 
+    @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ to get the module name
     def calculate_expected_return(self):
         """
         Calculate the expected return based on linear regression for each ticker.

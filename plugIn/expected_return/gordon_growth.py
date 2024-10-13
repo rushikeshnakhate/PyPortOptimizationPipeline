@@ -35,6 +35,7 @@ class GordonGrowthReturn(ExpectedReturnBase):
             return earnings_growth
         return 0
 
+
     # Calculate expected return for all tickers
     def calculate_expected_return(self):
         expected_returns = {}

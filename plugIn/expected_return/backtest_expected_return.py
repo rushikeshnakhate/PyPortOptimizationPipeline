@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 
 from plugIn.backtest.backtest_base import BackTestBase
+from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
 from plugIn.expected_return.arithmetic_mean_historical_return import ArithmeticMeanHistoricalReturn
 from plugIn.expected_return.black_litterman import BlackLittermanReturn
 from plugIn.expected_return.cagr_mean_historical_return import CAGRMeanHistoricalReturn
@@ -26,6 +27,7 @@ class BackTestExpectedReturn(BackTestBase):
         """
         super().__init__(data, output_dir)
 
+    @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ t
     def calculate_expected_returns(self):
         """
         Calculate expected returns using various methods and update the returns dataframe.
@@ -74,19 +76,18 @@ class BackTestExpectedReturn(BackTestBase):
         self.evaluate_metrics()
         self.log_summary()
 
-
-# Example usage in main
-if __name__ == "__main__":
-    import pandas as pd
-    from pathlib import Path
-
-    # Sample data loading (replace with actual data loading)
-    data = pd.read_csv('financial_data.csv')  # Replace with your data path
-    output_dir = Path('output')  # Replace with your desired output directory
-
-    # Create output directory if it doesn't exist
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    # Initialize and run the backtest for expected returns
-    backtest_expected_return = BackTestExpectedReturn(data, output_dir)
-    backtest_expected_return.run()
+# # Example usage in main
+# if __name__ == "__main__":
+#     import pandas as pd
+#     from pathlib import Path
+#
+#     # Sample data loading (replace with actual data loading)
+#     data = pd.read_csv('financial_data.csv')  # Replace with your data path
+#     output_dir = Path('output')  # Replace with your desired output directory
+#
+#     # Create output directory if it doesn't exist
+#     output_dir.mkdir(parents=True, exist_ok=True)
+#
+#     # Initialize and run the backtest for expected returns
+#     backtest_expected_return = BackTestExpectedReturn(data, output_dir)
+#     backtest_expected_return.run()
