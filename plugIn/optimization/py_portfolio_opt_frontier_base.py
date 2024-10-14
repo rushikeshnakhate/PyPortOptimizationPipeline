@@ -28,15 +28,3 @@ class PyPortfolioOptFrontierBase(EfficientFrontierBase):
             HeaderConventions.sharpe_ratio_column: [self.performance[2]]
         })
         return result_df
-
-
-class PyPortfolioOptFrontier(PyPortfolioOptFrontierBase):
-    def __init__(self, expected_returns, covariance_matrix, data=None):
-        # Call the base class with default weight bounds (0, 1)
-        super().__init__(expected_returns, covariance_matrix, data, weight_bounds=(0, 1))
-
-
-class PyPortfolioOptFrontierWithShortPosition(PyPortfolioOptFrontierBase):
-    def __init__(self, expected_returns, covariance_matrix, data=None):
-        # Call the base class with weight bounds allowing short positions (-1, 1)
-        super().__init__(expected_returns, covariance_matrix, data, weight_bounds=(-1, 1))

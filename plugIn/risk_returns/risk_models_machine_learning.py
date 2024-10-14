@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
 
+from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
 from plugIn.risk_returns.base_risk_model import BaseRiskModel
 
 
@@ -31,6 +32,7 @@ from plugIn.risk_returns.base_risk_model import BaseRiskModel
 
 # Random Forest Volatility Prediction
 class RandomForestVolatility(BaseRiskModel):
+    @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ t
     def calculate_risk_matrix(self):
         # Compute percentage change in data (returns) and remove NaN values
         X = self.data.pct_change().dropna()

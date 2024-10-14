@@ -17,7 +17,7 @@ class BlackLittermanReturn(ExpectedReturnBase):
         self.market_prior = None  # This will be calculated dynamically
         self.investor_views = {'HDFCBANK.NS': 0.10}
         self.P_matrix = np.array([[1, -1, 0, 0], [0, 1, -1, 0]])  # Example P matrix
-        self.expected_returns = self.calculate_expected_return()
+        # self.expected_returns = self.calculate_expected_return()
 
     def calculate_market_prior(self):
         tickers = self.data.columns

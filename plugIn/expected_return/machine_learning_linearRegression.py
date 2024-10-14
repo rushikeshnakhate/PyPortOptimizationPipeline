@@ -9,7 +9,7 @@ class LinearRegressionReturn(ExpectedReturnBase):
     def __init__(self, data):
         super().__init__(data)
         self.data = data
-        self.expected_returns = self.calculate_expected_return()
+        # self.expected_returns = self.calculate_expected_return()
 
     @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ to get the module name
     def calculate_expected_return(self):

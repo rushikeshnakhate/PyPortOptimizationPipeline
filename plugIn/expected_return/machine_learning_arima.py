@@ -11,7 +11,7 @@ class ARIMAReturn(ExpectedReturnBase):
         self.data = data
         self.data.index = pd.to_datetime(data.index)
         self.data = data.asfreq('B')  # Business day frequency
-        self.expected_returns = self.calculate_expected_return()
+        # self.expected_returns = self.calculate_expected_return()
 
     @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ to get the module name
     def calculate_expected_return(self):

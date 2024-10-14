@@ -1,55 +1,55 @@
 # Configuration for Risk Models
 risk_models:
   enabled_methods:
+#    - AutoencoderRiskModel
+    - CopulaRiskModel
+    - ExponentialCovariance
+    - GaussianProcessRiskModel
+    - GraphicalLasso
+    - KMeansClustering
+    - LedoitWolfConstantCorrelation
+    - LedoitWolfConstantVariance
+    - LedoitWolfShrinkage
+    - LedoitWolfSingleFactor
+    - OracleApproximatingShrinkage
+    - RandomForestVolatility
+    - RegimeSwitchingRiskModel
+    - SVMVolatility
     - SampleCovariance
     - SemiCovariance
-    - ExponentialCovariance
-    - LedoitWolfShrinkage
-    - LedoitWolfConstantVariance
-    - LedoitWolfSingleFactor
-    - LedoitWolfConstantCorrelation
-    - OracleApproximatingShrinkage
-    - GraphicalLasso
-    - AutoencoderRiskModel
-    - RandomForestVolatility
-    - GaussianProcessRiskModel
-    - SVMVolatility
-    - KMeansClustering
-    - CopulaRiskModel
-    - RegimeSwitchingRiskModel
-
-  parameters:
-    SampleCovariance:
-      window: 252  # Number of periods for covariance calculation
-    SemiCovariance:
-      threshold: 0.0  # Threshold to consider semi-variance
-    ExponentialCovariance:
-      decay_factor: 0.94  # Decay factor for exponential weighting
-    LedoitWolfShrinkage:
-      shrinkage_level: 0.5  # Level of shrinkage
-    LedoitWolfConstantVariance:
-      constant_variance: 0.02  # Assumed constant variance
-    LedoitWolfSingleFactor:
-      single_factor: 0.01  # Single factor assumption
-    LedoitWolfConstantCorrelation:
-      constant_correlation: 0.6  # Constant correlation value
-    OracleApproximatingShrinkage:
-      use_estimation: true  # Use estimation for shrinkage
-    GraphicalLasso:
-      alpha: 0.1  # Regularization parameter
-    AutoencoderRiskModel:
-      epochs: 100  # Number of epochs for training
-      batch_size: 32  # Batch size for training
-    RandomForestVolatility:
-      n_estimators: 100  # Number of trees in the forest
-    GaussianProcessRiskModel:
-      kernel: 'RBF'  # Kernel type for Gaussian Process
-    SVMVolatility:
-      C: 1.0  # Regularization parameter
-      kernel: 'linear'  # SVM kernel type
-    KMeansClustering:
-      n_clusters: 3  # Number of clusters for KMeans
-    CopulaRiskModel:
-      copula_type: 'Gaussian'  # Type of copula used
-    RegimeSwitchingRiskModel:
-      regimes: 2  # Number of regimes in the model
+#
+#  parameters:
+#    SampleCovariance:
+#      window: 252  # Number of periods for covariance calculation
+#    SemiCovariance:
+#      threshold: 0.0  # Threshold to consider semi-variance
+#    ExponentialCovariance:
+#      decay_factor: 0.94  # Decay factor for exponential weighting
+#    LedoitWolfShrinkage:
+#      shrinkage_level: 0.5  # Level of shrinkage
+#    LedoitWolfConstantVariance:
+#      constant_variance: 0.02  # Assumed constant variance
+#    LedoitWolfSingleFactor:
+#      single_factor: 0.01  # Single factor assumption
+#    LedoitWolfConstantCorrelation:
+#      constant_correlation: 0.6  # Constant correlation value
+#    OracleApproximatingShrinkage:
+#      use_estimation: true  # Use estimation for shrinkage
+#    GraphicalLasso:
+#      alpha: 0.1  # Regularization parameter
+#    AutoencoderRiskModel:
+#      epochs: 100  # Number of epochs for training
+#      batch_size: 32  # Batch size for training
+#    RandomForestVolatility:
+#      n_estimators: 100  # Number of trees in the forest
+#    GaussianProcessRiskModel:
+#      kernel: 'RBF'  # Kernel type for Gaussian Process
+#    SVMVolatility:
+#      C: 1.0  # Regularization parameter
+#      kernel: 'linear'  # SVM kernel type
+#    KMeansClustering:
+#      n_clusters: 3  # Number of clusters for KMeans
+#    CopulaRiskModel:
+#      copula_type: 'Gaussian'  # Type of copula used
+#    RegimeSwitchingRiskModel:
+#      regimes: 2  # Number of regimes in the model

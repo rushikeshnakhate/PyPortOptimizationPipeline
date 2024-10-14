@@ -3,6 +3,8 @@ import os
 import pandas as pd
 
 from plugIn.common.conventions import PklFileConventions
+from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
+from plugIn.common.hydra_config_loader import load_config
 from plugIn.risk_returns.exponential_covariance import ExponentialCovariance
 from plugIn.risk_returns.graphical_lasso import GraphicalLassoRiskModel
 from plugIn.risk_returns.ledoit_wolf_constant_correlation import LedoitWolfConstantCorrelation
@@ -62,21 +64,29 @@ def process_risk_models(risk_model_calculators, output_dir):
     # Dictionary to store covariance matrices for each risk model
     covariance_dict = {}
 
-    for risk_type, calculator in risk_model_calculators.items():
-        # Check if the covariance matrix exists
-        cov_matrix = check_existing_cov_matrix(risk_type, output_dir)
+    module_name = os.path.basename(os.path.dirname(__file__))
+    returns_cfg = load_config(module_name)
+    enabled_methods = returns_cfg.risk_models.enabled_methods
+    logger.info("loading risk_models config for enabled_methods: %s", enabled_methods)
+    for enabled_method in enabled_methods:
+        if enabled_method in risk_model_calculators:
+            calculator = risk_model_calculators[enabled_method]
+            # Check if the covariance matrix exists
+            cov_matrix = check_existing_cov_matrix(enabled_method, output_dir)
 
-        # If the file doesn't exist, calculate the covariance matrix and save it
-        if cov_matrix is None:
-            cov_matrix = calculate_cov_matrix(calculator)
-            save_cov_matrix_to_pkl(cov_matrix, risk_type, output_dir)
+            # If the file doesn't exist, calculate the covariance matrix and save it
+            if cov_matrix is None:
+                cov_matrix = calculate_cov_matrix(calculator)
+                save_cov_matrix_to_pkl(cov_matrix, enabled_method, output_dir)
 
-        # Store the covariance matrix in the dictionary
-        covariance_dict[risk_type] = pd.DataFrame(cov_matrix)
-
+            # Store the covariance matrix in the dictionary
+            covariance_dict[enabled_method] = pd.DataFrame(cov_matrix)
+        else:
+            logger.warning(f"risk_models{enabled_method},risk_model_calculators{risk_model_calculators}")
     return covariance_dict
 
 
+@ExecutionTimeRecorder(module_name=__name__)  # Use __name__ t
 # Main function that orchestrates everything
 def calculate_all_risk_matrix(data, output_dir):
     """
@@ -97,13 +107,13 @@ def calculate_all_risk_matrix(data, output_dir):
         'LedoitWolfConstantCorrelation': LedoitWolfConstantCorrelation(data),
         'OracleApproximatingShrinkage': OracleApproximatingShrinkage(data),
         'GraphicalLasso': GraphicalLassoRiskModel(data),
-        # 'AutoencoderRiskModel': AutoencoderRiskModel(data),
         'RandomForestVolatility': RandomForestVolatility(data),
         'GaussianProcessRiskModel': GaussianProcessRiskModel(data),
         'SVMVolatility': SVMVolatility(data),
         'KMeansClustering': KMeansClustering(data),
         'CopulaRiskModel': CopulaRiskModel(data),
         'RegimeSwitchingRiskModel': RegimeSwitchingRiskModel(data),
+        # 'AutoencoderRiskModel': AutoencoderRiskModel(data),
     }
 
     # Call the process function to loop through the risk models and calculate/save covariance matrices

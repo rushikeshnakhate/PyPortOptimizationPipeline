@@ -1,0 +1,17 @@
+optimization:
+  enabled_methods:
+    - pyPortfolioOptFrontier
+    - pyPortfolioOptFrontierWithShortPosition
+    - MVRiskFolioOptimizer
+    - MADRiskFolioOptimizer
+    - MSVRiskFolioOptimizer
+    - FLPMRiskFolioOptimizer
+    - SLPMRiskFolioOptimizer
+    - CVaRRiskFolioOptimizer
+    - EVaRRiskFolioOptimizer
+    - WRRiskFolioOptimizer
+    - MDDRiskFolioOptimizer
+    - ADDRiskFolioOptimizer
+    - CDaRRiskFolioOptimizer
+    - UCIRiskFolioOptimizer
+    - EDaRRiskFolioOptimizer

@@ -2,12 +2,12 @@ import logging
 from pathlib import Path
 from omegaconf import OmegaConf
 
-from plugIn.common.config_loader import ConfigLoader
+from plugIn.common.config_loader import BaseConfigLoader
 
 logger = logging.getLogger(__name__)
 
 
-class OmegaConfLoader(ConfigLoader):
+class OmegaConfLoader(BaseConfigLoader):
     def load_config(self):
         """Load the configuration for the application using OmegaConf."""
         logger.info("Loading configuration using OmegaConf")

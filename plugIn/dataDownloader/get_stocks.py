@@ -6,7 +6,7 @@ import yfinance as yf
 
 from plugIn.common.conventions import PklFileConventions
 from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
-from plugIn.common.utils import load_config
+from plugIn.common.hydra_config_loader import load_config
 
 logger = logging.getLogger(__name__)
 
