@@ -5,7 +5,7 @@ import pandas as pd
 
 from plugIn.common.conventions import PklFileConventions
 from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
-from plugIn.common.utils import load_config
+from plugIn.common.hydra_config_loader import load_config
 from plugIn.expected_return.arithmetic_mean_historical_return import ArithmeticMeanHistoricalReturn
 from plugIn.expected_return.black_litterman import BlackLittermanReturn
 from plugIn.expected_return.cagr_mean_historical_return import CAGRMeanHistoricalReturn
@@ -27,14 +27,14 @@ def update_returns_dataframe(df_returns, return_type, return_values):
     return df_returns.join(return_series, how='outer')
 
 
-@ExecutionTimeRecorder(module_name='expected_return_calculate_all_returns')  #
+@ExecutionTimeRecorder(module_name=__name__)  # Use __name__ t
 def calculate_all_returns(data, output_dir):
     """Calculate all the different returns (mean, ema, capm, etc.) using a loop."""
     # Create a mapping of return types to their respective classes
     module_name = os.path.basename(os.path.dirname(__file__))
     returns_cfg = load_config(module_name)
     enabled_methods = returns_cfg.expected_returns.enabled_methods
-    logging.info("loading config for enabled_methods: %s", enabled_methods)
+    logger.info("loading config for enabled_methods: %s", enabled_methods)
 
     return_calculators = {
         'CAGRMeanHistorical': CAGRMeanHistoricalReturn(data),
@@ -68,7 +68,7 @@ def calculate_all_returns(data, output_dir):
     return df_returns
 
 
-@ExecutionTimeRecorder(module_name='expected_return')  # Decorate the function
+# @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ t
 def calculate_or_get_all_return(data, current_month_dir):
     logger.info("Calculating or getting all returns...for the month {}".format(current_month_dir))
     expected_return_pkl_filepath = current_month_dir / PklFileConventions.expected_return_pkl_filename

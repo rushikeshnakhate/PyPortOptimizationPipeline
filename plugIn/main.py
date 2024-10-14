@@ -4,6 +4,8 @@ import cProfile
 import pandas as pd
 import pstats
 
+from tabulate import tabulate
+
 from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
 from plugIn.common.logging_config import setup_logging
 from plugIn.expected_return.main import calculate_or_get_all_return
@@ -33,15 +35,14 @@ if __name__ == "__main__":
         data = get_stocks(start_date, end_date, current_month_dir)
 
         expected_return_df = calculate_or_get_all_return(data, current_month_dir)
-        # risk_return_dict = calculate_all_risk_matrix(data, current_month_dir)
-        #
-        # optimized_df = calculate_optimizations(data, expected_return_df, risk_return_dict, current_month_dir)
+        risk_return_dict = calculate_all_risk_matrix(data, current_month_dir)
+        optimized_df = calculate_optimizations(data, expected_return_df.head(10), risk_return_dict, current_month_dir)
         # monte_carlo_df = run_monte_carlo_simulation(output_dir, data)
         # all_optimized_df = pd.concat([monte_carlo_df, optimized_df], ignore_index=True)
         # post_processing_wright_df = run_all_post_processing_weight(optimized_df, data, current_month_dir)
         # performance_df = calculate_performance(post_processing_wright_df, data, start_date, end_date,
         #                                        current_month_dir)
-        # print(tabulate(performance_df.head(20), headers='keys', tablefmt='pretty'))
+        # print(tabulate(optimized_df.head(20), headers='keys', tablefmt='pretty'))
 
         ExecutionTimeRecorder.print_results()
 # if __name__ == "__main__":
