@@ -1,7 +1,7 @@
 # Configuration for Risk Models
 risk_models:
   enabled_methods:
-#    - AutoencoderRiskModel
+    #    - AutoencoderRiskModel
     - CopulaRiskModel
     - ExponentialCovariance
     - GaussianProcessRiskModel
@@ -17,6 +17,9 @@ risk_models:
     - SVMVolatility
     - SampleCovariance
     - SemiCovariance
+  target_data_directory: D:\PortfoliOpt\data\202301
+  data_view_html_file: data_view.html
+  flask_port: 5002
 #
 #  parameters:
 #    SampleCovariance:
