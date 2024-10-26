@@ -68,7 +68,7 @@ def calculate_all_returns(data, output_dir):
     return df_returns
 
 
-# @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ t
+@ExecutionTimeRecorder(module_name=__name__)  # Use __name__ t
 def calculate_or_get_all_return(data, current_month_dir):
     logger.info("Calculating or getting all returns...for the month {}".format(current_month_dir))
     expected_return_pkl_filepath = current_month_dir / PklFileConventions.expected_return_pkl_filename
