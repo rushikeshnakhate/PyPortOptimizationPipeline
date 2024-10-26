@@ -10,8 +10,13 @@ from plugIn.common.hydra_config_loader import load_config
 
 logger = logging.getLogger(__name__)
 
+logging.getLogger("yfinance").setLevel(logging.WARNING)
+logging.getLogger("yfinance").setLevel(logging.WARNING)
+logging.getLogger("peewee").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
-@ExecutionTimeRecorder(module_name='get_stocks')  # Decor
+
+@ExecutionTimeRecorder(module_name=__name__)  # Decor
 def get_stocks(start_date, end_date, current_dir):
     logger.info(f"getting stocks start_date={start_date}, end_date={end_date}")
     try:
@@ -29,7 +34,7 @@ def get_stocks(start_date, end_date, current_dir):
         raise ValueError(f"error in getting stocks..{ex}")
 
 
-@ExecutionTimeRecorder(module_name='download_stocks')  # Decorate the function
+@ExecutionTimeRecorder(module_name=__name__)  # Decorate the function
 def download_stock_data(start_date, end_date):
     module_name = os.path.basename(os.path.dirname(__file__))
     stocks = load_config(module_name)
