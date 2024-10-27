@@ -11,8 +11,12 @@ class BaseDownloader(ABC):
         self.asset_class = asset_class
         self.current_dir = current_dir
 
+    def get_pkl_file_name(self):
+        return os.path.join(self.current_dir, f"{self.asset_class}.pkl")
+        # return os.path.join(self.current_dir, f"{self.asset_class}_{start_date}_{end_date}.pkl")
+
     def get_data(self, tickers, start_date, end_date):
-        pkl_filepath = os.path.join(self.current_dir, f"{self.asset_class}_{start_date}_{end_date}.pkl")
+        pkl_filepath = self.get_pkl_file_name()
         if os.path.exists(pkl_filepath):
             logger.info(f"Loading cached data from {pkl_filepath}")
             return pd.read_pickle(pkl_filepath)
