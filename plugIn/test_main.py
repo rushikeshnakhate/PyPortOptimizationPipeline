@@ -6,8 +6,8 @@ import pandas as pd
 from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
 from plugIn.common.logging_config import setup_logging
 from plugIn.common.utils import generate_month_date_ranges, create_current_month_directory
-from plugIn.dataDownloader.get_stocks import get_stocks
-from plugIn.dataDownloader.main import DataDownloaderFactory
+from plugIn.dataDownloader.main import get_data
+
 from plugIn.expected_return.main import calculate_or_get_all_return
 from plugIn.experimental.monte_carlo_simulation import run_monte_carlo_simulation
 from plugIn.optimization.main import calculate_optimizations
@@ -26,9 +26,10 @@ logging.basicConfig(level=logging.INFO)
 @ExecutionTimeRecorder(module_name=__name__)
 def main():
     year = 2023
-    month_ranges = generate_month_date_ranges(year, months=[1])
-    # month_ranges = generate_month_date_ranges(2023)
+    # month_ranges = generate_month_date_ranges(year, months=[1])
+    month_ranges = generate_month_date_ranges(2023)
     for start_date, end_date in month_ranges:
+
         current_month_dir = create_current_month_directory(start_date, output_dir)
         logger.info(
             f"Processing start_date={start_date}, end_date={end_date} for current_month_dir={current_month_dir}")

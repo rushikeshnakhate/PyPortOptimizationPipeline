@@ -6,6 +6,11 @@ from plugIn.dataDownloader.base_downloader import BaseDownloader
 
 logger = logging.getLogger(__name__)
 
+logging.getLogger("yfinance").setLevel(logging.WARNING)
+logging.getLogger("yfinance").setLevel(logging.WARNING)
+logging.getLogger("peewee").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
+
 
 class YahooFinanceDownloader(BaseDownloader):
     def __init__(self, current_dir, asset_class):

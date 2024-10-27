@@ -8,6 +8,6 @@ class BaseAsset(ABC):
         self.data_source = data_source
 
     @abstractmethod
-    def fetch_data(self):
+    def fetch_data(self, tickers):
         """Fetch data from the data source."""
         pass

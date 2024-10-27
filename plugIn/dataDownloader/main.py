@@ -1,5 +1,6 @@
 import os
 
+import pandas as pd
 from alpha_vantage.commodities import Commodities
 
 from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
@@ -41,7 +42,7 @@ def get_data(current_dir, start_date, end_date, api_key=None, file_path=None):
     module_name = os.path.basename(os.path.dirname(__file__))
     configuration = load_config(module_name)
     all_data = []
-    for source_cfg in cfg.sources:
+    for source_cfg in configuration.sources:
         source_type = source_cfg.source_type
         asset_type = source_cfg.asset_class
 
@@ -50,8 +51,11 @@ def get_data(current_dir, start_date, end_date, api_key=None, file_path=None):
                                      asset_class=asset_type,
                                      api_key=api_key,
                                      file_path=file_path)
-        asset_factory = get_asset(start_date=start_date, end_date=end_date, data_source=data_source)
-        data = asset_factory.fetch_data()
+        asset_factory = get_asset(asset_type=asset_type,
+                                  start_date=start_date,
+                                  end_date=end_date,
+                                  data_source=data_source)
+        data = asset_factory.fetch_data(source_cfg.tickers)
         all_data.append(data)
         # Concatenate or merge all data
     combined_data = pd.concat(all_data, axis=1)  # Adjust concatenation based on requirements
