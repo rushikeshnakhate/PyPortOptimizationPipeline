@@ -19,7 +19,7 @@ class PyPortfolioOptFrontierBase(EfficientFrontierBase):
         self.cleaned_weights = dict(self.ef.clean_weights())  # Clean the weights
         self.performance = self.ef.portfolio_performance(verbose=False)  # Portfolio performance
 
-    def get_results(self):
+    def _get_results(self):
         # Create a DataFrame for performance metrics
         result_df = pd.DataFrame({
             HeaderConventions.cleaned_weights_column: [self.cleaned_weights],

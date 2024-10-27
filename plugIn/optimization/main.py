@@ -66,7 +66,7 @@ def get_all_efficient_frontier_optimizer(return_type,
 
                 optimizer_instance = optimizer(expected_returns, covariance_matrix, data)
                 optimizer_instance.calculate_efficient_frontier()
-                optimizer_results = optimizer_instance.get_results()
+                optimizer_results = optimizer_instance.get_results(current_month_dir)
                 optimizers_dict[optimizer] = optimizer_results
             except Exception as e:
                 logger.error(
@@ -174,23 +174,14 @@ def calculate_optimizations(data, expected_return_df, risk_return_dict, current_
     Iterate over each return type and risk model to calculate optimizations.
     """
     logger.info("calculating optimizations for the month {}".format(current_month_dir))
-    optimization_pkl_filepath = current_month_dir / PklFileConventions.optimization_pkl_filename
 
-    optimization_data = load_data_from_pickle(optimization_pkl_filepath)
-
-    if optimization_data is not None:
-        return optimization_data
-
-    # If pickle not found or loading failed, calculate the optimizations
-    optimization_data = calculate_optimizations_for_risk_model(expected_return_df, risk_return_dict, data,
+    optimization_data = calculate_optimizations_for_risk_model(expected_return_df,
+                                                               risk_return_dict,
+                                                               data,
                                                                current_month_dir)
 
     # Clean the metadata and extract the values from the DataFrame
     df1 = optimization_data.applymap(clean_metadata)
     optimization_data_cleaned = df1.applymap(extract_value)
 
-    # Save the newly calculated data to a pickle file
-    save_data_to_pickle(optimization_pkl_filepath, optimization_data_cleaned)
-
-    logger.info("Optimization data saved to {}".format(optimization_pkl_filepath))
-    return optimization_data
+    return optimization_data_cleaned

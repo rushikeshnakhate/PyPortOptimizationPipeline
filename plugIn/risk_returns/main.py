@@ -21,12 +21,13 @@ from plugIn.risk_returns.semi_covariance import SemiCovariance
 logger = logging.getLogger(__name__)
 
 
-def get_pickle_file_path(risk_type, output_dir, generic_pkl_file_name: str):
+def get_pickle_file_path(risk_type, output_dir: str):
     """
     Get the file path for the covariance matrix pickle file.
     """
     # Generate the file path with the updated pattern
-    return os.path.join(output_dir, generic_pkl_file_name.format(risk_return_type=risk_type))
+    return os.path.join(output_dir,
+                        PklFileConventions.ending_pattern_for_risk_return_pkl_files.format(risk_return_type=risk_type))
 
 
 # Function to check if covariance matrix pickle file exists
@@ -35,8 +36,7 @@ def check_existing_cov_matrix(risk_type, output_dir):
     Check if the covariance matrix for the given risk model already exists as a .pkl file.
     """
     pkl_filepath = get_pickle_file_path(risk_type,
-                                        output_dir,
-                                        PklFileConventions.ending_pattern_for_risk_return_pkl_files)
+                                        output_dir)
     if os.path.exists(pkl_filepath):
         logger.info(f"Loading covariance matrix for {risk_type} from {pkl_filepath}...")
         return pd.read_pickle(pkl_filepath)  # Load the matrix from pickle file

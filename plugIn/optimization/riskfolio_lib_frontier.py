@@ -87,7 +87,7 @@ class RiskFolioOptimizer(EfficientFrontierBase):
         # Calculate Sharpe Ratio
         self.sharpe_ratio = (self.expected_return - self.rf) / self.volatility
 
-    def get_results(self):
+    def _get_results(self):
         # Convert weights to a dictionary for storing in DataFrame
         weights_dict = self.weights['weights'].to_dict()
 
@@ -99,4 +99,3 @@ class RiskFolioOptimizer(EfficientFrontierBase):
             HeaderConventions.sharpe_ratio_column: [self.sharpe_ratio]
         })
         return result_df
-
