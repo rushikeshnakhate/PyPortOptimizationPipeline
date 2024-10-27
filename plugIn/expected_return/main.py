@@ -23,8 +23,15 @@ logger = logging.getLogger(__name__)
 
 
 def update_returns_dataframe(df_returns, return_type, return_values):
-    return_series = pd.Series(return_values, name=return_type)
-    return df_returns.join(return_series, how='outer')
+    # Ensure return_values DataFrame has 'Ticker' as the index
+    return_values.set_index('Ticker', inplace=True)
+
+    # Rename the column to include the return type (e.g., "ExpectedReturn_ARIMA")
+    return_values.columns = [f'ExpectedReturn_{return_type}']
+
+    # Join on 'Ticker' index
+    df_returns = df_returns.join(return_values, how='outer')
+    return df_returns
 
 
 @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ t
@@ -37,18 +44,18 @@ def calculate_all_returns(data, output_dir):
     logger.info("loading config for enabled_methods: %s", enabled_methods)
 
     return_calculators = {
-        'CAGRMeanHistorical': CAGRMeanHistoricalReturn(data),
+        'ARIMA': ARIMAReturn(data),
         'ArithmeticMeanHistorical': ArithmeticMeanHistoricalReturn(data),
-        'EMAHistorical': EMAHistoricalReturn(data),
+        'BlackLitterman': BlackLittermanReturn(data),
         'CAPM': CAPMReturn(data),
-        'GordonGrowth': GordonGrowthReturn(data),
+        'CAGRMeanHistorical': CAGRMeanHistoricalReturn(data),
+        'EMAHistorical': EMAHistoricalReturn(data),
         'FamaFrench': FamaFrenchReturn(data),
+        'GordonGrowth': GordonGrowthReturn(data),
+        'HoltWinters': HoltWintersReturn(data),
         'LinearRegression': LinearRegressionReturn(data),
         'RiskParity': RiskParityReturn(data),
-        'BlackLitterman': BlackLittermanReturn(data),
-        'ARIMA': ARIMAReturn(data),
-        'TWRR': TWRRReturn(data),
-        'HoltWinters': HoltWintersReturn(data),
+        'TWRR': TWRRReturn(data)
     }
 
     # Initialize an empty DataFrame to store returns
@@ -59,21 +66,17 @@ def calculate_all_returns(data, output_dir):
         if enabled_method in return_calculators:
             logger.debug("Calculating expected return for: %s", enabled_method)
             calculator = return_calculators[enabled_method]
-            return_values = calculator.calculate_expected_return()
-            # logger.debug("Return values for %s: %s", return_type, return_values)
-            df_returns = update_returns_dataframe(df_returns, enabled_method, return_values)
+            return_values = calculator.calculate_expected_return(output_dir)
+            df_returns = pd.concat([df_returns, return_values], axis=1)
         else:
             logger.warning("Return type %s not found in return calculators", enabled_method)
-    df_returns.to_pickle(output_dir / PklFileConventions.expected_return_pkl_filename)
+    df_returns.to_pickle(output_dir / PklFileConventions.expected_return_for_all_type_pkl_filename)
     return df_returns
 
 
 @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ t
 def calculate_or_get_all_return(data, current_month_dir):
     logger.info("Calculating or getting all returns...for the month {}".format(current_month_dir))
-    expected_return_pkl_filepath = current_month_dir / PklFileConventions.expected_return_pkl_filename
-    if expected_return_pkl_filepath.exists():
-        return pd.read_pickle(expected_return_pkl_filepath)
     return calculate_all_returns(data, current_month_dir)
 
 #

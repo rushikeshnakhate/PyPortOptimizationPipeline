@@ -29,7 +29,7 @@ class FamaFrenchReturn(ExpectedReturnBase):
         return annualized_returns
 
     @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ to get the module name
-    def calculate_expected_return(self):
+    def _calculate_expected_return(self):
         """
         Calculate the expected return based on the Fama-French 3-factor model.
         :return: Dictionary of expected returns for each ticker
@@ -38,7 +38,7 @@ class FamaFrenchReturn(ExpectedReturnBase):
         for ticker in self.tickers:
             market_excess = self.annualized_return[ticker] - self.risk_free_rate
             expected_returns[ticker] = self.risk_free_rate + self.SMB + self.HML + market_excess
-        return expected_returns
+        return self._convert_to_dataframe(expected_returns)
 
     def get_annualized_return(self):
         """

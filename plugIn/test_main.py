@@ -35,12 +35,12 @@ def main():
                     f"for current_month_dir={current_month_dir}")
         data = get_data(current_dir=current_month_dir, start_date=start_date, end_date=end_date)
         expected_return_df = calculate_or_get_all_return(data, current_month_dir)
-        risk_return_dict = calculate_all_risk_matrix(data, current_month_dir)
-        optimized_df = calculate_optimizations(data, expected_return_df.head(10), risk_return_dict, current_month_dir)
-        monte_carlo_df = run_monte_carlo_simulation(configuration.output_dir, data)
-        all_optimized_df = pd.concat([monte_carlo_df, optimized_df], ignore_index=True)
-        post_processing_wright_df = run_all_post_processing_weight(all_optimized_df, data, current_month_dir)
-        performance_df = calculate_performance(post_processing_wright_df, data, start_date, end_date, current_month_dir)
+        # risk_return_dict = calculate_all_risk_matrix(data, current_month_dir)
+        # optimized_df = calculate_optimizations(data, expected_return_df.head(10), risk_return_dict, current_month_dir)
+        # monte_carlo_df = run_monte_carlo_simulation(configuration.output_dir, data)
+        # all_optimized_df = pd.concat([monte_carlo_df, optimized_df], ignore_index=True)
+        # post_processing_wright_df = run_all_post_processing_weight(all_optimized_df, data, current_month_dir)
+        # performance_df = calculate_performance(post_processing_wright_df, data, start_date, end_date, current_month_dir)
 
 
 if __name__ == "__main__":

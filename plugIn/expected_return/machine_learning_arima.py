@@ -14,7 +14,7 @@ class ARIMAReturn(ExpectedReturnBase):
         # self.expected_returns = self.calculate_expected_return()
 
     @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ to get the module name
-    def calculate_expected_return(self):
+    def _calculate_expected_return(self):
         """
         Calculate the expected return based on ARIMA model for each ticker.
         :return: Dictionary of annualized expected returns for each ticker
@@ -42,4 +42,4 @@ class ARIMAReturn(ExpectedReturnBase):
             annualized_return = (1 + daily_return) ** 252 - 1
             expected_returns[ticker] = annualized_return
 
-        return expected_returns
+        return self._convert_to_dataframe(expected_returns)

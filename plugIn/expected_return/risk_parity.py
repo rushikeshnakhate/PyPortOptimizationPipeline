@@ -48,7 +48,7 @@ class RiskParityReturn(ExpectedReturnBase):
         return weights
 
     @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ to get the module name
-    def calculate_expected_return(self):
+    def _calculate_expected_return(self):
         """
         Calculate the expected return based on risk parity approach.
         :return: Dictionary of expected returns for each asset
@@ -59,4 +59,4 @@ class RiskParityReturn(ExpectedReturnBase):
 
         # Calculate expected return based on these weights
         returns = self.data.pct_change().dropna().mean() * 252  # Annualize returns
-        return returns
+        return self._convert_to_dataframe(returns)

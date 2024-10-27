@@ -75,4 +75,3 @@ class BackTestExpectedReturn(BackTestBase):
         self.calculate_expected_returns()
         self.evaluate_metrics()
         self.log_summary()
-

@@ -31,6 +31,6 @@ class BlackLittermanReturn(ExpectedReturnBase):
         self.market_prior = black_litterman.market_implied_prior_returns(self.mcaps, self.delta, self.covariance_matrix)
 
     @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ t
-    def calculate_expected_return(self):
+    def _calculate_expected_return(self):
         bl = BlackLittermanModel(self.covariance_matrix, self.market_prior, absolute_views=self.investor_views)
-        return bl.bl_returns()
+        self._convert_to_dataframe(bl.bl_returns())

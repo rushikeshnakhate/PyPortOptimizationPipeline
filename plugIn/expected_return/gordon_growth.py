@@ -35,15 +35,14 @@ class GordonGrowthReturn(ExpectedReturnBase):
             return earnings_growth
         return 0
 
-
     # Calculate expected return for all tickers
-    def calculate_expected_return(self):
+    def _calculate_expected_return(self):
         expected_returns = {}
         for ticker, metrics in self.data.items():
             dividend_yield = metrics.get('dividend_yield', 0)
             growth_rate = metrics.get('growth_rate', 0)
             expected_returns[ticker] = dividend_yield + growth_rate
-        return expected_returns
+        return self._convert_to_dataframe(expected_returns)
 
     # Optionally, calculate expected return for a specific ticker
     def calculate_expected_return_for_ticker(self, ticker):

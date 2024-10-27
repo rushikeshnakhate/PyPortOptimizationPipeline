@@ -10,7 +10,7 @@ class HoltWintersReturn(ExpectedReturnBase):
         self.data = data
 
     @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ to get the module name
-    def calculate_expected_return(self):
+    def _calculate_expected_return(self):
         """
         Calculate the expected return using Holt-Winters Exponential Smoothing.
         :return: Dictionary of expected returns for each ticker
@@ -25,4 +25,4 @@ class HoltWintersReturn(ExpectedReturnBase):
             fit_model = model.fit()
             forecast = fit_model.forecast(1)
             expected_returns[ticker] = forecast.values[0] * 252  # Annualized the daily return
-        return expected_returns
+        return self._convert_to_dataframe(expected_returns)

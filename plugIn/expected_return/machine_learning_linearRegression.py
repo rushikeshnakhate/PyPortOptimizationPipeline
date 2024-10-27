@@ -12,7 +12,7 @@ class LinearRegressionReturn(ExpectedReturnBase):
         # self.expected_returns = self.calculate_expected_return()
 
     @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ to get the module name
-    def calculate_expected_return(self):
+    def _calculate_expected_return(self):
         """
         Calculate the expected return based on linear regression for each ticker.
         :return: Dictionary of annualized expected returns for each ticker
@@ -43,4 +43,4 @@ class LinearRegressionReturn(ExpectedReturnBase):
             # Store the expected return
             expected_returns[ticker] = annualized_return
 
-        return expected_returns
+        return self._convert_to_dataframe(expected_returns)

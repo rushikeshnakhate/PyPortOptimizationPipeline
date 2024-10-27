@@ -1,17 +1,17 @@
 expected_returns:
   enabled_methods:
     - ARIMA
-#    - ArithmeticMeanHistorical
-#    - BlackLitterman
-#    - CAPM
-#    - CAGRMeanHistorical
-#    - EMAHistorical
-#    - GordonGrowth
-#    - LinearRegression
-#    - RiskParity
-  #    - TWRR
-  #    - HoltWinters
-  #    - FamaFrench
+    - ArithmeticMeanHistorical
+    - BlackLitterman
+    - CAPM
+    - CAGRMeanHistorical
+    - EMAHistorical
+    - FamaFrench
+    - GordonGrowth
+#    - HoltWinters
+    - LinearRegression
+    - RiskParity
+    #    - TWRR
   target_data_directory: D:\PortfoliOpt\data\202301
   data_view_html_file: data_view.html
   flask_port: 5001
