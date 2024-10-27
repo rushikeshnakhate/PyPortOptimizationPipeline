@@ -9,7 +9,7 @@ class PklFileConventions:
     post_processing_weight_pkl_filename: str = "post_processing_weight.pkl"
     performance_pkl_filename: str = "performance.pkl"
     expected_return_pkl_filename: str = "expected_return.pkl"
-    ending_pattern_for_risk_return_pkl_files: str = "covariance.pkl"
+    ending_pattern_for_risk_return_pkl_files: str = "covariance_{risk_return_type}.pkl"
     data_pkl_filename: str = "data.pkl"
     monte_carlo_pkl_filename: str = "monte_carlo_pkl_filename.pkl"
     short_listed_monte_carlo_pkl_filename: str = "short_listed_monte_pkl_filename.pkl"

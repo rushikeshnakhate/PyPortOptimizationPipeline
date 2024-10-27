@@ -21,14 +21,24 @@ from plugIn.risk_returns.semi_covariance import SemiCovariance
 logger = logging.getLogger(__name__)
 
 
+def get_pickle_file_path(risk_type, output_dir):
+    """
+    Get the file path for the covariance matrix pickle file.
+    """
+    # Generate the file path with the updated pattern
+    pkl_filepath = os.path.join(output_dir,
+                                PklFileConventions.ending_pattern_for_risk_return_pkl_files.format(
+                                    risk_return_type=risk_type)
+                                )
+    return pkl_filepath
+
+
 # Function to check if covariance matrix pickle file exists
 def check_existing_cov_matrix(risk_type, output_dir):
     """
     Check if the covariance matrix for the given risk model already exists as a .pkl file.
     """
-    pkl_filepath = os.path.join(output_dir,
-                                f"{risk_type}_{PklFileConventions.ending_pattern_for_risk_return_pkl_files}")
-
+    pkl_filepath = get_pickle_file_path(risk_type, output_dir)
     if os.path.exists(pkl_filepath):
         logger.info(f"Loading covariance matrix for {risk_type} from {pkl_filepath}...")
         return pd.read_pickle(pkl_filepath)  # Load the matrix from pickle file
@@ -40,9 +50,7 @@ def save_cov_matrix_to_pkl(cov_matrix, risk_type, output_dir):
     """
     Save the covariance matrix as a .pkl file for future use.
     """
-    pkl_filepath = os.path.join(output_dir,
-                                f"{risk_type}_{PklFileConventions.ending_pattern_for_risk_return_pkl_files}")
-
+    pkl_filepath = get_pickle_file_path(risk_type, output_dir)
     logger.info(f"Saving covariance matrix for {risk_type} to {pkl_filepath}...")
     pd.DataFrame(cov_matrix).to_pickle(pkl_filepath)
 
