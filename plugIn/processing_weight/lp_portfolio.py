@@ -4,6 +4,7 @@ import numpy as np
 from pypfopt import DiscreteAllocation
 from sympy.printing.tests.test_cupy import cp
 
+from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
 from plugIn.processing_weight.allocationBase import AllocationBase
 
 
@@ -12,6 +13,7 @@ class LpPortfolio(AllocationBase):
         super().__init__(weights, latest_prices, total_portfolio_value, short_ratio)
         self.discreteAllocation = None
 
+    @ExecutionTimeRecorder(module_name=__name__)
     def get_allocation(self):
         self.discreteAllocation = DiscreteAllocation(
             self.weights,
@@ -26,6 +28,7 @@ class MinRiskLpPortfolio(AllocationBase):
     def __init__(self, weights, latest_prices, total_portfolio_value=10000, short_ratio=None):
         super().__init__(weights, latest_prices, total_portfolio_value, short_ratio)
 
+    @ExecutionTimeRecorder(module_name=__name__)
     def get_allocation(self, reinvest=False, verbose=False, solver="ECOS_BB"):
         """
         Convert continuous weights into a discrete portfolio allocation

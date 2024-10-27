@@ -6,6 +6,7 @@ import pandas as pd
 from tqdm import tqdm
 
 from plugIn.common.conventions import PklFileConventions, HeaderConventions
+from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
 
 logger = logging.getLogger(__name__)
 
@@ -107,6 +108,7 @@ class MonteCarloSimulation:
         return self.get_max_sharpe_ratio(), self.get_min_volatility()
 
 
+@ExecutionTimeRecorder(module_name=__name__)
 def run_monte_carlo_simulation(output_dir, data):
     """
     Run the Monte Carlo simulation and append the results to the results DataFrame.

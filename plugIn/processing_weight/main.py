@@ -1,6 +1,7 @@
 import logging
 
 from plugIn.common.conventions import HeaderConventions, PklFileConventions
+from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
 from plugIn.processing_weight.greedy_portfolio import GreedyPortfolio
 from plugIn.processing_weight.lp_portfolio import LpPortfolio
 from plugIn.common.utils import save_data_to_pickle, load_data_from_pickle
@@ -39,6 +40,7 @@ def process_post_processing_for_row_method(sr_no, row, data, portfolio_class, bu
         return f"error at Sr No={sr_no}: {e}"
 
 
+@ExecutionTimeRecorder(module_name=__name__)
 # Main function to process all rows
 def run_all_post_processing_weight(results_df, data, current_month_dir, budget=1000000):
     """

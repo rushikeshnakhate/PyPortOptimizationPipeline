@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 
 from plugIn.common.conventions import HeaderConventions, PklFileConventions
+from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
 from plugIn.common.hydra_config_loader import load_config
 
 from plugIn.common.utils import load_data_from_pickle, save_data_to_pickle
@@ -121,6 +122,7 @@ def process_optimizer_results(return_type, risk_model_name, mu, cov_matrix, data
     return results
 
 
+@ExecutionTimeRecorder(module_name=__name__)
 def calculate_optimizations_for_risk_model(expected_return_df, risk_return_dict, data, current_month_dir):
     """
     Calculate optimizations for all risk models and expected return types.
@@ -166,6 +168,7 @@ def extract_value(value):
     return value  # Return the value as-is if not a list
 
 
+@ExecutionTimeRecorder(module_name=__name__)
 def calculate_optimizations(data, expected_return_df, risk_return_dict, current_month_dir):
     """
     Iterate over each return type and risk model to calculate optimizations.

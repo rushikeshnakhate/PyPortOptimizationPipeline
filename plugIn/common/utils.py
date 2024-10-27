@@ -3,11 +3,7 @@ import ast
 import logging
 import os
 import pickle
-import time
-
-import pandas as pd
-
-from plugIn.common.hydra_config_loader import HydraConfigLoader
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 from datetime import datetime, timedelta
@@ -60,7 +56,7 @@ def generate_month_date_ranges(year, months=None):
 
 def create_current_month_directory(start_date, output_dir):
     current_month = start_date.strftime("%Y%m")
-    current_month_dir = output_dir / current_month
+    current_month_dir = Path(output_dir) / current_month
     current_month_dir.mkdir(parents=True, exist_ok=True)
     return current_month_dir
 

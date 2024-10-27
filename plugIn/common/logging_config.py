@@ -1,40 +1,45 @@
+import os
 import logging
 import logging.config
-import os
 
-# Define the log file path
-LOG_FILE_PATH = os.path.join(os.path.dirname(__file__), 'app.log')
 
-LOGGING_CONFIG = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'standard': {
-            'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+def setup_logging(base_dir):
+    # Define the log file path using the provided base directory
+    log_file_path = os.path.join(base_dir, 'app.log')
+
+    # Update the logging configuration dictionary
+    logging_config = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'standard': {
+                'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+            },
         },
-    },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',  # Handler to print to console
-            'formatter': 'standard',
-            'level': 'DEBUG',  # Print debug and above to console
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+                'formatter': 'standard',
+                'level': 'DEBUG',
+            },
+            'file': {
+                'class': 'logging.FileHandler',
+                'formatter': 'standard',
+                'level': 'INFO',
+                'filename': log_file_path,
+            },
         },
-        'file': {
-            'class': 'logging.FileHandler',  # Handler to write to log file
-            'formatter': 'standard',
-            'level': 'INFO',  # Write info and above to log file
-            'filename': LOG_FILE_PATH,
-        },
-    },
-    'loggers': {
-        '': {  # root logger
-            'handlers': ['console', 'file'],  # Send logs to both console and file
-            'level': 'DEBUG',
-            'propagate': True
-        },
+        'loggers': {
+            '': {
+                'handlers': ['console', 'file'],
+                'level': 'DEBUG',
+                'propagate': True
+            },
+        }
     }
-}
 
+    # Configure logging
+    logging.config.dictConfig(logging_config)
 
-def setup_logging():
-    logging.config.dictConfig(LOGGING_CONFIG)
+# # Example usage:
+# setup_logging(os.path.dirname(__file__))

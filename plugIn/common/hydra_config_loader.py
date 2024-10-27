@@ -21,8 +21,10 @@ class HydraConfigLoader(BaseConfigLoader):
 
         if not self.config_loaded:
             # Build the config directory relative to the current working directory
-            config_dir = os.path.join('..', module_name)
-
+            if module_name == "plugIn":
+                config_dir = os.path.join('../..', module_name)
+            else:
+                config_dir = os.path.join('..', module_name)
             # Initialize Hydra with the relative path
             hydra.initialize(config_path=config_dir, job_name="default", caller_stack_depth=1, version_base=None)
             self.config_loaded = True  # Mark as loaded
