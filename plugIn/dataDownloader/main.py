@@ -1,7 +1,6 @@
 import os
 
 import pandas as pd
-from alpha_vantage.commodities import Commodities
 
 from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
 from plugIn.common.hydra_config_loader import load_config
@@ -31,8 +30,8 @@ def get_asset(asset_type, start_date, end_date, data_source, **kwargs):
         return Stocks(start_date, end_date, data_source, **kwargs)
     elif asset_type == "bonds":
         return Bonds(start_date, end_date, data_source, **kwargs)
-    elif asset_type == "commodities":
-        return Commodities(start_date, end_date, data_source, **kwargs)
+    # elif asset_type == "commodities":
+    #     return Commodities(start_date, end_date, data_source, **kwargs)
     else:
         raise ValueError("Unknown asset type")
 
