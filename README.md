@@ -1,2 +1,6 @@
-This research tackles the challenges of applying Modern Portfolio Theory (MPT) in dynamic markets by developing a robust, end-to-end portfolio optimization system.The solution automates the entire process from data acquisition to risk-return modeling and optimization,while adhering to strong software engineering principles.Using SOLID principles,design patterns and API-driven architecture, the system ensures modularity, scalability, and ease of integration.
+* This research tackles the challenges of applying Modern Portfolio Theory (MPT) in dynamic markets by developing a robust, end-to-end portfolio optimization system.The solution automates the entire process from data acquisition to risk-return modeling and optimization,while adhering to strong software engineering principles.Using SOLID principles,design patterns and API-driven architecture, the system ensures modularity, scalability, and ease of integration.
 Optimizers such as PyPortfolioOptFrontier and MDDRiskFolioOptimizer, combined with post-processing methods like GreedyPortfolio, convert portfolio weights into actionable strategies.The project is designed with future expansion in mind, laying the groundwork for an open-source library with automated testing.This system supports multiple asset classes and provides a flexible, scalable platform for effective portfolio management
+
+* https://blog.quantinsti.com/portfolio-optimization-methods/
+* https://blog.quantinsti.com/portfolio-management-strategy-python/
+
