@@ -9,7 +9,7 @@ class PklFileConventions:
     performance_pkl_filename: str = "performance.pkl"
     expected_return_pkl_filename: str = "expected_return_{expected_return_type}.pkl"
     expected_return_for_all_type_pkl_filename: str = "expected_return_all_type.pkl"
-    optimization_pkl_filename: str = "optimization_{optimization_type}.pkl"
+    optimization_pkl_filename: str = "optimization_{expected_return_type}_{risk_return_type}_{optimization_type}.pkl"
     ending_pattern_for_risk_return_pkl_files: str = "covariance_{risk_return_type}.pkl"
     data_pkl_filename: str = "data.pkl"
     monte_carlo_pkl_filename: str = "monte_carlo_pkl_filename.pkl"

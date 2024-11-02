@@ -88,7 +88,9 @@ def process_risk_models(risk_model_calculators, output_dir):
             # Store the covariance matrix in the dictionary
             covariance_dict[enabled_method] = pd.DataFrame(cov_matrix)
         else:
-            logger.warning(f"risk_models{enabled_method},risk_model_calculators{risk_model_calculators}")
+            logger.warning(
+                f"No support for risk_return=`{enabled_method}`,Please add support OR remove from config.yaml.Support "
+                f"available for risk_model_calculators={risk_model_calculators}")
     return covariance_dict
 
 

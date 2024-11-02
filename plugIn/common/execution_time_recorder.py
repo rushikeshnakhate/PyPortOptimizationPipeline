@@ -35,8 +35,11 @@ class ExecutionTimeRecorder:
                 'Execution Time': exec_time
             }])
 
-            # Concatenate to the results DataFrame
-            results_df = pd.concat([results_df, new_row_df], ignore_index=True)
+            # Filter out all-NA columns from new_row_df before concatenation
+            new_row_df_cleaned = new_row_df.dropna(axis=1, how='all')
+
+            # Concatenate the cleaned DataFrame
+            results_df = pd.concat([results_df, new_row_df_cleaned], ignore_index=True)
             return result
 
         return wrapper
