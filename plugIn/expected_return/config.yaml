@@ -8,7 +8,7 @@ expected_returns:
     - EMAHistorical
     - FamaFrench
     - GordonGrowth
-    #    - HoltWinters
+#    - HoltWinters
     - LinearRegression
     - RiskParity
 #    - TWRR

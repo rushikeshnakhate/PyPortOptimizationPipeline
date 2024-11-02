@@ -70,6 +70,10 @@ class RiskFolioOptimizer(EfficientFrontierBase):
             hist=self.hist
         )
 
+        if self.weights is None:
+            raise ValueError(
+                "Optimization failed: weights returned as None.The problem doesn't have a solution with actual input "
+                "parameters")
         # Calculate expected return and volatility
         weights_array = self.weights['weights'].values.flatten()
         mu_array = self.port.mu.values.flatten()

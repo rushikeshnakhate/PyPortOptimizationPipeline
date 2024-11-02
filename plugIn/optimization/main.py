@@ -96,14 +96,12 @@ def process_optimizer_results(expected_return_type, risk_model_name, mu, cov_mat
                                                                enabled_methods,
                                                                data)
         for optimizer_name, result in optimizers_dict.items():
-            error_rows = result[HeaderConventions.cleaned_weights_column].astype(str).str.contains("error", case=False,
-                                                                                                   na=False)
-            if error_rows.any():
+            if 'error' in result:
                 result_dict = {
                     HeaderConventions.expected_return_column: expected_return_type,
                     HeaderConventions.risk_model_column: risk_model_name,
                     HeaderConventions.optimizer_column: optimizer_name,
-                    HeaderConventions.weights_column: result[HeaderConventions.cleaned_weights_column],
+                    HeaderConventions.weights_column: result,
                     HeaderConventions.expected_annual_return_column: np.nan,
                     HeaderConventions.annual_volatility_column: np.nan,
                     HeaderConventions.sharpe_ratio_column: np.nan}

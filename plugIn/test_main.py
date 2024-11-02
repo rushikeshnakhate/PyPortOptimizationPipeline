@@ -39,6 +39,8 @@ def main():
         risk_return_dict = calculate_all_risk_matrix(data, current_month_dir)
         optimized_df = calculate_optimizations(data, expected_return_df.head(10), risk_return_dict, current_month_dir)
         print(tabulate(optimized_df, headers='keys', tablefmt='grid'))
+        save_pickle = Path(current_month_dir) / 'optimized_df.pkl'
+        optimized_df.to_pickle(save_pickle)
         # monte_carlo_df = run_monte_carlo_simulation(configuration.output_dir, data)
         # all_optimized_df = pd.concat([monte_carlo_df, optimized_df], ignore_index=True)
         # post_processing_wright_df = run_all_post_processing_weight(all_optimized_df, data, current_month_dir)
