@@ -1,0 +1,24 @@
+rules:
+  - conditions:
+      - name: expected_return
+        operator: greater_than
+        value: 0.05
+      - name: annual_volatility
+        operator: equal
+        value: 0.1
+      - name: annual_volatility
+        operator: equal
+        value: 0.01
+    actions:
+      - name: select_portfolio
+        params:
+          portfolio_id: 1
+  - conditions:
+      - name: expected_return
+        operator: equal
+        value: 0.06
+    actions:
+      - name: reject_portfolio
+        params:
+          portfolio_id: 2
+      - name: print_row

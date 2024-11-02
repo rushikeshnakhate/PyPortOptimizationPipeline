@@ -42,7 +42,6 @@ def main():
         all_optimized_df = pd.concat([monte_carlo_df, optimized_df], ignore_index=True)
         save_pickle = Path(current_month_dir) / 'all_optimized_df.pkl'
         all_optimized_df.to_pickle(save_pickle)
-        
         # post_processing_wright_df = run_all_post_processing_weight(all_optimized_df, data, current_month_dir)
         # performance_df = calculate_performance(post_processing_wright_df, data, start_date, end_date, current_month_dir)
 
