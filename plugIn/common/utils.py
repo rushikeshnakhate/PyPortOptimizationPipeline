@@ -61,28 +61,28 @@ def create_current_month_directory(start_date, output_dir):
     return current_month_dir
 
 
-def load_data_from_pickle(filepath):
+def load_data_from_pickle(pkl_filename):
     """
     Load optimization data from a pickle file.
     """
-    if os.path.exists(filepath):
-        logger.info(f"Loading optimization data from {filepath}")
+    if os.path.exists(pkl_filename):
+        logger.info(f"Loading data from pkl file=`{pkl_filename}`")
         try:
-            with open(filepath, 'rb') as f:
+            with open(pkl_filename, 'rb') as f:
                 return pickle.load(f)
         except Exception as e:
-            logger.error(f"Error loading pickle file: {e}")
+            logger.error(f"Error={e} while loading pickle file={pkl_filename}")
             return None
     return None
 
 
-def save_data_to_pickle(filepath, data):
+def save_data_to_pickle(pkl_filename, dataframe):
     """
     Save optimization data to a pickle file.
     """
     try:
-        with open(filepath, 'wb') as f:
-            pickle.dump(data, f)
-        logger.info(f" data saved to {filepath}")
+        with open(pkl_filename, 'wb') as f:
+            pickle.dump(dataframe, f)
+        logger.info(f" data saved to filepath={pkl_filename}")
     except Exception as e:
-        logger.error(f"Error saving {filepath} data to pickle file: {e}")
+        logger.error(f"Error={e} saving data to pickle file={pkl_filename}")

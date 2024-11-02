@@ -4,11 +4,9 @@ import os
 import numpy as np
 import pandas as pd
 
-from plugIn.common.conventions import HeaderConventions, PklFileConventions
+from plugIn.common.conventions import HeaderConventions
 from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
 from plugIn.common.hydra_config_loader import load_config
-
-from plugIn.common.utils import load_data_from_pickle, save_data_to_pickle
 from plugIn.optimization.add_risk_folio_optimizer import ADDRiskFolioOptimizer
 from plugIn.optimization.cadr_risk_folio_optimizer import CDaRRiskFolioOptimizer
 from plugIn.optimization.cvarr_risk_folio_optimizer import CVaRRiskFolioOptimizer
@@ -28,7 +26,7 @@ from plugIn.optimization.wr_risk_folio_optimizer import WRRiskFolioOptimizer
 logger = logging.getLogger(__name__)
 
 
-def get_all_efficient_frontier_optimizer(return_type,
+def get_all_efficient_frontier_optimizer(expected_return_type,
                                          risk_model_name,
                                          expected_returns,
                                          covariance_matrix,
@@ -61,30 +59,36 @@ def get_all_efficient_frontier_optimizer(return_type,
             optimizer = optimizers[enabled_method]
             try:
                 logger.info(
-                    f"Calculating efficient frontier for current_date:{current_month_dir} for Risk Model: {risk_model_name}, "
-                    f"Return Type: {return_type}" + f" with optimizer: {optimizer}")
+                    f"Calculating efficient frontier for current_date=`{current_month_dir}`,Risk Model=`{risk_model_name}`, "
+                    f"Return Type=`{expected_return_type}`" + f",optimizer=`{optimizer}`")
 
-                optimizer_instance = optimizer(expected_returns, covariance_matrix, data)
+                optimizer_instance = optimizer(expected_returns=expected_returns,
+                                               covariance_matrix=covariance_matrix,
+                                               expected_return_type=expected_return_type,
+                                               risk_return_type=risk_model_name,
+                                               output_dir=current_month_dir,
+                                               data=data)
                 optimizer_instance.calculate_efficient_frontier()
-                optimizer_results = optimizer_instance.get_results(current_month_dir)
+                optimizer_results = optimizer_instance.get_results()
                 optimizers_dict[optimizer] = optimizer_results
             except Exception as e:
                 logger.error(
-                    f"Calculating efficient frontier for current_date:{current_month_dir} for Risk Model: {risk_model_name}, "
-                    f"Return Type: {return_type}" + f" with optimizer: {optimizer}" + f" failed with error: {e}")
+                    f"Calculating efficient frontier current_date=`{current_month_dir},Risk Model=`{risk_model_name}`, "
+                    f"Return Type=`{expected_return_type}`" + f",optimizer=`{optimizer}`" + f" failed with error: {e}")
                 optimizers_dict[optimizer] = f" failed with error: {e}"
         else:
             logger.warning("Optimizer{}  %s not found in return optimizers_dict={}", enabled_method, optimizers_dict)
     return optimizers_dict
 
 
-def process_optimizer_results(return_type, risk_model_name, mu, cov_matrix, data, current_month_dir, enabled_methods):
+def process_optimizer_results(expected_return_type, risk_model_name, mu, cov_matrix, data, current_month_dir,
+                              enabled_methods):
     """
     Process the optimizer results for a given return type and risk model.
     """
     results = []
     try:
-        optimizers_dict = get_all_efficient_frontier_optimizer(return_type,
+        optimizers_dict = get_all_efficient_frontier_optimizer(expected_return_type,
                                                                risk_model_name,
                                                                mu,
                                                                cov_matrix,
@@ -96,7 +100,7 @@ def process_optimizer_results(return_type, risk_model_name, mu, cov_matrix, data
                                                                                                    na=False)
             if error_rows.any():
                 result_dict = {
-                    HeaderConventions.expected_return_column: return_type,
+                    HeaderConventions.expected_return_column: expected_return_type,
                     HeaderConventions.risk_model_column: risk_model_name,
                     HeaderConventions.optimizer_column: optimizer_name,
                     HeaderConventions.weights_column: result[HeaderConventions.cleaned_weights_column],
@@ -105,7 +109,7 @@ def process_optimizer_results(return_type, risk_model_name, mu, cov_matrix, data
                     HeaderConventions.sharpe_ratio_column: np.nan}
             else:
                 result_dict = {
-                    HeaderConventions.expected_return_column: return_type,
+                    HeaderConventions.expected_return_column: expected_return_type,
                     HeaderConventions.risk_model_column: risk_model_name,
                     HeaderConventions.optimizer_column: optimizer_name,
                     HeaderConventions.weights_column: result[HeaderConventions.cleaned_weights_column],
@@ -117,8 +121,8 @@ def process_optimizer_results(return_type, risk_model_name, mu, cov_matrix, data
             results.append(result_dict)
     except Exception as e:
         logger.error(
-            f"Calculating efficient frontier for current_date:{current_month_dir} for Risk Model: {risk_model_name}, "
-            f"Return Type: {return_type}" + f" failed with error: {e}")
+            f"processing optimizer results for current_date=`{current_month_dir}`,Risk Model=`{risk_model_name}`, "
+            f",Return Type=`{expected_return_type}`" + f" failed with error: {e}")
     return results
 
 
@@ -133,12 +137,12 @@ def calculate_optimizations_for_risk_model(expected_return_df, risk_return_dict,
     logger.info("loading optmizers config for enabled_methods: %s", enabled_methods)
 
     all_results = []
-    for return_type in expected_return_df.columns:
-        mu = expected_return_df[return_type]
+    for expected_return_type in expected_return_df.columns:
+        mu = expected_return_df[expected_return_type]
 
         for risk_model_name, cov_matrix in risk_return_dict.items():
             if cov_matrix.shape[0] == mu.shape[0]:
-                results = process_optimizer_results(return_type,
+                results = process_optimizer_results(expected_return_type,
                                                     risk_model_name,
                                                     mu,
                                                     cov_matrix,
@@ -175,13 +179,19 @@ def calculate_optimizations(data, expected_return_df, risk_return_dict, current_
     """
     logger.info("calculating optimizations for the month {}".format(current_month_dir))
 
+    if not risk_return_dict:
+        logger.critical(
+            "No risk models found. Skipping optimization calculations.Please check risk_return generated,"
+            "no risk return was generated..")
+        return None
+
     optimization_data = calculate_optimizations_for_risk_model(expected_return_df,
                                                                risk_return_dict,
                                                                data,
                                                                current_month_dir)
 
     # Clean the metadata and extract the values from the DataFrame
-    df1 = optimization_data.applymap(clean_metadata)
-    optimization_data_cleaned = df1.applymap(extract_value)
+    df1 = optimization_data.apply(lambda x: x.map(clean_metadata))
+    optimization_data_cleaned = df1.apply(lambda x: x.map(extract_value))
 
     return optimization_data_cleaned

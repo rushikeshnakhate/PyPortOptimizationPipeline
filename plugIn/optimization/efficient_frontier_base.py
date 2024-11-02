@@ -2,44 +2,39 @@ import os
 import pickle
 
 from plugIn.common.conventions import PklFileConventions
+from plugIn.common.utils import load_data_from_pickle, save_data_to_pickle
 
 
 class EfficientFrontierBase:
-    def __init__(self, expected_returns, covariance_matrix, data=None):
+    def __init__(self, expected_returns, covariance_matrix, expected_return_type, risk_return_type,
+                 output_dir=None,
+                 data=None):
         self.expected_returns = expected_returns
         self.covariance_matrix = covariance_matrix
         self.cleaned_weights = None
         self.performance = None
         self.data = data
-        self.cache_file = None
+        self.cache_file = self._generate_cache_filename(output_dir=output_dir,
+                                                        expected_return_type=expected_return_type,
+                                                        risk_return_type=risk_return_type)
 
-    def _generate_cache_filename(self, output_dir):
+    def _generate_cache_filename(self, output_dir, expected_return_type, risk_return_type):
         # Generate cache filename using the class name and a hash of the data characteristics
         class_name = self.__class__.__name__
         expected_return_pkl_filename = os.path.join(output_dir,
                                                     PklFileConventions.optimization_pkl_filename.
-                                                    format(optimization_type=class_name))
-        self.cache_file = os.path.join(output_dir, expected_return_pkl_filename)
+                                                    format(expected_return_type=expected_return_type,
+                                                           risk_return_type=risk_return_type,
+                                                           optimization_type=class_name))
+        return os.path.join(output_dir, expected_return_pkl_filename)
 
-    def _load_cache(self, output_dir):
-        self._generate_cache_filename(output_dir)
-        if os.path.exists(self.cache_file):
-            with open(self.cache_file, "rb") as f:
-                print(f"Loading cached results from {self.cache_file}")
-                return pickle.load(f)
-        return None
-
-    def _save_cache(self, result):
-        # Save result to cache file
-        with open(self.cache_file, "wb") as f:
-            pickle.dump(result, f)
-            print(f"Saved results to cache at {self.cache_file}")
-
-    def get_results(self, output_dir):
-        cached_result = self._load_cache(output_dir)
-        if cached_result is not None:
+    def get_results(self):
+        cached_result = load_data_from_pickle(self.cache_file)
+        if cached_result is None:
             df = self._get_results()
-            self._save_cache(df)
+            print(cached_result)
+            save_data_to_pickle(pkl_filename=self.cache_file, dataframe=df)
+            cached_result = df
         return cached_result
 
     def calculate_efficient_frontier(self):

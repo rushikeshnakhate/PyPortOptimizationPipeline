@@ -32,8 +32,9 @@ def make_positive_definite(matrix, epsilon=1e-5):
 
 # Base class for risk measure optimization
 class RiskFolioOptimizer(EfficientFrontierBase):
-    def __init__(self, expected_returns, covariance_matrix, data: pd.DataFrame, rm: str):
-        super().__init__(expected_returns, covariance_matrix, data)
+    def __init__(self, expected_returns, covariance_matrix, expected_return_type, risk_return_type, output_dir,
+                 data: pd.DataFrame, rm: str):
+        super().__init__(expected_returns, covariance_matrix, expected_return_type, risk_return_type, output_dir, data)
         self.rm = rm
         self.sharpe_ratio = None
         self.volatility = None

@@ -6,8 +6,10 @@ from plugIn.optimization.efficient_frontier_base import EfficientFrontierBase
 
 
 class PyPortfolioOptFrontierBase(EfficientFrontierBase):
-    def __init__(self, expected_returns, covariance_matrix, data=None, weight_bounds=(0, 1)):
-        super().__init__(expected_returns, covariance_matrix, data)
+    def __init__(self, expected_returns, covariance_matrix, expected_return_type, risk_return_type,
+                 output_dir=None,
+                 data=None, weight_bounds=(0, 1)):
+        super().__init__(expected_returns, covariance_matrix, expected_return_type, risk_return_type, output_dir, data)
         self.weights = None
         self.ef = None
         self.weight_bounds = weight_bounds  # Add weight bounds as an instance attribute

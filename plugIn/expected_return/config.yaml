@@ -8,10 +8,10 @@ expected_returns:
     - EMAHistorical
     - FamaFrench
     - GordonGrowth
-#    - HoltWinters
+    #    - HoltWinters
     - LinearRegression
     - RiskParity
-    #    - TWRR
+#    - TWRR
   target_data_directory: D:\PortfoliOpt\data\202301
   data_view_html_file: data_view.html
   flask_port: 5001
