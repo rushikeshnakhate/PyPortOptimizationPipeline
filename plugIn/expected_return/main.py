@@ -25,10 +25,8 @@ logger = logging.getLogger(__name__)
 def update_returns_dataframe(df_returns, return_type, return_values):
     # Ensure return_values DataFrame has 'Ticker' as the index
     return_values.set_index('Ticker', inplace=True)
-
     # Rename the column to include the return type (e.g., "ExpectedReturn_ARIMA")
     return_values.columns = [f'ExpectedReturn_{return_type}']
-
     # Join on 'Ticker' index
     df_returns = df_returns.join(return_values, how='outer')
     return df_returns
@@ -38,11 +36,24 @@ def update_returns_dataframe(df_returns, return_type, return_values):
 def calculate_all_returns(data, output_dir):
     """Calculate all the different returns (mean, ema, capm, etc.) using a loop."""
     # Create a mapping of return types to their respective classes
-    module_name = os.path.basename(os.path.dirname(__file__))
-    returns_cfg = load_config(module_name)
-    enabled_methods = returns_cfg.expected_returns.enabled_methods
-    logger.info("loading config for enabled_methods: %s", enabled_methods)
+    return_calculators = get_expected_return_enabled_classes(data)
+    enabled_methods = get_enabled_methods()
+    # Initialize an empty DataFrame to store returns
+    df_returns = pd.DataFrame()
+    # Loop through each return type and add to the DataFrame
+    for enabled_method in enabled_methods:
+        if enabled_method in return_calculators:
+            logger.debug("Calculating expected return for: %s", enabled_method)
+            calculator = return_calculators[enabled_method]
+            return_values = calculator.calculate_expected_return(output_dir)
+            df_returns = pd.concat([df_returns, return_values], axis=1)
+        else:
+            logger.warning("Return type %s not found in return calculators", enabled_method)
+    df_returns.to_pickle(output_dir / PklFileConventions.expected_return_for_all_type_pkl_filename)
+    return df_returns
 
+
+def get_expected_return_enabled_classes(data):
     return_calculators = {
         'ARIMA': ARIMAReturn(data),
         'ArithmeticMeanHistorical': ArithmeticMeanHistoricalReturn(data),
@@ -57,35 +68,18 @@ def calculate_all_returns(data, output_dir):
         'RiskParity': RiskParityReturn(data),
         'TWRR': TWRRReturn(data)
     }
+    return return_calculators
 
-    # Initialize an empty DataFrame to store returns
-    df_returns = pd.DataFrame()
 
-    # Loop through each return type and add to the DataFrame
-    for enabled_method in enabled_methods:
-        if enabled_method in return_calculators:
-            logger.debug("Calculating expected return for: %s", enabled_method)
-            calculator = return_calculators[enabled_method]
-            return_values = calculator.calculate_expected_return(output_dir)
-            df_returns = pd.concat([df_returns, return_values], axis=1)
-        else:
-            logger.warning("Return type %s not found in return calculators", enabled_method)
-    df_returns.to_pickle(output_dir / PklFileConventions.expected_return_for_all_type_pkl_filename)
-    return df_returns
+def get_enabled_methods():
+    module_name = os.path.basename(os.path.dirname(__file__))
+    returns_cfg = load_config(module_name)
+    enabled_methods = returns_cfg.expected_returns.enabled_methods
+    logger.info("loading config for enabled_methods: %s", enabled_methods)
+    return enabled_methods
 
 
 @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ t
-def calculate_or_get_all_return(data, current_month_dir):
-    logger.info("Calculating or getting all returns...for the month {}".format(current_month_dir))
-    return calculate_all_returns(data, current_month_dir)
-
-#
-# if __name__ == "__main__":
-#     output_dir = Path(r"D:\PortfoliOpt\data")
-#     year = 2023
-#     month_ranges = generate_month_date_ranges(year, months=[1])
-#     for start_date, end_date in month_ranges:
-#         current_month_dir = create_current_month_directory(start_date, output_dir)
-#         data = get_stocks(start_date, end_date, current_month_dir)
-#         expected_return_df = calculate_all_returns(data, current_month_dir)
-#         print(tabulate(expected_return_df, headers='keys', tablefmt='grid'))
+def calculate_or_get_all_return(data, current_dir):
+    logger.info("Calculating or getting all returns...for the month {}".format(current_dir))
+    return calculate_all_returns(data, current_dir)

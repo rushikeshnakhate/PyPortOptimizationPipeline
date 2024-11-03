@@ -126,9 +126,3 @@ def calculate_all_risk_matrix(data, output_dir):
 
     # Call the process function to loop through the risk models and calculate/save covariance matrices
     return process_risk_models(risk_model_calculators, output_dir)
-
-# Example usage
-# if __name__ == "__main__":
-#     data = pd.DataFrame()  # Replace with your actual data
-#     output_dir = "./covariance_matrices"  # Directory to save/load covariance matrices
-#     covariance_matrices = calculate_all_risk_matrix(data, output_dir)
