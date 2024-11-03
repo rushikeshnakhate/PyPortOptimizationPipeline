@@ -1,7 +1,9 @@
 import logging
+import os
 
 from plugIn.common.conventions import HeaderConventions, PklFileConventions
 from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
+from plugIn.common.hydra_config_loader import load_config
 from plugIn.processing_weight.greedy_portfolio import GreedyPortfolio
 from plugIn.processing_weight.lp_portfolio import LpPortfolio
 from plugIn.common.utils import save_data_to_pickle, load_data_from_pickle
@@ -9,15 +11,20 @@ from plugIn.common.utils import save_data_to_pickle, load_data_from_pickle
 logger = logging.getLogger(__name__)
 
 
-# Function to create allocation classes mapping
+# Function to create allocation classes mapping (consider enabled methods)
 def get_allocation_classes():
     """
-    Returns a dictionary of allocation types mapped to their respective portfolio classes.
+    Returns a dictionary of allocation types mapped to their respective portfolio classes,
+    considering only the enabled methods.
     """
-    return {
+    enabled_methods = get_enabled_methods()
+    allocation_classes = {
         'GreedyPortfolio': GreedyPortfolio,
         'LpPortfolio': LpPortfolio,
+        # Add more allocation classes here
     }
+    return {allocation_type: portfolio_class for allocation_type, portfolio_class in allocation_classes.items() if
+            allocation_type in enabled_methods}
 
 
 # Function to process allocations for a single row and method
@@ -46,16 +53,22 @@ def run_all_post_processing_weight(results_df, data, current_month_dir, budget=1
     """
     Processes all rows in the results DataFrame and adds post_processing to it, row-by-row, method-by-method.
     """
-    total_rows = len(results_df)
-
     logger.info(f"Calculating processing_weight for the month {current_month_dir}")
     post_processing_weight_pkl_filepath = current_month_dir / PklFileConventions.post_processing_weight_pkl_filename
     post_processing = load_data_from_pickle(post_processing_weight_pkl_filepath)
     if post_processing is not None:
         return post_processing
-
     post_processing_classes = get_allocation_classes()
 
+    do_process(budget, current_month_dir, data, post_processing_classes, results_df)
+
+    save_data_to_pickle(post_processing_weight_pkl_filepath, results_df)
+    logger.info("Processing weight completed successfully for the month {}".format(current_month_dir))
+    return results_df
+
+
+def do_process(budget, current_month_dir, data, post_processing_classes, results_df):
+    total_rows = len(results_df)
     for sr_no, (index, row) in enumerate(results_df.iterrows(), start=1):
         logger.info(f"Processing row {sr_no}/{total_rows} for the month {current_month_dir}")
 
@@ -78,6 +91,10 @@ def run_all_post_processing_weight(results_df, data, current_month_dir, budget=1
                 # In case of an error, log it in the DataFrame
                 results_df.loc[index, f'Allocation_{allocation_type}_remaining_amount'] = allocation
 
-    save_data_to_pickle(post_processing_weight_pkl_filepath, results_df)
-    logger.info("Processing weight completed successfully for the month {}".format(current_month_dir))
-    return results_df
+
+def get_enabled_methods():
+    module_name = os.path.basename(os.path.dirname(__file__))
+    returns_cfg = load_config(module_name)
+    enabled_methods = returns_cfg.processing_weights.enabled_methods
+    logger.info("loading config for enabled_methods=%s", enabled_methods)
+    return enabled_methods

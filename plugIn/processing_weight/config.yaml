@@ -1,0 +1,4 @@
+processing_weights:
+  enabled_methods:
+    - GreedyPortfolio
+    - LpPortfolio
