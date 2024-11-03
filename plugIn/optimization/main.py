@@ -4,9 +4,10 @@ import os
 import numpy as np
 import pandas as pd
 
-from plugIn.common.conventions import HeaderConventions
+from plugIn.common.conventions import HeaderConventions, PklFileConventions
 from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
 from plugIn.common.hydra_config_loader import load_config
+from plugIn.common.utils import load_data_from_pickle, save_data_to_pickle
 from plugIn.optimization.add_risk_folio_optimizer import ADDRiskFolioOptimizer
 from plugIn.optimization.cadr_risk_folio_optimizer import CDaRRiskFolioOptimizer
 from plugIn.optimization.cvarr_risk_folio_optimizer import CVaRRiskFolioOptimizer
@@ -176,6 +177,11 @@ def calculate_optimizations(data, expected_return_df, risk_return_dict, current_
     Iterate over each return type and risk model to calculate optimizations.
     """
     logger.info("calculating optimizations for the month {}".format(current_month_dir))
+    optimized_df = load_data_from_pickle(current_month_dir / PklFileConventions.optimization_for_all_type_pkl_filename)
+    if optimized_df is not None:
+        logger.info(
+            f"cache exists={current_month_dir / PklFileConventions.optimization_for_all_type_pkl_filename},loading optimized data from cache..")
+        return optimized_df
 
     if not risk_return_dict:
         logger.critical(
@@ -191,5 +197,6 @@ def calculate_optimizations(data, expected_return_df, risk_return_dict, current_
     # Clean the metadata and extract the values from the DataFrame
     df1 = optimization_data.apply(lambda x: x.map(clean_metadata))
     optimization_data_cleaned = df1.apply(lambda x: x.map(extract_value))
-
+    save_data_to_pickle(output_dir / PklFileConventions.optimization_for_all_type_pkl_filename,
+                        optimization_data_cleaned)
     return optimization_data_cleaned
