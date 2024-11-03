@@ -53,6 +53,24 @@ def generate_month_date_ranges(year, months=None):
 # print(generate_month_date_ranges(2024))  # All months
 # print(generate_month_date_ranges(2024, months=[1, 12]))  # January and December only
 
+def generate_date_ranges(year, months=None, frequency='monthly'):
+    """Generate start_date and end_date ranges for each month or the entire year based on frequency.
+
+    Args:
+        year (int): The year for which to generate the date ranges.
+        months (list of int, optional): Specific months to generate ranges for (1-12).
+        frequency (str): 'monthly' for monthly ranges or 'yearly' for a single range for the entire year.
+
+    Returns:
+        list of tuples: Each tuple contains the start and end date based on the specified frequency.
+    """
+    if frequency == 'yearly':
+        # Return a single tuple with the start and end date for the entire year
+        start_date = datetime(year, 1, 1).date()
+        end_date = datetime(year, 12, 31).date()
+        return [(start_date, end_date)]
+    generate_month_date_ranges(year, months)
+
 
 def create_current_month_directory(start_date, output_dir):
     current_month = start_date.strftime("%Y%m")
