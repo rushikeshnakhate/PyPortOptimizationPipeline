@@ -32,7 +32,6 @@ class EfficientFrontierBase:
         cached_result = load_data_from_pickle(self.cache_file)
         if cached_result is None:
             df = self._get_results()
-            print(cached_result)
             save_data_to_pickle(pkl_filename=self.cache_file, dataframe=df)
             cached_result = df
         return cached_result
