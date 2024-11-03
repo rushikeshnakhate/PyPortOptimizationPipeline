@@ -3,14 +3,12 @@ import os
 from pathlib import Path
 
 import pandas as pd
-from tabulate import tabulate
 
 from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
 from plugIn.common.hydra_config_loader import load_config
 from plugIn.common.logging_config import setup_logging
-from plugIn.common.utils import generate_month_date_ranges, create_current_month_directory, generate_date_ranges
+from plugIn.common.utils import create_current_month_directory, generate_date_ranges
 from plugIn.dataDownloader.main import get_data
-
 from plugIn.expected_return.main import calculate_or_get_all_return
 from plugIn.experimental.monte_carlo_simulation import run_monte_carlo_simulation
 from plugIn.optimization.main import calculate_optimizations
