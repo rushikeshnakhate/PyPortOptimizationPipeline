@@ -1,11 +1,10 @@
-import hashlib
 import os
-import pickle
 from abc import ABC, abstractmethod
 
 import pandas as pd
 
 from plugIn.common.conventions import PklFileConventions, HeaderConventions
+from plugIn.common.utils import load_data_from_pickle, save_data_to_pickle
 
 
 # Base class for expected returns
@@ -22,30 +21,16 @@ class ExpectedReturnBase(ABC):
                                                     format(expected_return_type=class_name))
         self.cache_file = os.path.join(output_dir, expected_return_pkl_filename)
 
-    def _load_cache(self):
-        # Load cached data if it exists
-        if os.path.exists(self.cache_file):
-            with open(self.cache_file, "rb") as f:
-                print(f"Loading cached results from {self.cache_file}")
-                return pickle.load(f)
-        return None
-
-    def _save_cache(self, result):
-        # Save result to cache file
-        with open(self.cache_file, "wb") as f:
-            pickle.dump(result, f)
-            print(f"Saved results to cache at {self.cache_file}")
-
     def calculate_expected_return(self, output_dir):
         # Check if cache exists
         self._generate_cache_filename(output_dir)
-        cached_result = self._load_cache()
+        cached_result = load_data_from_pickle(self.cache_file)
         if cached_result is not None:
             return cached_result
 
         # If no cache, calculate and cache the result
         result = self._calculate_expected_return()
-        self._save_cache(result)
+        save_data_to_pickle({self.cache_file}, result)
         return result
 
     def _convert_to_dataframe(self, expected_returns):
