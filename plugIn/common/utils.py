@@ -5,6 +5,8 @@ import os
 import pickle
 from pathlib import Path
 
+from plugIn.common.conventions import GeneralConventions
+
 logger = logging.getLogger(__name__)
 from datetime import datetime, timedelta
 
@@ -53,7 +55,7 @@ def generate_month_date_ranges(year, months=None):
 # print(generate_month_date_ranges(2024))  # All months
 # print(generate_month_date_ranges(2024, months=[1, 12]))  # January and December only
 
-def generate_date_ranges(year, months=None, frequency='monthly'):
+def generate_date_ranges(year, months=None, frequency=GeneralConventions.frequency_monthly):
     """Generate start_date and end_date ranges for each month or the entire year based on frequency.
 
     Args:
@@ -64,7 +66,7 @@ def generate_date_ranges(year, months=None, frequency='monthly'):
     Returns:
         list of tuples: Each tuple contains the start and end date based on the specified frequency.
     """
-    if frequency == 'yearly':
+    if frequency == GeneralConventions.frequency_yearly:
         # Return a single tuple with the start and end date for the entire year
         start_date = datetime(year, 1, 1).date()
         end_date = datetime(year, 12, 31).date()
@@ -72,11 +74,13 @@ def generate_date_ranges(year, months=None, frequency='monthly'):
     generate_month_date_ranges(year, months)
 
 
-def create_current_month_directory(start_date, output_dir):
-    current_month = start_date.strftime("%Y%m")
-    current_month_dir = Path(output_dir) / current_month
-    current_month_dir.mkdir(parents=True, exist_ok=True)
-    return current_month_dir
+def create_current_data_directory(start_date, output_dir, frequency=None):
+    current_dir_name = start_date.strftime("%Y%m")
+    if frequency == GeneralConventions.frequency_yearly:
+        current_dir_name = start_date.strftime("%Y")
+    current_dir_with_path = Path(output_dir) / current_dir_name
+    current_dir_with_path.mkdir(parents=True, exist_ok=True)
+    return current_dir_with_path
 
 
 def load_data_from_pickle(pkl_filename):

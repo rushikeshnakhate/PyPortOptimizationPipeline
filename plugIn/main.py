@@ -3,11 +3,13 @@ import os
 from pathlib import Path
 
 import pandas as pd
+from tabulate import tabulate
 
+from plugIn.common.conventions import GeneralConventions
 from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
 from plugIn.common.hydra_config_loader import load_config
 from plugIn.common.logging_config import setup_logging
-from plugIn.common.utils import create_current_month_directory, generate_date_ranges
+from plugIn.common.utils import generate_date_ranges, create_current_data_directory
 from plugIn.dataDownloader.main import get_data
 from plugIn.expected_return.main import calculate_or_get_all_return
 from plugIn.experimental.monte_carlo_simulation import run_monte_carlo_simulation
@@ -27,9 +29,12 @@ logging.basicConfig(level=logging.INFO)
 
 @ExecutionTimeRecorder(module_name=__name__)
 def main():
-    date_ranges = generate_date_ranges(year=configuration.year, months=configuration.months, frequency="yearly")
+    frequency = GeneralConventions.frequency_monthly  # make None if need monthly
+    date_ranges = generate_date_ranges(year=configuration.year, months=configuration.months,
+                                       frequency=frequency)
     for start_date, end_date in date_ranges:
-        current_dir = create_current_month_directory(start_date, configuration.output_dir)
+        current_dir = create_current_data_directory(start_date, configuration.output_dir,
+                                                    GeneralConventions.frequency_yearly)
         logger.info(f"Processing start_date={start_date}, end_date={end_date} "
                     f"for current_dir={current_dir}")
         data = get_data(current_dir=current_dir, start_date=start_date, end_date=end_date)
@@ -42,7 +47,9 @@ def main():
         save_pickle = Path(current_dir) / 'all_optimized_df.pkl'
         all_optimized_df.to_pickle(save_pickle)
         post_processing_wright_df = run_all_post_processing_weight(all_optimized_df, data, current_dir)
-        performance_df = calculate_performance(post_processing_wright_df, data, start_date, end_date, current_dir)
+        performance_df = calculate_performance(post_processing_wright_df, data, start_date, end_date,
+                                               current_dir)
+        print(tabulate(performance_df.head(10), headers='keys', tablefmt='pretty'))
 
 
 if __name__ == "__main__":
