@@ -19,10 +19,10 @@ class PyPortfolioOptFrontierBase(EfficientFrontierBase):
         self.ef = EfficientFrontier(self.expected_returns, self.covariance_matrix, weight_bounds=self.weight_bounds)
         self.weights = self.ef.max_sharpe()  # Max Sharpe optimization
         self.cleaned_weights = dict(self.ef.clean_weights())  # Clean the weights
-        self.performance = self.ef.portfolio_performance(verbose=False)  # Portfolio performance
+        self.performance = self.ef.portfolio_performance(verbose=False)  # Portfolio performance_metrics
 
     def _get_results(self):
-        # Create a DataFrame for performance metrics
+        # Create a DataFrame for performance_metrics metrics
         result_df = pd.DataFrame({
             HeaderConventions.cleaned_weights_column: [self.cleaned_weights],
             HeaderConventions.expected_annual_return_column: [self.performance[0]],

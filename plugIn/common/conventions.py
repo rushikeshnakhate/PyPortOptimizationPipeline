@@ -1,12 +1,10 @@
-from pathlib import Path
-
 from pydantic.dataclasses import dataclass
 
 
 @dataclass
 class PklFileConventions:
     post_processing_weight_pkl_filename: str = "post_processing_weight.pkl"
-    performance_pkl_filename: str = "performance.pkl"
+    performance_pkl_filename: str = "performance_metrics.pkl"
     expected_return_pkl_filename: str = "expected_return_{expected_return_type}.pkl"
     expected_return_for_all_type_pkl_filename: str = "expected_return_all_type.pkl"
     optimization_for_all_type_pkl_filename: str = "optimization_all_type.pkl"

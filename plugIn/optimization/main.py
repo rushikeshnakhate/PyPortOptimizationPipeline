@@ -197,6 +197,6 @@ def calculate_optimizations(data, expected_return_df, risk_return_dict, current_
     # Clean the metadata and extract the values from the DataFrame
     df1 = optimization_data.apply(lambda x: x.map(clean_metadata))
     optimization_data_cleaned = df1.apply(lambda x: x.map(extract_value))
-    save_data_to_pickle(output_dir / PklFileConventions.optimization_for_all_type_pkl_filename,
+    save_data_to_pickle(current_month_dir / PklFileConventions.optimization_for_all_type_pkl_filename,
                         optimization_data_cleaned)
     return optimization_data_cleaned
