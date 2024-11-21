@@ -32,9 +32,13 @@ def main():
     frequency = GeneralConventions.frequency_monthly  # make None if need monthly
     date_ranges = generate_date_ranges(year=configuration.year, months=configuration.months,
                                        frequency=frequency)
+    if date_ranges is None:
+        raise Exception(
+            "date ranges generation failed for year={},months={},frequency={}".format(
+                configuration.year, configuration.months, frequency))
+
     for start_date, end_date in date_ranges:
-        current_dir = create_current_data_directory(start_date, configuration.output_dir,
-                                                    GeneralConventions.frequency_yearly)
+        current_dir = create_current_data_directory(start_date, configuration.output_dir, frequency)
         logger.info(f"Processing start_date={start_date}, end_date={end_date} "
                     f"for current_dir={current_dir}")
         data = get_data(current_dir=current_dir, start_date=start_date, end_date=end_date)

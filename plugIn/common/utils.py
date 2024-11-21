@@ -71,7 +71,7 @@ def generate_date_ranges(year, months=None, frequency=GeneralConventions.frequen
         start_date = datetime(year, 1, 1).date()
         end_date = datetime(year, 12, 31).date()
         return [(start_date, end_date)]
-    generate_month_date_ranges(year, months)
+    return generate_month_date_ranges(year, months)
 
 
 def create_current_data_directory(start_date, output_dir, frequency=None):
