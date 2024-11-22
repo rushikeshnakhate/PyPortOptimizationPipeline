@@ -5,6 +5,8 @@ processing_weights:
     - ProportionalRoundingAllocator
     - WeightedFloorAllocator
     - TransactionCostAllocator
+    - DiversityAllocator
+    - ClusteredAllocator
 #    - MinRiskLpPortfolio
 #    - ProportionalGreedyPortfolio
 #    - CustomGreedyAllocation
