@@ -6,6 +6,7 @@ from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
 from plugIn.common.hydra_config_loader import load_config
 from plugIn.processing_weight.custom_greedy_allocation import CustomGreedyAllocation
 from plugIn.processing_weight.custom_proportional_rounding_allocator import ProportionalRoundingAllocator
+from plugIn.processing_weight.custom_transaction_cost_allocator import TransactionCostAllocator
 from plugIn.processing_weight.custom_wighted_floor_allocator import WeightedFloorAllocator
 from plugIn.processing_weight.greedy_portfolio import GreedyPortfolio
 from plugIn.processing_weight.lp_portfolio import LpPortfolio
@@ -26,7 +27,8 @@ def get_allocation_classes():
         'LpPortfolio': LpPortfolio,
         'CustomGreedyAllocation': CustomGreedyAllocation,
         'ProportionalRoundingAllocator': ProportionalRoundingAllocator,
-        'WeightedFloorAllocator': WeightedFloorAllocator
+        'WeightedFloorAllocator': WeightedFloorAllocator,
+        'TransactionCostAllocator': TransactionCostAllocator
         # Add more allocation classes here
     }
     return {allocation_type: portfolio_class for allocation_type, portfolio_class in allocation_classes.items() if
