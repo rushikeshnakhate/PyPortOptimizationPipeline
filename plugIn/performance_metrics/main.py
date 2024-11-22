@@ -18,8 +18,8 @@ def calculate_performance(post_processing_df, data, start_date, end_date, curren
     logger.info(f"started calculating calculate_performance for the month {current_month_dir}")
     performance_pkl_filepath = current_month_dir / PklFileConventions.performance_pkl_filename
     performance_df = load_data_from_pickle(performance_pkl_filepath)
-    if performance_df is not None:
-        return performance_df
+    # if performance_df is not None:
+    #     return performance_df
 
     for index, row in post_processing_df.iterrows():
         for col in post_processing_df.columns:

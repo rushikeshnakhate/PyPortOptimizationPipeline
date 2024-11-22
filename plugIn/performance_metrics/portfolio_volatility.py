@@ -13,6 +13,29 @@ class PortfolioVolatility(PortfolioMetricBase):
         :param portfolio:
         :param **kwargs:
         """
-        portfolio_returns = portfolio.daily_returns[list(portfolio.allocation.keys())].dot(
-            pd.Series(portfolio.allocation))
-        return portfolio_returns.std() * np.sqrt(252)  # Annualized volatility
+        return self.normalized_volatility(portfolio)
+        try:
+            keys = list(portfolio.allocation.keys())
+            daily_return = portfolio.daily_returns[keys]
+
+            allocations = pd.Series(portfolio.allocation)
+            portfolio_weighted_return = daily_return.dot(allocations)
+            volatility1 = portfolio_weighted_return.std() * np.sqrt(252)  # Annualized volatility
+            return volatility1
+        except Exception as ex:
+            print("vol1={}".format(ex))
+
+    @staticmethod
+    def normalized_volatility(portfolio):
+        try:
+            keys = list(portfolio.allocation.keys())
+            daily_return = portfolio.daily_returns[keys]
+
+            allocations = pd.Series(portfolio.allocation)
+            normalized_allocations = allocations / allocations.sum()
+
+            portfolio_weighted_return = daily_return.dot(normalized_allocations)
+            volatility2 = portfolio_weighted_return.std() * np.sqrt(252)
+            return volatility2
+        except Exception as ex:
+            raise Exception("calculation fo volatility failed with error={}".format(ex))
