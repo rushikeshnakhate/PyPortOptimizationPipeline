@@ -2,3 +2,10 @@ processing_weights:
   enabled_methods:
     - GreedyPortfolio
     - LpPortfolio
+    - ProportionalRoundingAllocator
+    - WeightedFloorAllocator
+#    - MinRiskLpPortfolio
+#    - ProportionalGreedyPortfolio
+#    - CustomGreedyAllocation
+
+  budget: 100000

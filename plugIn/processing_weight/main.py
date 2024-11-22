@@ -4,6 +4,9 @@ import os
 from plugIn.common.conventions import HeaderConventions, PklFileConventions
 from plugIn.common.execution_time_recorder import ExecutionTimeRecorder
 from plugIn.common.hydra_config_loader import load_config
+from plugIn.processing_weight.custom_greedy_allocation import CustomGreedyAllocation
+from plugIn.processing_weight.custom_proportional_rounding_allocator import ProportionalRoundingAllocator
+from plugIn.processing_weight.custom_wighted_floor_allocator import WeightedFloorAllocator
 from plugIn.processing_weight.greedy_portfolio import GreedyPortfolio
 from plugIn.processing_weight.lp_portfolio import LpPortfolio
 from plugIn.common.utils import save_data_to_pickle, load_data_from_pickle
@@ -21,6 +24,9 @@ def get_allocation_classes():
     allocation_classes = {
         'GreedyPortfolio': GreedyPortfolio,
         'LpPortfolio': LpPortfolio,
+        'CustomGreedyAllocation': CustomGreedyAllocation,
+        'ProportionalRoundingAllocator': ProportionalRoundingAllocator,
+        'WeightedFloorAllocator': WeightedFloorAllocator
         # Add more allocation classes here
     }
     return {allocation_type: portfolio_class for allocation_type, portfolio_class in allocation_classes.items() if

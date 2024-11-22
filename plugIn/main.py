@@ -29,7 +29,7 @@ logging.basicConfig(level=logging.INFO)
 
 @ExecutionTimeRecorder(module_name=__name__)
 def main():
-    frequency = GeneralConventions.frequency_monthly  # make None if need monthly
+    frequency = GeneralConventions.frequency_yearly
     date_ranges = generate_date_ranges(year=configuration.year, months=configuration.months,
                                        frequency=frequency)
     if date_ranges is None:
@@ -50,10 +50,10 @@ def main():
 
         save_pickle = Path(current_dir) / 'all_optimized_df.pkl'
         all_optimized_df.to_pickle(save_pickle)
-        post_processing_wright_df = run_all_post_processing_weight(all_optimized_df, data, current_dir)
+        post_processing_wright_df = run_all_post_processing_weight(all_optimized_df.head, data, current_dir)
         performance_df = calculate_performance(post_processing_wright_df, data, start_date, end_date,
                                                current_dir)
-        print(tabulate(performance_df.head(10), headers='keys', tablefmt='pretty'))
+        print(tabulate(performance_df.head(2), headers='keys', tablefmt='pretty'))
 
 
 if __name__ == "__main__":
