@@ -1,6 +1,9 @@
-**README.md**
+# PyExpectedReturns
 
-**Introduction**
+A Python library for calculating expected returns using various statistical and financial models, including ARIMA, CAPM,
+and Black-Litterman, to forecast asset performance based on historical dat
+
+## Introduction
 
 This code module provides functionalities for calculating various expected return metrics for financial assets. It
 supports a wide range of methods, allowing you to explore diverse approaches to forecasting potential returns.
@@ -25,7 +28,7 @@ supports a wide range of methods, allowing you to explore diverse approaches to 
 * **Time-Weighted Rate of Return (TWRR):** Calculates the annualized compound return accounting for cash flows within
   the period.
 
-**Usage**
+## Usage
 
 1. Calling the calculate_all_returns Function
    To calculate expected returns using enabled methods, use the calculate_all_returns function. The function calculates
@@ -68,7 +71,6 @@ enabled_methods = ['ARIMA', 'ArithmeticMeanHistorical']
 
 ```print(df_returns)```
 
-
 **Sample data**
 
 ```import pandas as pd
@@ -89,7 +91,6 @@ Create a new Python class for the method in the src/expected_return/ directory.
 The class should implement a calculate_expected_return method that returns a DataFrame of expected returns.
 Example:
 
-
 ```python
 class NewReturnType:
     def __init__(self, data):
@@ -102,5 +103,7 @@ class NewReturnType:
             'ExpectedReturn_NewMethod': [0.06, 0.04]
         }).set_index('Ticker')
 ```
+
 **Update Configuration (Optional):**
-If you want to control which methods are enabled from a configuration file, add the new method to the list of enabled_methods in your configuration file (e.g., config.yaml).
+If you want to control which methods are enabled from a configuration file, add the new method to the list of
+enabled_methods in your configuration file (e.g., config.yaml).
