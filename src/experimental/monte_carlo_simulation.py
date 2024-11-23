@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 # Monte Carlo Simulation Class
 class MonteCarloSimulation:
-    def __init__(self, data, output_dir, num_of_portfolios=10000):
+    def __init__(self, data, output_dir, num_of_portfolios=20000):
         self.tickers = data.columns
         self.data = data
         self.num_of_portfolios = num_of_portfolios

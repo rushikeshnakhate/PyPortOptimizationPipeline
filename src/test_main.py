@@ -117,5 +117,5 @@ def run_optimization_pipeline(
 
 
 if __name__ == "__main__":
-    run_optimization_pipeline(years=[2022, 2023], frequency="multiyear")
+    run_optimization_pipeline(years=[2020, 2024], frequency="multiyear")
     ExecutionTimeRecorder.print_results()
