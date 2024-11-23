@@ -47,8 +47,8 @@ def main():
                     f"for current_dir={current_dir}")
         data = get_data(current_dir=current_dir, start_date=start_date, end_date=end_date)
         expected_return_df = calculate_or_get_all_return(data=data, current_dir=current_dir)
-        # risk_return_dict = calculate_all_risk_matrix(data, current_dir)
-        # optimized_df = calculate_optimizations(data, expected_return_df, risk_return_dict, current_dir)
+        risk_return_dict = calculate_all_risk_matrix(data, current_dir)
+        optimized_df = calculate_optimizations(data, expected_return_df, risk_return_dict, current_dir)
         # monte_carlo_df = run_monte_carlo_simulation(configuration.output_dir, data)
         # all_optimized_df = pd.concat([monte_carlo_df, optimized_df], ignore_index=True)
         #

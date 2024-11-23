@@ -3,7 +3,7 @@
 A Python library for calculating expected returns using various statistical and financial models, including ARIMA, CAPM,
 and Black-Litterman, to forecast asset performance based on historical dat
 
-## Introduction
+### Introduction
 
 This code module provides functionalities for calculating various expected return metrics for financial assets. It
 supports a wide range of methods, allowing you to explore diverse approaches to forecasting potential returns.
@@ -28,7 +28,24 @@ supports a wide range of methods, allowing you to explore diverse approaches to 
 * **Time-Weighted Rate of Return (TWRR):** Calculates the annualized compound return accounting for cash flows within
   the period.
 
-## Usage
+### Function
+#### calculate_or_get_all_return
+* This function calculates or retrieves all returns for a given dataset, based on the enabled methods specified. It can either calculate returns from scratch or fetch previously computed returns, depending on whether the data and enabled methods are provided.
+
+#### Parameters:
+* data (pd.DataFrame):
+A pandas DataFrame containing the financial data for which returns need to be calculated.
+Expected to include columns with price or value data for the assets being analyzed.
+* current_dir (Path): The directory where the results or data related to the current month are stored. It is used for logging and may be involved in path resolution when saving or fetching results.
+* enabled_methods (list, optional): A list of methods that should be used for calculating returns (e.g., "simple", "logarithmic").
+If not provided, it will be loaded from a configuration file using the get_enabled_methods() function.
+Defaults to None, in which case the method loads the enabled methods from the configuration.
+
+#### Returns:
+* pd.DataFrame: A DataFrame containing the calculated returns for the provided data. The structure of the returned DataFrame depends on the enabled methods and the calculations performed.
+
+
+### Usage
 
 1. Calling the calculate_all_returns Function
    To calculate expected returns using enabled methods, use the calculate_all_returns function. The function calculates
@@ -36,11 +53,7 @@ supports a wide range of methods, allowing you to explore diverse approaches to 
 
 ```python
 from src.expected_return_calculator import calculate_all_returns
-```
 
-**Sample data (replace with actual data)**
-
-```
 import pandas as pd
 data = pd.DataFrame({
     'AAPL': [184.73, 183.35, 181.02, 180.29, 184.65],
@@ -48,41 +61,15 @@ data = pd.DataFrame({
 }, index=pd.to_datetime([
     '2024-01-02', '2024-01-03', '2024-01-04', '2024-01-05', '2024-01-08'
 ]))
-```
-
-**Output directory for pickle files**
-
-```
 from pathlib import Path
 output_dir = Path("path_to_output_directory")
-```
-
-**List of enabled methods (can also be fetched from config)**
-
-```
 enabled_methods = ['ARIMA', 'ArithmeticMeanHistorical']
+df_returns = calculate_all_returns(data, output_dir, enabled_methods)
+print(df_returns)
 ```
 
-**Call the function to calculate returns**
 
-```df_returns = calculate_all_returns(data, output_dir, enabled_methods)```
-
-**View the calculated returns**
-
-```print(df_returns)```
-
-**Sample data**
-
-```import pandas as pd
-data = pd.DataFrame({
-'AAPL': [184.73, 183.35, 181.02, 180.29, 184.65],
-'GOOGL': [137.82, 138.57, 136.05, 135.39, 138.49]
-}, index=pd.to_datetime([
-'2024-01-02', '2024-01-03', '2024-01-04', '2024-01-05', '2024-01-08'
-]))
-```
-
-**How to Add New Methods**
+### How to Add New Methods
 
 To add a new return calculation method, follow these steps:
 Create a New Class for the Return Type:
@@ -104,6 +91,6 @@ class NewReturnType:
         }).set_index('Ticker')
 ```
 
-**Update Configuration (Optional):**
-If you want to control which methods are enabled from a configuration file, add the new method to the list of
+### Update Configuration (Optional)
+* If you want to control which methods are enabled from a configuration file, add the new method to the list of
 enabled_methods in your configuration file (e.g., config.yaml).

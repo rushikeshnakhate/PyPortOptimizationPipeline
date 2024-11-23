@@ -1,5 +1,6 @@
 import logging
 import os
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -126,13 +127,18 @@ def process_optimizer_results(expected_return_type, risk_model_name, mu, cov_mat
 
 
 @ExecutionTimeRecorder(module_name=__name__)
-def calculate_optimizations_for_risk_model(expected_return_df, risk_return_dict, data, current_month_dir):
+def calculate_optimizations_for_risk_model(expected_return_df,
+                                           risk_return_dict,
+                                           data,
+                                           current_month_dir,
+                                           enabled_methods=None):
     """
     Calculate optimizations for all risk models and expected return types.
     """
     module_name = os.path.basename(os.path.dirname(__file__))
     returns_cfg = load_config(module_name)
-    enabled_methods = returns_cfg.optimization.enabled_methods
+    if enabled_methods is None:
+        enabled_methods = returns_cfg.optimization.enabled_methods
     logger.info("loading optmizers config for enabled_methods: %s", enabled_methods)
 
     all_results = []
@@ -172,7 +178,11 @@ def extract_value(value):
 
 
 @ExecutionTimeRecorder(module_name=__name__)
-def calculate_optimizations(data, expected_return_df, risk_return_dict, current_month_dir):
+def calculate_optimizations(data: pd.DataFrame,
+                            expected_return_df: pd.DataFrame,
+                            risk_return_dict: dict,
+                            current_month_dir: Path,
+                            enabled_methods=None):
     """
     Iterate over each return type and risk model to calculate optimizations.
     """
@@ -192,7 +202,8 @@ def calculate_optimizations(data, expected_return_df, risk_return_dict, current_
     optimization_data = calculate_optimizations_for_risk_model(expected_return_df,
                                                                risk_return_dict,
                                                                data,
-                                                               current_month_dir)
+                                                               current_month_dir,
+                                                               enabled_methods)
 
     # Clean the metadata and extract the values from the DataFrame
     df1 = optimization_data.apply(lambda x: x.map(clean_metadata))
