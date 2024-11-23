@@ -53,18 +53,19 @@ def generate_date_ranges(years: list, months=None, frequency=GeneralConventions.
         start_date = datetime(years[0], 1, 1).date()  # Start of the first year
         end_date = datetime(years[-1] + 1, 1, 1).date()  # Jan 1 of the year after the last year
         all_date_ranges.append((start_date, end_date))
-    else:
-        for year in years:
-            if frequency == GeneralConventions.frequency_yearly:
-                # Add a single tuple with the start and end date for the entire year
-                start_date = datetime(year, 1, 1).date()
-                end_date = datetime(year, 12, 31).date()
-                all_date_ranges.append((start_date, end_date))
-            elif frequency == GeneralConventions.frequency_monthly:
-                # Add monthly ranges for the given year
-                all_date_ranges.extend(generate_month_date_ranges(year, months))
+        return all_date_ranges
 
-            else:
-                raise ValueError(f"Invalid frequency: {frequency}")
+    for year in years:
+        if frequency == GeneralConventions.frequency_yearly:
+            # Add a single tuple with the start and end date for the entire year
+            start_date = datetime(year, 1, 1).date()
+            end_date = datetime(year, 12, 31).date()
+            all_date_ranges.append((start_date, end_date))
+        elif frequency == GeneralConventions.frequency_monthly:
+            # Add monthly ranges for the given year
+            all_date_ranges.extend(generate_month_date_ranges(year, months))
+
+        else:
+            raise ValueError(f"Invalid frequency: {frequency}")
 
     return all_date_ranges
