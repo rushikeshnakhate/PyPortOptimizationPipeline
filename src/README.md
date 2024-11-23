@@ -6,12 +6,73 @@ user can customize the pipeline by providing their own methods for each step in 
 
 ### Features
 
-* Customizable Pipeline: Users can provide their own functions for calculating expected returns, risk-return matrix,
-  optimization methods, post-processing weights, and performance.
-* Supports Different Frequencies: Works for both "yearly" and "monthly" frequencies.
-* Flexible Date Ranges: Users can specify the years and months they wish to process.
-* Monte Carlo Simulation: Includes integration with Monte Carlo simulations to complement the optimization process.
-* Save Results: Optimized results are saved as pickle files for further analysis.
+* #### Customizable Pipeline:
+
+Users can provide their own functions to calculate expected returns, risk-return matrices, optimization methods,
+post-processing weights, and performance.
+
+* #### Supports Different Frequencies:
+
+Supports processing of data on both yearly and monthly frequencies.
+
+* #### Flexible Date Ranges:
+
+Users can specify the years and months they wish to process, allowing for highly customizable date ranges.
+
+* #### Monte Carlo Simulation:
+
+Built-in integration with Monte Carlo simulations to enhance the optimization process and help assess the robustness of
+the optimized portfolio.
+
+* #### Save Results:
+
+Optimized portfolio results are saved as pickle files for easy retrieval and further analysis.
+
+* #### Risk-Return Matrix Types:
+
+The library supports multiple risk-return matrix types like covariance matrix, correlation matrix, and other
+user-defined risk-return metrics. Users can choose the method they prefer or add new ones.
+
+* #### Multiple Optimization Methods:
+
+Several optimization methods are available, including mean-variance optimization, risk-parity, minimum volatility, and
+other methods. Custom optimization strategies can also be implemented easily.
+
+* #### SOLID Pricing:
+
+The library uses SOLID principles to ensure scalability, maintainability, and flexibility of the code, making it easy to
+extend and modify for specific user needs.
+
+* #### Logging:
+
+Detailed logging is integrated into the pipeline, allowing users to track the process and identify any potential issues
+with the execution.
+
+* #### Configuration Management:
+
+Config files are used to easily manage settings like date ranges, frequency, and methods for each step in the process.
+The library also supports reading configurations from a central configuration manager.
+
+### Requirements
+
+To use this library, make sure you have the following Python packages installed:
+
+* pandas
+* numpy
+* scipy
+* matplotlib
+* tabulate
+  Additionally, you'll need the following custom modules (located in the src directory):
+
+* execution_time_recorder: For logging execution times.
+* dataDownloader: For downloading financial data.
+* date_generation: For generating date ranges.
+* expected_return: For calculating expected returns.
+* monte_carlo_simulation: For running Monte Carlo simulations.
+* optimization: For portfolio optimization methods.
+* performance_metrics: For calculating portfolio performance.
+* processing_weight: For post-processing optimization weights.
+* risk_returns: For calculating risk-return matrices.
 
 ### Library Structure
 
