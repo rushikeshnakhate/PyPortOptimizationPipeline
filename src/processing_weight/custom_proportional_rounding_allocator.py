@@ -5,7 +5,7 @@ from src.processing_weight.allocationBase import AllocationBase
 
 
 @ExecutionTimeRecorder(module_name=__name__)
-class ProportionalRoundingAllocator(AllocationBase):
+class CustomProportionalRoundingAllocator(AllocationBase):
     def get_allocation(self):
         total_value = self.total_portfolio_value
         proportionate_values = {ticker: np.round(weight * total_value) for ticker, weight in self.weights.items()}

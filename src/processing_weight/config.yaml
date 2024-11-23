@@ -1,14 +1,11 @@
 processing_weights:
   enabled_methods:
+    - CustomClusteredAllocator
+    - CustomDiversityAllocator
+    - CustomGreedyAllocation
+    - CustomProportionalRoundingAllocator
+    - CustomTransactionCostAllocator
+    - CustomWeightedFloorAllocator
     - GreedyPortfolio
     - LpPortfolio
-    - ProportionalRoundingAllocator
-    - WeightedFloorAllocator
-    - TransactionCostAllocator
-    - DiversityAllocator
-    - ClusteredAllocator
-#    - MinRiskLpPortfolio
-#    - ProportionalGreedyPortfolio
-#    - CustomGreedyAllocation
-
   budget: 100000

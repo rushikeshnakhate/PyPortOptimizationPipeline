@@ -2,7 +2,7 @@ import numpy as np
 from src.processing_weight.allocationBase import AllocationBase
 
 
-class DiversityAllocator(AllocationBase):
+class CustomDiversityAllocator(AllocationBase):
     def __init__(self, weights, latest_prices, total_portfolio_value=100000, diversity_threshold=0.4):
         super().__init__(weights, latest_prices, total_portfolio_value)
         self.diversity_threshold = diversity_threshold

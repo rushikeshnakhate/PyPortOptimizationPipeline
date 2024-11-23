@@ -5,7 +5,7 @@ from src.processing_weight.allocationBase import AllocationBase
 
 
 @ExecutionTimeRecorder(module_name=__name__)
-class TransactionCostAllocator(AllocationBase):
+class CustomTransactionCostAllocator(AllocationBase):
     def __init__(self, weights, latest_prices, total_portfolio_value=100000, short_ratio=None,
                  transaction_cost_rate=0.005):
         super().__init__(weights, latest_prices, total_portfolio_value, short_ratio)

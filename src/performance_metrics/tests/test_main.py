@@ -1,16 +1,11 @@
 import os
 import unittest
-from unittest.mock import patch, MagicMock
-import pandas as pd
 from pathlib import Path
+from unittest.mock import patch, MagicMock
+
+import pandas as pd
 
 from src.performance_metrics.main import calculate_performance
-from src.performance_metrics.portfoliio_performance import PortfolioWithAllocatedWeights
-from src.performance_metrics.portfolio_return import PortfolioReturn
-from src.performance_metrics.portfolio_sharpratio import PortfolioSharpeRatio
-from src.performance_metrics.portfolio_volatility import PortfolioVolatility
-from src.common.utils import save_data_to_pickle
-from src.performance_metrics.performance_metrics_name_convernsions import PerformanceMetricsNameConventions
 
 
 class TestCalculatePerformance(unittest.TestCase):

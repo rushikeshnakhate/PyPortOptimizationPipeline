@@ -4,7 +4,7 @@ from sklearn.cluster import KMeans
 from src.processing_weight.allocationBase import AllocationBase
 
 
-class ClusteredAllocator(AllocationBase):
+class CustomClusteredAllocator(AllocationBase):
     def __init__(self, weights, latest_prices, total_portfolio_value=100000, short_ratio=None, n_clusters=3):
         super().__init__(weights, latest_prices, total_portfolio_value, short_ratio)
         self.n_clusters = n_clusters

@@ -5,7 +5,7 @@ from src.processing_weight.allocationBase import AllocationBase
 
 
 @ExecutionTimeRecorder(module_name=__name__)
-class WeightedFloorAllocator(AllocationBase):
+class CustomWeightedFloorAllocator(AllocationBase):
     def get_allocation(self):
         try:
             total_value = self.total_portfolio_value
