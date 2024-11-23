@@ -1,7 +1,7 @@
 import unittest
 from datetime import date
 
-from src.date_generation.conventions import GeneralConventions
+from src.common.conventions import GeneralConventions
 from src.date_generation.generate_date_ranges import generate_date_ranges
 
 

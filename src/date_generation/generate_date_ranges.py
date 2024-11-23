@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from src.date_generation.conventions import GeneralConventions
+from src.common.conventions import GeneralConventions
 
 
 def generate_month_date_ranges(year, months=None):

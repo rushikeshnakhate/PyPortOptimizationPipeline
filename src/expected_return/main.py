@@ -1,5 +1,6 @@
 import logging
 import os
+from pathlib import Path
 
 import pandas as pd
 
@@ -33,11 +34,10 @@ def update_returns_dataframe(df_returns, return_type, return_values):
 
 
 @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ t
-def calculate_all_returns(data, output_dir):
+def calculate_all_returns(data, output_dir, enabled_methods):
     """Calculate all the different returns (mean, ema, capm, etc.) using a loop."""
     # Create a mapping of return types to their respective classes
     return_calculators = get_expected_return_enabled_classes(data)
-    enabled_methods = get_enabled_methods()
     # Initialize an empty DataFrame to store returns
     df_returns = pd.DataFrame()
     # Loop through each return type and add to the DataFrame
@@ -80,6 +80,9 @@ def get_enabled_methods():
 
 
 @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ t
-def calculate_or_get_all_return(data, current_dir):
+def calculate_or_get_all_return(data: pd.DataFrame, current_dir: Path, enabled_methods=None):
     logger.info("Calculating or getting all returns...for the month {}".format(current_dir))
-    return calculate_all_returns(data, current_dir)
+    if enabled_methods is None:
+        # If enabled_methods is not provided, load it from the config file
+        enabled_methods = get_enabled_methods()
+    return calculate_all_returns(data, current_dir, enabled_methods)

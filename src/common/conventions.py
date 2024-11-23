@@ -30,3 +30,9 @@ class HeaderConventions:
     optimizer_column: str = "Optimizer"
     cleaned_weights_column: str = "Cleaned Weights"
     ticker: str = "ticker"
+
+
+@dataclass
+class GeneralConventions:
+    frequency_yearly: str = "yearly"
+    frequency_monthly: str = "monthly"

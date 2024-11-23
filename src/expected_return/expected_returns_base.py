@@ -30,7 +30,7 @@ class ExpectedReturnBase(ABC):
 
         # If no cache, calculate and cache the result
         result = self._calculate_expected_return()
-        save_data_to_pickle({self.cache_file}, result)
+        # save_data_to_pickle({self.cache_file}, result)
         return result
 
     def _convert_to_dataframe(self, expected_returns):
