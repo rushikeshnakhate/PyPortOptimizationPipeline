@@ -24,7 +24,7 @@ pd.set_option('display.max_colwidth', None)  # Display full content in cells
 
 # module_name = os.path.basename(os.path.dirname(__file__))
 # configuration = load_config(module_name)
-project_directory = Path(__file__).resolve().parent.parent
+project_directory = Path(__file__).resolve().parent.parent/"data"
 setup_logging(project_directory)
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)

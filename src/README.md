@@ -108,6 +108,7 @@ To use this library, make sure you have the following Python packages installed:
 # Run the pipeline for multiple years with yearly frequency
 run_optimization_pipeline(
     years=[2023, 2024], 
+    tickrs=["AAPL", "GOOGL"]
     frequency="yearly", 
     expected_return_methods=['mean', 'geometric'], 
     risk_return_methods=['covariance'], 
