@@ -36,4 +36,4 @@ class HeaderConventions:
 class GeneralConventions:
     frequency_yearly: str = "yearly"
     frequency_monthly: str = "monthly"
-    frequency_multiyear: str = "multiyear "
+    frequency_multiyear: str = "multiyear"
