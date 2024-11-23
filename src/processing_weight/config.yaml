@@ -2,7 +2,6 @@ processing_weights:
   enabled_methods:
     - CustomClusteredAllocator
     - CustomDiversityAllocator
-    - CustomGreedyAllocation
     - CustomProportionalRoundingAllocator
     - CustomTransactionCostAllocator
     - CustomWeightedFloorAllocator

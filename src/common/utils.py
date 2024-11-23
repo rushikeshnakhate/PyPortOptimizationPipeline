@@ -25,10 +25,15 @@ def clean_up(results_df):
     results_df['Weights'] = results_df['Weights'].apply(ast.literal_eval)
 
 
-def create_current_data_directory(start_date, output_dir, frequency=None):
-    current_dir_name = start_date.strftime("%Y%m")
+def create_current_data_directory(start_date, end_date, output_dir, frequency=None):
     if frequency == GeneralConventions.frequency_yearly:
         current_dir_name = start_date.strftime("%Y")
+    elif frequency == GeneralConventions.frequency_multiyear:
+        start_year = start_date.strftime("%Y")
+        end_year = end_date.strftime("%Y")
+        current_dir_name = f"{start_year}_{end_year}"
+    else:
+        current_dir_name = start_date.strftime("%Y%m")
     current_dir_with_path = Path(output_dir) / current_dir_name
     current_dir_with_path.mkdir(parents=True, exist_ok=True)
     return current_dir_with_path

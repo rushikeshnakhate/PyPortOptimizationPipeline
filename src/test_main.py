@@ -40,7 +40,7 @@ def run_optimization_pipeline(
     Arguments:
     - years: List of years to process. If None, uses default configuration value.
     - months: List of months to process. If None, uses default configuration value.
-    - frequency: Frequency of data (e.g., 'yearly', 'monthly'). Default is 'yearly'.
+    - frequency: Frequency of data (e.g., 'yearly', 'monthly' ,'multiyear). Default is 'yearly'.
     - expected_return_method: Function to calculate expected returns.
     - risk_return_method: Function to calculate risk return matrix (e.g., covariance matrix).
     - optimization_method: Function to calculate optimizations.

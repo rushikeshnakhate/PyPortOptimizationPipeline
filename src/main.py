@@ -50,6 +50,7 @@ def main():
         risk_return_dict = calculate_all_risk_matrix(data, current_dir)
         optimized_df = calculate_optimizations(data, expected_return_df, risk_return_dict, current_dir)
         monte_carlo_df = run_monte_carlo_simulation(project_directory, data)
+        # print(tabulate(monte_carlo_df.head(10), headers='keys', tablefmt='pretty'))
         all_optimized_df = pd.concat([monte_carlo_df, optimized_df], ignore_index=True)
 
         save_pickle = Path(current_dir) / 'all_optimized_df.pkl'
@@ -57,7 +58,7 @@ def main():
         post_processing_wright_df = run_all_post_processing_weight(all_optimized_df, data, current_dir)
         performance_df = calculate_performance(post_processing_wright_df, data, start_date, end_date,
                                                current_dir)
-        print(tabulate(performance_df.head(2), headers='keys', tablefmt='pretty'))
+        print(tabulate(performance_df.head(10), headers='keys', tablefmt='pretty'))
 
 
 if __name__ == "__main__":
