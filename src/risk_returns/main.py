@@ -1,5 +1,7 @@
 import logging
 import os
+from pathlib import Path
+
 import pandas as pd
 
 from src.common.conventions import PklFileConventions
@@ -63,7 +65,7 @@ def calculate_cov_matrix(calculator):
 
 
 # Function to loop through the risk models
-def process_risk_models(risk_model_calculators, output_dir):
+def process_risk_models(risk_model_calculators, output_dir, enabled_methods):
     """
     Loop through each risk model, calculate or load the covariance matrix, and store it.
     """
@@ -72,7 +74,8 @@ def process_risk_models(risk_model_calculators, output_dir):
 
     module_name = os.path.basename(os.path.dirname(__file__))
     returns_cfg = load_config(module_name)
-    enabled_methods = returns_cfg.risk_models.enabled_methods
+    if enabled_methods is None:
+        enabled_methods = returns_cfg.risk_models.enabled_methods
     logger.info("loading risk_models config for enabled_methods: %s", enabled_methods)
     for enabled_method in enabled_methods:
         if enabled_method in risk_model_calculators:
@@ -96,13 +99,13 @@ def process_risk_models(risk_model_calculators, output_dir):
 
 @ExecutionTimeRecorder(module_name=__name__)  # Use __name__ t
 # Main function that orchestrates everything
-def calculate_all_risk_matrix(data, output_dir):
+def calculate_all_risk_matrix(data: pd.DataFrame, current_dir: Path, enabled_methods=None):
     """
     Calls different risk models, calculates the covariance matrices if not already saved,
     and saves them as .pkl files for future use.
     """
     # Ensure the output directory exists
-    os.makedirs(output_dir, exist_ok=True)
+    os.makedirs(current_dir, exist_ok=True)
 
     # Create a dictionary of risk model types and their corresponding classes
     risk_model_calculators = {
@@ -125,4 +128,4 @@ def calculate_all_risk_matrix(data, output_dir):
     }
 
     # Call the process function to loop through the risk models and calculate/save covariance matrices
-    return process_risk_models(risk_model_calculators, output_dir)
+    return process_risk_models(risk_model_calculators, current_dir, enabled_methods)

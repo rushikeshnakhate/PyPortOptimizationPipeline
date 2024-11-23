@@ -100,19 +100,19 @@ def get_enabled_methods():
 # Main function to process all rows
 def run_all_post_processing_weight(results_df: pd.DataFrame,
                                    data: pd.DataFrame,
-                                   current_month_dir: Path,
+                                   current_dir: Path,
                                    enabled_methods=None,
                                    budget=1000000):
     """
     Processes all rows in the results DataFrame and adds post_processing to it, row-by-row, method-by-method.
     """
-    logger.info(f"Calculating processing_weight for the month {current_month_dir}")
-    post_processing_weight_pkl_filepath = current_month_dir / PklFileConventions.post_processing_weight_pkl_filename
+    logger.info(f"Calculating processing_weight for the month {current_dir}")
+    post_processing_weight_pkl_filepath = current_dir / PklFileConventions.post_processing_weight_pkl_filename
     post_processing = load_data_from_pickle(post_processing_weight_pkl_filepath)
     if post_processing is not None:
         return post_processing
     post_processing_classes = get_allocation_classes(enabled_methods)
-    do_process(budget, current_month_dir, data, post_processing_classes, results_df)
+    do_process(budget, current_dir, data, post_processing_classes, results_df)
     save_data_to_pickle(post_processing_weight_pkl_filepath, results_df)
-    logger.info("Processing weight completed successfully for the month {}".format(current_month_dir))
+    logger.info("Processing weight completed successfully for the month {}".format(current_dir))
     return results_df

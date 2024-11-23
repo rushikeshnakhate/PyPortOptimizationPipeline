@@ -12,11 +12,11 @@ from src.performance_metrics.portfolio_volatility import PortfolioVolatility
 logger = logging.getLogger(__name__)
 
 
-def calculate_performance(post_processing_df, data, start_date, end_date, current_month_dir):
+def calculate_performance(post_processing_df, data, start_date, end_date, current_dir):
     """Calculate and append performance_metrics metrics for portfolios based on allocation columns."""
 
-    logger.info(f"started calculating calculate_performance for the month {current_month_dir}")
-    performance_pkl_filepath = current_month_dir / PklFileConventions.performance_pkl_filename
+    logger.info(f"started calculating calculate_performance for the month {current_dir}")
+    performance_pkl_filepath = current_dir / PklFileConventions.performance_pkl_filename
     performance_df = load_data_from_pickle(performance_pkl_filepath)
     # if performance_df is not None:
     #     return performance_df
@@ -66,5 +66,5 @@ def calculate_performance(post_processing_df, data, start_date, end_date, curren
                                                                                                     row[col]))
                 # post_processing_df.dropna()
     save_data_to_pickle(performance_pkl_filepath, post_processing_df)
-    logger.info(f"completed calculating calculate_performance for the month {current_month_dir}")
+    logger.info(f"completed calculating calculate_performance for the month {current_dir}")
     return post_processing_df

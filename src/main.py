@@ -1,18 +1,13 @@
-import logging
 import os
-from pathlib import Path
 
 import pandas as pd
+import logging
+from pathlib import Path
 from tabulate import tabulate
 
-from src.common.conventions import GeneralConventions
 from src.common.execution_time_recorder import ExecutionTimeRecorder
-from src.common.hydra_config_loader import load_config
-from src.common.logging_config import setup_logging
 from src.common.utils import create_current_data_directory
-
 from src.dataDownloader.main import get_data
-
 from src.date_generation.generate_date_ranges import generate_date_ranges
 from src.expected_return.main import calculate_or_get_all_return
 from src.experimental.monte_carlo_simulation import run_monte_carlo_simulation
@@ -21,45 +16,101 @@ from src.performance_metrics.main import calculate_performance
 from src.processing_weight.main import run_all_post_processing_weight
 from src.risk_returns.main import calculate_all_risk_matrix
 
-pd.set_option('display.max_colwidth', None)  # Display full content in cells
-
-module_name = os.path.basename(os.path.dirname(__file__))
-configuration = load_config(module_name)
-setup_logging(configuration.log_dir)
+# Setup logging
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
+
+project_directory = Path(__file__).resolve().parent
 
 
 @ExecutionTimeRecorder(module_name=__name__)
-def main():
-    frequency = GeneralConventions.frequency_yearly
-    date_ranges = generate_date_ranges(years=[2023],
-                                       months=configuration.months,
-                                       frequency=frequency)
+def run_optimization_pipeline(
+        years,  # List of years to process (mandatory)
+        frequency='yearly',  # Frequency (optional or "monthly")
+        data_directory=project_directory / "data",
+        months=None,  # List of Months, if not provided then for all months of years(optional)
+        expected_return_methods=None,  # Function to calculate expected returns
+        risk_return_methods=None,  # Function to calculate risk return matrix
+        optimization_methods=None,  # Function to calculate optimizations
+        post_processing_methods=None  # Function for post-processing
+):
+    """
+    This function runs the entire optimization pipeline with user-defined methods.
+
+    Arguments:
+    - years: List of years to process. If None, uses default configuration value.
+    - months: List of months to process. If None, uses default configuration value.
+    - frequency: Frequency of data (e.g., 'yearly', 'monthly'). Default is 'yearly'.
+    - expected_return_method: Function to calculate expected returns.
+    - risk_return_method: Function to calculate risk return matrix (e.g., covariance matrix).
+    - optimization_method: Function to calculate optimizations.
+    - post_processing_method: Function for post-processing optimization weights.
+    - performance_method: Function to calculate performance.
+
+    Returns:
+    - performance_df: The performance DataFrame after running the optimization pipeline.
+    """
+
+    # Generate date ranges based on user input or defaults
+
+    date_ranges = generate_date_ranges(years=years, months=months, frequency=frequency)
+
     if date_ranges is None:
         raise Exception(
-            "date ranges generation failed for year={},months={},frequency={}".format(
-                configuration.year, configuration.months, frequency))
+            f"Date ranges generation failed for years={years}, months={months}, frequency={frequency}"
+        )
 
+    # Loop through date ranges and process the data
     for start_date, end_date in date_ranges:
-        current_dir = create_current_data_directory(start_date, configuration.output_dir, frequency)
-        logger.info(f"Processing start_date={start_date}, end_date={end_date} "
-                    f"for current_dir={current_dir}")
+        current_dir = create_current_data_directory(start_date, data_directory, frequency)
+        logger.info(f"Processing start_date={start_date}, end_date={end_date} for current_dir={current_dir}")
+
+        # Load data for the given date range
         data = get_data(current_dir=current_dir, start_date=start_date, end_date=end_date)
-        expected_return_df = calculate_or_get_all_return(data=data, current_dir=current_dir)
-        risk_return_dict = calculate_all_risk_matrix(data, current_dir)
-        optimized_df = calculate_optimizations(data, expected_return_df, risk_return_dict, current_dir)
-        monte_carlo_df = run_monte_carlo_simulation(configuration.output_dir, data)
+
+        # Calculate expected returns using the provided method
+        expected_return_df = calculate_or_get_all_return(data=data,
+                                                         current_dir=current_dir,
+                                                         enabled_methods=expected_return_methods)
+
+        # Calculate risk return matrix using the provided method
+        risk_return_dict = calculate_all_risk_matrix(data=data,
+                                                     current_dir=current_dir,
+                                                     enabled_methods=risk_return_methods)
+
+        # Perform optimization using the provided method
+        optimized_df = calculate_optimizations(data=data,
+                                               expected_return_df=expected_return_df,
+                                               risk_return_dict=risk_return_dict,
+                                               current_dir=current_dir,
+                                               enabled_methods=optimization_methods)
+
+        # Run Monte Carlo simulation
+        monte_carlo_df = run_monte_carlo_simulation(output_dir=current_dir, data=data)
+
+        # Combine the optimization and Monte Carlo results
         all_optimized_df = pd.concat([monte_carlo_df, optimized_df], ignore_index=True)
 
+        # Save the results to a pickle file
         save_pickle = Path(current_dir) / 'all_optimized_df.pkl'
         all_optimized_df.to_pickle(save_pickle)
-        post_processing_wright_df = run_all_post_processing_weight(all_optimized_df, data, current_dir)
-        # performance_df = calculate_performance(post_processing_wright_df, data, start_date, end_date,
-        #                                        current_dir)
-        # print(tabulate(performance_df.head(2), headers='keys', tablefmt='pretty'))
+
+        # Run post-processing on the optimized weights using the provided method
+        post_processing_wright_df = run_all_post_processing_weight(all_optimized_df=all_optimized_df,
+                                                                   data=data,
+                                                                   current_dir=current_dir,
+                                                                   enabled_methods=post_processing_methods)
+
+        # Calculate performance based on the post-processed data
+        performance_df = calculate_performance(post_processing_df=post_processing_wright_df,
+                                               data=data,
+                                               start_date=start_date,
+                                               end_date=end_date,
+                                               current_dir=current_dir)
+
+        # Print a preview of the performance
+        print(tabulate(performance_df.head(2), headers='keys', tablefmt='pretty'))
 
 
 if __name__ == "__main__":
-    main()
+    run_optimization_pipeline(years=[2023], frequency="yearly")
     ExecutionTimeRecorder.print_results()

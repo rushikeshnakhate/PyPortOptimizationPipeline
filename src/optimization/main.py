@@ -181,16 +181,16 @@ def extract_value(value):
 def calculate_optimizations(data: pd.DataFrame,
                             expected_return_df: pd.DataFrame,
                             risk_return_dict: dict,
-                            current_month_dir: Path,
+                            current_dir: Path,
                             enabled_methods=None):
     """
     Iterate over each return type and risk model to calculate optimizations.
     """
-    logger.info("calculating optimizations for the month {}".format(current_month_dir))
-    optimized_df = load_data_from_pickle(current_month_dir / PklFileConventions.optimization_for_all_type_pkl_filename)
+    logger.info("calculating optimizations for the month {}".format(current_dir))
+    optimized_df = load_data_from_pickle(current_dir / PklFileConventions.optimization_for_all_type_pkl_filename)
     if optimized_df is not None:
         logger.info(
-            f"cache exists={current_month_dir / PklFileConventions.optimization_for_all_type_pkl_filename},loading optimized data from cache..")
+            f"cache exists={current_dir / PklFileConventions.optimization_for_all_type_pkl_filename},loading optimized data from cache..")
         return optimized_df
 
     if not risk_return_dict:
@@ -202,12 +202,12 @@ def calculate_optimizations(data: pd.DataFrame,
     optimization_data = calculate_optimizations_for_risk_model(expected_return_df,
                                                                risk_return_dict,
                                                                data,
-                                                               current_month_dir,
+                                                               current_dir,
                                                                enabled_methods)
 
     # Clean the metadata and extract the values from the DataFrame
     df1 = optimization_data.apply(lambda x: x.map(clean_metadata))
     optimization_data_cleaned = df1.apply(lambda x: x.map(extract_value))
-    save_data_to_pickle(current_month_dir / PklFileConventions.optimization_for_all_type_pkl_filename,
+    save_data_to_pickle(current_dir / PklFileConventions.optimization_for_all_type_pkl_filename,
                         optimization_data_cleaned)
     return optimization_data_cleaned
