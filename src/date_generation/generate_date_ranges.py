@@ -53,6 +53,11 @@ def generate_date_ranges(years: list, months=None, frequency=GeneralConventions.
         elif frequency == GeneralConventions.frequency_monthly:
             # Add monthly ranges for the given year
             all_date_ranges.extend(generate_month_date_ranges(year, months))
+        elif frequency == GeneralConventions.frequency_multiyear:
+            # For multi-year frequency, generate a start date and an end date for the entire range
+            start_date = datetime(years[0], 1, 1).date()  # Start of the first year
+            end_date = datetime(years[-1] + 1, 1, 1).date()  # Jan 1 of the year after the last year
+            all_date_ranges.append((start_date, end_date))
         else:
             raise ValueError(f"Invalid frequency: {frequency}")
 

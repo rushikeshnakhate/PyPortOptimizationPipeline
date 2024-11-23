@@ -62,7 +62,11 @@ def run_optimization_pipeline(
 
     # Loop through date ranges and process the data
     for start_date, end_date in date_ranges:
-        current_dir = create_current_data_directory(start_date, data_directory, frequency)
+        current_dir = create_current_data_directory(start_date=start_date,
+                                                    end_date=end_date,
+                                                    output_dir=data_directory,
+                                                    frequency=frequency)
+
         logger.info(f"Processing start_date={start_date}, end_date={end_date} for current_dir={current_dir}")
 
         # Load data for the given date range

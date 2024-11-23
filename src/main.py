@@ -24,7 +24,7 @@ pd.set_option('display.max_colwidth', None)  # Display full content in cells
 
 # module_name = os.path.basename(os.path.dirname(__file__))
 # configuration = load_config(module_name)
-project_directory = Path(__file__).resolve().parent.parent/"data"
+project_directory = Path(__file__).resolve().parent.parent / "data"
 setup_logging(project_directory)
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -42,7 +42,7 @@ def main():
                 years, None, frequency))
 
     for start_date, end_date in date_ranges:
-        current_dir = create_current_data_directory(start_date, project_directory, frequency)
+        current_dir = create_current_data_directory(start_date, end_date, project_directory, frequency)
         logger.info(f"Processing start_date={start_date}, end_date={end_date} "
                     f"for current_dir={current_dir}")
         data = get_data(current_dir=current_dir, start_date=start_date, end_date=end_date)

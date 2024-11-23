@@ -53,6 +53,14 @@ class TestGenerateDateRanges(unittest.TestCase):
         ]
         self.assertEqual(result, expected)
 
+    def test_multi_year(self):
+        years = [2022, 2023]
+        months = None
+        frequency = GeneralConventions.frequency_multiyear
+        expected = [(date(2022, 1, 1)), date(2024, 12, 31)]
+        result = generate_date_ranges(years, months, frequency)
+        self.assertEqual(result, expected)
+
     def test_generate_date_ranges_invalid_frequency(self):
         """Test invalid frequency."""
         years = [2024]
