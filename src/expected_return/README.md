@@ -69,7 +69,7 @@ print(df_returns)
 ```
 
 
-### How to Add New Methods
+### How to Add New Methods?
 
 To add a new return calculation method, follow these steps:
 Create a New Class for the Return Type:
