@@ -1,72 +1,134 @@
-### Portfolio Allocation Processor (PyPAP)
+## Portfolio Optimization Pipeline( PyPortOptimizationPipeline)
 
-The Portfolio Allocation Processor (PyPAP) is a Python library designed to process and allocate portfolio weights based
-on
-different allocation methods. It supports multiple portfolio classes, calculates weights and remaining amounts, and
-provides functionality to extend the system with new allocation methods. This library can be used in financial and
-investment analysis, portfolio optimization, and asset allocation.
+This library is designed to automate the portfolio optimization process, including the calculation of expected returns,
+risk-return matrix, optimizations, Monte Carlo simulations, post-processing of weights, and performance evaluation. The
+user can customize the pipeline by providing their own methods for each step in the process.
+
+### Features
+
+* #### Customizable Pipeline:
+
+Users can provide their own functions to calculate expected returns, risk-return matrices, optimization methods,
+post-processing weights, and performance.
+
+* #### Supports Different Frequencies:
+
+Supports processing of data on both yearly and monthly frequencies.
+
+* #### Flexible Date Ranges:
+
+Users can specify the years and months they wish to process, allowing for highly customizable date ranges.
+
+* #### Monte Carlo Simulation:
+
+Built-in integration with Monte Carlo simulations to enhance the optimization process and help assess the robustness of
+the optimized portfolio.
+
+* #### Save Results:
+
+Optimized portfolio results are saved as pickle files for easy retrieval and further analysis.
+
+* #### Risk-Return Matrix Types:
+
+The library supports multiple risk-return matrix types like covariance matrix, correlation matrix, and other
+user-defined risk-return metrics. Users can choose the method they prefer or add new ones.
+
+* #### Multiple Optimization Methods:
+
+Several optimization methods are available, including mean-variance optimization, risk-parity, minimum volatility, and
+other methods. Custom optimization strategies can also be implemented easily.
+
+* #### SOLID Pricing:
+
+The library uses SOLID principles to ensure scalability, maintainability, and flexibility of the code, making it easy to
+extend and modify for specific user needs.
+
+* #### Logging:
+
+Detailed logging is integrated into the pipeline, allowing users to track the process and identify any potential issues
+with the execution.
+
+* #### Configuration Management:
+
+Config files are used to easily manage settings like date ranges, frequency, and methods for each step in the process.
+The library also supports reading configurations from a central configuration manager.
+
+### Requirements
+
+To use this library, make sure you have the following Python packages installed:
+
+* pandas
+* numpy
+* scipy
+* matplotlib
+* tabulate
+  Additionally, you'll need the following custom modules (located in the src directory):
+
+* execution_time_recorder: For logging execution times.
+* dataDownloader: For downloading financial data.
+* date_generation: For generating date ranges.
+* expected_return: For calculating expected returns.
+* monte_carlo_simulation: For running Monte Carlo simulations.
+* optimization: For portfolio optimization methods.
+* performance_metrics: For calculating portfolio performance.
+* processing_weight: For post-processing optimization weights.
+* risk_returns: For calculating risk-return matrices.
+
+### Library Structure
+
+* execution_time_recorder.py: Records the execution time of functions in the pipeline.
+* dataDownloader/main.py: Contains logic for downloading or fetching data.
+* date_generation/generate_date_ranges.py: Generates date ranges based on user input (years, months, frequency).
+* expected_return/main.py: Contains functions for calculating expected returns.
+* monte_carlo_simulation.py: Runs Monte Carlo simulations for portfolio analysis.
+* optimization/main.py: Contains the optimization logic (e.g., using Markowitz optimization).
+* performance_metrics/main.py: Calculates the performance metrics based on portfolio weights.
+* processing_weight/main.py: Post-processes optimization weights after the optimization phase.
+* risk_returns/main.py: Calculates risk-return matrices (e.g., covariance matrix).
 
 ### Function
 
-#### run_all_post_processing_weight
+#### run_optimization_pipeline
 
-#### Returns
+#### arguments:
 
-* a dictionary of allocation classes that are enabled based on the enabled_methods parameter. If
-  no methods are specified, it returns all available classes.
-
-#### Parameters
-
-* results_df (pd.DataFrame): A DataFrame containing the portfolio data that needs processing. This will include weights
-  and other necessary data for allocation.
-* data (pd.DataFrame): A DataFrame containing market data, which could include prices, market indices, etc., for the
-  calculation of portfolio allocations.
-* current_month_dir (Path): The directory path for storing the results of the processing for the current month.
-* enabled_methods (list, optional): A list of allocation methods (e.g., GreedyPortfolio, LpPortfolio). If not provided,
-  the function loads enabled methods from the configuration.
-* budget (int, optional): The total budget available for allocation. The default value is 1,000,000.
+* years (list): List of years to process.
+* tickers(list): List of Tickers.
+* frequency (str): Frequency of data ("yearly" or "monthly" ,"multiyear"). Default is "yearly".
+* data_directory (Path): Directory where the data and results will be stored. Default is project_directory / "data".
+* months (list): List of months to process (optional). If not provided, all months of the specified years are processed.
+* expected_return_methods (list): List of methods for calculating expected returns (optional).
+* risk_return_methods (list): List of methods for calculating the risk-return matrix (optional).
+* optimization_methods (list): List of optimization methods (optional).
+* post_processing_methods (list): List of post-processing methods for optimization weights (optional).
 
 #### Usage
 
-1. Importing the necessary libraries and setting up data:
-
-````
-import pandas as pd
-from pathlib import Path
-from src.processing_weight import PortfolioAllocationProcessor as PAP
-
-# Sample data: Assume that `results_df` and `data` are already loaded or generated
-results_df = pd.DataFrame({
-    'weights_column': [{'stock_a': 0.5, 'stock_b': 0.3, 'stock_c': 0.2}],
-    'other_column': ['data']
-})
-
-data = pd.DataFrame({
-    'stock_a': [100, 105, 110],
-    'stock_b': [200, 210, 215],
-    'stock_c': [150, 145, 140]
-})
-
-# Path to the current month's directory where the results will be saved
-current_month_dir = Path("/path/to/current_month_dir")
-````
-
-2. Running the allocation processing:
-
 ```
-# If you want to use specific enabled methods:
-enabled_methods = ['GreedyPortfolio', 'LpPortfolio']
-
-# Or, if you want to let the function load enabled methods from the config file:
-enabled_methods = None  # The function will load enabled methods from config
-
-# Run the function to process the portfolio data and allocation
-final_results_df = PAP.run_all_post_processing_weight(
-    results_df=results_df, 
-    data=data, 
-    current_month_dir=current_month_dir, 
-    enabled_methods=enabled_methods, 
-    budget=1000000
+# Run the pipeline for multiple years with yearly frequency
+run_optimization_pipeline(
+    years=[2023, 2024], 
+    tickrs=["AAPL", "GOOGL"]
+    frequency="yearly", 
+    expected_return_methods=['mean', 'geometric'], 
+    risk_return_methods=['covariance'], 
+    optimization_methods=['max_sharpe'], 
+    post_processing_methods=['equal_weight', 'volatility_adjusted']
 )
 ```
 
+#### Configuration and Default Values
+
+* Default Frequency: "yearly"
+* Default Months: If not provided, the function will run for all months in the given years.
+* Default Methods: If no methods are provided, the function will use default configurations for expected returns,
+  risk-return matrix, optimization, and post-processing.
+
+#### Performance Metrics
+
+The following performance metrics are calculated for the optimized portfolio:
+
+* Return: Total return over the given period.
+* Risk: Total risk (e.g., standard deviation of returns).
+* Sharpe Ratio: Risk-adjusted return.
+  These metrics are based on the results of post-processing steps and optimizations.

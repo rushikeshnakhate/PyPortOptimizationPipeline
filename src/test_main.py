@@ -26,7 +26,7 @@ project_directory = Path(__file__).resolve().parent.parent
 def run_optimization_pipeline(
         years,  # List of years to process (mandatory)
         tickers=None,  # List of tickers(optional)
-        frequency='yearly',  # Frequency (optional)
+        frequency="yearly",  # Frequency (optional)
         data_directory=project_directory / "data",
         months=None,  # List of Months, if not provided then for all months of years(optional)
         expected_return_methods=None,  # Function to calculate expected returns
@@ -117,5 +117,5 @@ def run_optimization_pipeline(
 
 
 if __name__ == "__main__":
-    run_optimization_pipeline(years=[2023], frequency="yearly")
+    run_optimization_pipeline(years=[2022, 2023], frequency="multiyear")
     ExecutionTimeRecorder.print_results()

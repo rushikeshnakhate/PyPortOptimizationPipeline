@@ -94,7 +94,7 @@ To use this library, make sure you have the following Python packages installed:
 
 * years (list): List of years to process.
 * tickers(list): List of Tickers.
-* frequency (str): Frequency of data ("yearly" or "monthly"). Default is "yearly".
+* frequency (str): Frequency of data ("yearly" or "monthly" ,"multiyear"). Default is "yearly".
 * data_directory (Path): Directory where the data and results will be stored. Default is project_directory / "data".
 * months (list): List of months to process (optional). If not provided, all months of the specified years are processed.
 * expected_return_methods (list): List of methods for calculating expected returns (optional).
