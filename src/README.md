@@ -182,7 +182,8 @@ run_optimization_pipeline(
 
 2. Run the pipeline for multiple years with monthly frequency and specific months:
 
-```run_optimization_pipeline(
+```
+run_optimization_pipeline(
     years=[2023, 2024],
     months=[1, 2, 3],
     tickers=None,  # If no specific tickers are needed
