@@ -165,18 +165,50 @@ To use this library, make sure you have the following Python packages installed:
 
 #### Usage
 
+1. Run the pipeline for multiple years with yearly frequency:
+
 ```
-# Run the pipeline for multiple years with yearly frequency
 run_optimization_pipeline(
-    years=[2023, 2024], 
-    months=[1,2],
-    tickrs=["AAPL", "GOOGL"]
-    frequency="yearly", 
-    expected_return_methods=['mean', 'geometric'], 
-    risk_return_methods=['covariance'], 
-    optimization_methods=['max_sharpe'], 
+    years=[2023, 2024],
+    months=[1, 2],
+    tickers=["AAPL", "GOOGL"],
+    frequency="yearly",
+    expected_return_methods=['mean', 'geometric'],
+    risk_return_methods=['covariance'],
+    optimization_methods=['max_sharpe'],
     post_processing_methods=['equal_weight', 'volatility_adjusted']
 )
+```
+
+2. Run the pipeline for multiple years with monthly frequency and specific months:
+
+```run_optimization_pipeline(
+    years=[2023, 2024],
+    months=[1, 2, 3],
+    tickers=None,  # If no specific tickers are needed
+    frequency="monthly",
+    expected_return_methods=['CAGR', 'EMA'],
+    risk_return_methods=['GaussianProcessRiskModel'],
+    optimization_methods=['MVRiskFolioOptimizer'],
+    post_processing_methods=['GreedyPortfolio']
+) 
+```
+
+3. Run the pipeline for multiple years with multiyear frequency:
+
+```
+run_optimization_pipeline(
+    years=[2021, 2022, 2023],
+    months=None,  # Will use all months
+    tickers=["HDFCBANK.NS", "RELIANCE.NS"],
+    frequency="multiyear",
+    expected_return_methods=['CAPM', 'ARIMA'],
+    risk_return_methods=['AutoencoderRiskModel'],
+    optimization_methods=['MADRiskFolioOptimizer'],
+    post_processing_methods=['CustomTransactionCostAllocator']
+)
+
+
 ```
 
 #### Performance Metrics
