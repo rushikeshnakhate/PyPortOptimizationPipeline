@@ -119,5 +119,6 @@ def run_optimization_pipeline(
 
 
 if __name__ == "__main__":
-    run_optimization_pipeline(years=[2020, 2024], frequency="multiyear")
-    ExecutionTimeRecorder.print_results()
+    run_optimization_pipeline(years=[2020], months=[1, 2], frequency="monthly")
+    executionTimeRecorder_df = ExecutionTimeRecorder.get_performance_dataframe()
+    executionTimeRecorder_df.to_pickle(Path(project_directory) / 'execution_timeppkl')
