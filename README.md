@@ -1,4 +1,4 @@
-## Portfolio Optimization Pipeline( PyPortOptimizationPipeline)
+## Portfolio Optimization Pipeline( PyPortOptimization)
 
 This library is designed to automate the portfolio optimization process, including the calculation of expected returns,
 risk-return matrix, optimizations, Monte Carlo simulations, post-processing of weights, and performance evaluation. The
@@ -53,6 +53,12 @@ with the execution.
 Config files are used to easily manage settings like date ranges, frequency, and methods for each step in the process.
 The library also supports reading configurations from a central configuration manager.
 
+* #### ExecutionTimeRecorder
+
+It s designed to track and store the execution time of all functions. It records the time each function takes to
+execute and maintains a log for reference. This allows you to monitor the performance and efficiency of various
+functions in your system.
+
 ### Requirements
 
 To use this library, make sure you have the following Python packages installed:
@@ -90,17 +96,72 @@ To use this library, make sure you have the following Python packages installed:
 
 #### run_optimization_pipeline
 
-#### arguments:
+#### arguments
 
-* years (list): List of years to process.
-* tickers(list): List of Tickers.
-* frequency (str): Frequency of data ("yearly" or "monthly"). Default is "yearly".
-* data_directory (Path): Directory where the data and results will be stored. Default is project_directory / "data".
-* months (list): List of months to process (optional). If not provided, all months of the specified years are processed.
-* expected_return_methods (list): List of methods for calculating expected returns (optional).
-* risk_return_methods (list): List of methods for calculating the risk-return matrix (optional).
-* optimization_methods (list): List of optimization methods (optional).
-* post_processing_methods (list): List of post-processing methods for optimization weights (optional).
+1. Years (Mandatory):
+    * This parameter accepts a list of years. It is mandatory and should be provided for running the optimization
+      pipeline.
+      For example, years=[2023, 2024].
+
+2. Months (Optional):
+    * If not provided, the function will consider all months in the given years for the analysis.
+    * If frequency="monthly", you can specify the months in a list, e.g., months=[1, 2] for January and February.
+    * If months is not specified for frequency="monthly", it will run for all months within the provided years.
+
+3. Tickers: List of tickers(optional)
+
+4. Frequency:
+    * monthly: The pipeline will generate portfolios on a monthly basis. You can provide specific months to analyze, or
+      it
+      will use all months for each year if not specified.
+    * yearly: This option generates portfolios for each year. The start date will be the 1st day of the year, and the
+      end
+      date will be the last day of the year.
+    * multiyear: The pipeline will consider portfolios consolidated across multiple years. The start date will be the
+      1st
+      day of the first year, and the end date will be the last day of the last year in the list of years.
+
+5. Expected Return Methods:   The pipeline supports various methods to estimate expected returns:
+    * ARIMA: Uses statistical modeling for forecasting returns based on historical patterns.
+    * Arithmetic Mean Historical Return: Calculates the average historical return.
+    * Black-Litterman Model: Combines historical data with subjective views.
+    * Capital Asset Pricing Model (CAPM): Estimates returns based on market beta and risk-free rate.
+    * CAGR: Calculates the Compound Annual Growth Rate based on historical returns.
+    * Exponential Moving Average: A weighted average of past returns, more sensitive to recent returns.
+    * Fama-French Model: Uses market, size, and value factors to estimate expected returns.
+    * Gordon Growth Model: Estimates expected equity returns based on dividend yield and growth rate.
+    * Holt-Winters: A combination of exponential smoothing and seasonality forecasting.
+    * Linear Regression: Estimates expected returns based on a linear relationship with independent variables.
+    * Risk Parity: Allocates risk evenly among assets to achieve the desired risk profile.
+    * TWRR: Time-weighted return to account for cash flows.
+
+6. Risk-Return Methods: The pipeline supports multiple risk-return modeling techniques:
+    * AutoencoderRiskModel
+    * CopulaRiskModel
+    * ExponentialCovariance
+    * GaussianProcessRiskModel
+    * KMeansClustering
+    * LedoitWolfShrinkage, etc.
+      These models help estimate the risk-return matrix that is essential for portfolio optimization.
+
+7. Optimization Methods: The pipeline supports a variety of portfolio optimization methods:
+    * PyPortfolioOptFrontier
+    * MVRiskFolioOptimizer
+    * MADRiskFolioOptimizer
+    * CVaRRiskFolioOptimizer, etc.
+      These methods help optimize the portfolio based on various risk-return trade-offs and constraints.
+
+8. Post-Processing Methods:The pipeline includes custom algorithms for portfolio weight allocation:
+
+    * CustomClusteredAllocator
+    * CustomDiversityAllocator
+    * CustomProportionalRoundingAllocator
+    * CustomTransactionCostAllocator
+    * CustomWeightedFloorAllocator
+    * GreedyPortfolio
+    * LpPortfolio
+      These methods help adjust and allocate weights to the portfolio in a manner that aligns with specific strategies
+      or risk profiles.
 
 #### Usage
 
@@ -108,6 +169,7 @@ To use this library, make sure you have the following Python packages installed:
 # Run the pipeline for multiple years with yearly frequency
 run_optimization_pipeline(
     years=[2023, 2024], 
+    months=[1,2],
     tickrs=["AAPL", "GOOGL"]
     frequency="yearly", 
     expected_return_methods=['mean', 'geometric'], 
@@ -116,13 +178,6 @@ run_optimization_pipeline(
     post_processing_methods=['equal_weight', 'volatility_adjusted']
 )
 ```
-
-#### Configuration and Default Values
-
-* Default Frequency: "yearly"
-* Default Months: If not provided, the function will run for all months in the given years.
-* Default Methods: If no methods are provided, the function will use default configurations for expected returns,
-  risk-return matrix, optimization, and post-processing.
 
 #### Performance Metrics
 

@@ -5,6 +5,25 @@ models, loading them from pickle files if they exist, or calculating and saving 
 part of the risk management pipeline and ensures that covariance matrices are available for further use in portfolio
 optimization and risk management.
 
+#### Introduction
+
+* AutoencoderRiskModel: Utilizes deep learning to reduce dimensionality and model complex risk relationships.
+* CopulaRiskModel: Models the dependency structure between assets to estimate joint risk behavior.
+* ExponentialCovariance: Estimates covariance with an emphasis on recent data using exponential smoothing.
+* GaussianProcessRiskModel: Applies Gaussian processes to model risk with non-linear dependencies in the data.
+* GraphicalLasso: Uses a sparse precision matrix to model the conditional dependencies between variables.
+* KMeansClustering: Identifies risk patterns by grouping assets with similar risk characteristics.
+* LedoitWolfConstantCorrelation: Applies shrinkage to estimate correlation matrices with improved accuracy.
+* LedoitWolfConstantVariance: Estimates variance-covariance matrices using shrinkage techniques for better stability.
+* LedoitWolfShrinkage: A shrinkage estimator for covariance matrices that improves estimation in small sample settings.
+* LedoitWolfSingleFactor: Uses a single-factor model with shrinkage to estimate covariance matrices.
+* OracleApproximatingShrinkage: Optimizes shrinkage techniques by approximating the "oracle" estimator.
+* RandomForestVolatility: Uses random forests to model and predict asset volatility based on historical data.
+* RegimeSwitchingRiskModel: Models risk with different regimes (e.g., bullish or bearish) using state transitions.
+* SVMVolatility: Uses Support Vector Machines (SVM) to forecast volatility by learning non-linear relationships.
+* SampleCovariance: Estimates covariance directly from sample data, providing a basic but effective measure of risk.
+* SemiCovariance: Measures downside risk by focusing on negative deviations from the mean.
+
 ### Function
 
 #### calculate_all_risk_matrix
