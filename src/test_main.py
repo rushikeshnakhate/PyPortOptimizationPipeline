@@ -6,6 +6,7 @@ from pathlib import Path
 from tabulate import tabulate
 
 from src.common.execution_time_recorder import ExecutionTimeRecorder
+from src.common.logging_config import setup_logging
 from src.common.utils import create_current_data_directory
 from src.dataDownloader.main import get_data
 from src.date_generation.generate_date_ranges import generate_date_ranges
@@ -20,6 +21,7 @@ from src.risk_returns.main import calculate_all_risk_matrix
 logger = logging.getLogger(__name__)
 
 project_directory = Path(__file__).resolve().parent.parent
+setup_logging(project_directory)
 
 
 @ExecutionTimeRecorder(module_name=__name__)
