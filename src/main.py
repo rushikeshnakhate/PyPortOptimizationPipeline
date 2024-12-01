@@ -114,4 +114,4 @@ def run_optimization_pipeline(
                                                current_dir=current_dir)
 
         # Print a preview of the performance
-        print(tabulate(performance_df.head(2), headers='keys', tablefmt='pretty'))
+        print(tabulate(performance_df.head(100), headers='keys', tablefmt='pretty'))

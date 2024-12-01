@@ -52,6 +52,9 @@ class ExecutionTimeRecorder:
         else:
             print("No execution time data available.")
 
+    @staticmethod
+    def get_performance_dataframe():
+        return results_df
 #
 # # Example usage of the decorator
 # execution_logger = ExecutionTimeLogger(module_name='example_module')

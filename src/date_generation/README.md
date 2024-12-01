@@ -19,7 +19,7 @@ A Python library for generating date ranges based on specified years, months, an
 #### Arguments:
 * `year` (int): The year for which to generate the month ranges (e.g., `2024`).
 * `months` (list of int, optional): A list of specific months to generate ranges for (1-12). Defaults to all months if not provided.
-
+* `frequency`: frequency (str): 'monthly' for monthly ranges or 'yearly' for a single range for each year.
 #### Returns:
 - `list of tuples`: Each tuple contains a start date and end date for the specified month(s). The start and end dates are represented as `datetime.date` objects.
 
