@@ -41,5 +41,5 @@ def download_stock_data(start_date, end_date):
     tickers = stocks.tickers
     sorted_tickers = sorted(list(tickers))
     logger.info(f"tickers list:{sorted_tickers}")
-    data = yf.download(sorted_tickers, start=start_date, end=end_date)["Adj Close"]
+    data = yf.download(sorted_tickers, start=start_date, end=end_date)["Close"]
     return data
