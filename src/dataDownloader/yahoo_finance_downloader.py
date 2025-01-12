@@ -18,5 +18,5 @@ class YahooFinanceDownloader(BaseDownloader):
 
     def download_data(self, tickers, start_date, end_date):
         sorted_tickers = sorted(list(tickers))
-        logger.info(f"Downloading data for tickers: {sorted_tickers}")
-        return yf.download(sorted_tickers, start=start_date, end=end_date)["Adj Close"]
+        logger.info(f"Downloading data for tickers: {sorted_tickers}, start_date {start_date}, end_date {end_date}")
+        return yf.download(sorted_tickers, start=start_date, end=end_date)["Close"]
